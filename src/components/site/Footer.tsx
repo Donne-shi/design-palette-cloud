@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { BridgeMark, Ornament } from "./Brand";
+import { Mail, MapPin, Send, Github, Twitter, Youtube, Rss } from "lucide-react";
 
 export function Footer() {
   const { t, lang } = useLang();
@@ -26,9 +28,13 @@ export function Footer() {
 
   return (
     <footer className="mt-24 border-t border-border/70 bg-secondary/40">
-      <div className="container-prose py-16 grid gap-12 md:grid-cols-12">
+      <div className="container-prose pt-16 pb-12 grid gap-12 md:grid-cols-12">
         <div className="md:col-span-5">
-          <p className="serif text-2xl leading-snug text-foreground max-w-md">
+          <div className="flex items-center gap-3 text-accent">
+            <BridgeMark className="h-9 w-9" />
+            <Ornament className="hidden sm:flex" />
+          </div>
+          <p className="serif text-2xl leading-snug text-foreground max-w-md mt-6">
             {t(
               "以福音连接文化，以真理回应时代，以恩典促进对话。",
               "Building bridges across cultures through the Gospel — truth, grace, dialogue."
@@ -40,6 +46,13 @@ export function Footer() {
               "A platform connecting Gospel faith, public discourse, and cross-cultural exchange."
             )}
           </p>
+          <div className="mt-6 flex items-center gap-4 text-stone-warm">
+            <a aria-label="Email" href="mailto:hello@mbi.example" className="hover:text-accent transition-colors"><Mail className="h-4 w-4" /></a>
+            <a aria-label="Twitter" href="#" className="hover:text-accent transition-colors"><Twitter className="h-4 w-4" /></a>
+            <a aria-label="YouTube" href="#" className="hover:text-accent transition-colors"><Youtube className="h-4 w-4" /></a>
+            <a aria-label="GitHub" href="#" className="hover:text-accent transition-colors"><Github className="h-4 w-4" /></a>
+            <a aria-label="RSS" href="#" className="hover:text-accent transition-colors"><Rss className="h-4 w-4" /></a>
+          </div>
         </div>
 
         <div className="md:col-span-3 text-sm">
@@ -51,6 +64,9 @@ export function Footer() {
             <li><Link to="/resources" className="link-underline">{t("资源中心", "Resources")}</Link></li>
             <li><Link to="/contact" className="link-underline">{t("联系我们", "Contact")}</Link></li>
           </ul>
+          <p className="mt-6 text-xs text-stone-warm flex items-center gap-1.5">
+            <MapPin className="h-3 w-3" /> Pasadena, CA
+          </p>
         </div>
 
         <div className="md:col-span-4">
@@ -69,9 +85,9 @@ export function Footer() {
             />
             <button
               disabled={loading}
-              className="bg-accent text-accent-foreground px-4 py-2 text-sm tracking-wider uppercase hover:bg-accent/90 disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-1.5 bg-accent text-accent-foreground px-4 py-2 text-sm tracking-wider uppercase hover:bg-accent/90 disabled:opacity-50"
             >
-              {loading ? "…" : t("订阅", "Subscribe")}
+              <Send className="h-3.5 w-3.5" /> {loading ? "…" : t("订阅", "Subscribe")}
             </button>
           </form>
         </div>
