@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
+import { Scale, ShieldCheck, Scroll, Quote, MessageCircle, Pencil } from "lucide-react";
 
 export const Route = createFileRoute("/theology")({
   head: () => ({

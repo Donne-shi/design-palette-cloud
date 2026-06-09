@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
+import { Landmark, MessageSquareQuote, Mic } from "lucide-react";
 
 export const Route = createFileRoute("/faith-public")({
   head: () => ({
