@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
+import { Compass, Sparkles, MessagesSquare, HandHeart, Sunrise, Check, X as XIcon, Globe2, BookOpen, Users, Heart, Handshake, Church } from "lucide-react";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -19,8 +20,19 @@ export const Route = createFileRoute("/about")({
 function AboutPage() {
   const { t } = useLang();
   const values = [
-    { en: "Truth", zh: "真理" }, { en: "Grace", zh: "恩典" },
-    { en: "Dialogue", zh: "对话" }, { en: "Service", zh: "服务" }, { en: "Hope", zh: "盼望" },
+    { en: "Truth", zh: "真理", Icon: Compass },
+    { en: "Grace", zh: "恩典", Icon: Sparkles },
+    { en: "Dialogue", zh: "对话", Icon: MessagesSquare },
+    { en: "Service", zh: "服务", Icon: HandHeart },
+    { en: "Hope", zh: "盼望", Icon: Sunrise },
+  ];
+  const missions = [
+    { zh: "推动跨文化理解", en: "Advance cross-cultural understanding", Icon: Globe2 },
+    { zh: "促进健康的神学讨论", en: "Foster healthy theological discussion", Icon: BookOpen },
+    { zh: "关注公共议题中的信仰声音", en: "Bring a faithful voice to public issues", Icon: MessagesSquare },
+    { zh: "服务普通家庭与社区", en: "Serve everyday families and communities", Icon: Users },
+    { zh: "促进福音与社会责任结合", en: "Connect Gospel with social responsibility", Icon: Heart },
+    { zh: "推动教会合作与全球对话", en: "Encourage church partnership and global dialogue", Icon: Handshake },
   ];
   return (
     <SiteShell>
@@ -51,17 +63,13 @@ function AboutPage() {
             <h2 className="serif text-3xl">{t("我们做什么", "What we do")}</h2>
           </div>
           <ul className="md:col-span-8 grid sm:grid-cols-2 gap-x-8 gap-y-5 text-foreground/85">
-            {[
-              { zh: "推动跨文化理解", en: "Advance cross-cultural understanding" },
-              { zh: "促进健康的神学讨论", en: "Foster healthy theological discussion" },
-              { zh: "关注公共议题中的信仰声音", en: "Bring a faithful voice to public issues" },
-              { zh: "服务普通家庭与社区", en: "Serve everyday families and communities" },
-              { zh: "促进福音与社会责任结合", en: "Connect Gospel with social responsibility" },
-              { zh: "推动教会合作与全球对话", en: "Encourage church partnership and global dialogue" },
-            ].map((m) => (
-              <li key={m.en} className="border-t border-border pt-4">
-                <p className="serif text-lg">{t(m.zh, m.en)}</p>
-                <p className="italic text-sm text-stone-warm">{t(m.en, m.zh)}</p>
+            {missions.map(({ Icon, ...m }) => (
+              <li key={m.en} className="border-t border-border pt-4 flex gap-4">
+                <Icon className="h-5 w-5 mt-1 text-accent shrink-0" />
+                <div>
+                  <p className="serif text-lg">{t(m.zh, m.en)}</p>
+                  <p className="italic text-sm text-stone-warm">{t(m.en, m.zh)}</p>
+                </div>
               </li>
             ))}
           </ul>
@@ -71,8 +79,9 @@ function AboutPage() {
       <section className="container-prose py-24">
         <p className="eyebrow mb-4">Core Values · 核心价值</p>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
-          {values.map((v) => (
+          {values.map(({ Icon, ...v }) => (
             <div key={v.en} className="border-t-2 border-accent pt-5">
+              <Icon className="h-6 w-6 text-accent mb-3" />
               <p className="serif text-3xl">{v.en}</p>
               <p className="text-stone-warm mt-1">{v.zh}</p>
             </div>
@@ -84,15 +93,19 @@ function AboutPage() {
         <p className="eyebrow mb-4">Editorial Principles · 内容原则</p>
         <div className="grid md:grid-cols-2 gap-12">
           <div>
-            <h3 className="serif text-2xl mb-4">{t("我们支持", "We support")}</h3>
+            <h3 className="serif text-2xl mb-4 flex items-center gap-2"><Check className="h-5 w-5 text-accent" /> {t("我们支持", "We support")}</h3>
             <ul className="space-y-2 text-foreground/85">
-              {["福音中心 / Gospel-centered","跨文化理解 / Cross-cultural understanding","理性公共讨论 / Reasoned public discourse","宗教自由 / Religious liberty","家庭与社区 / Families and communities","全球教会合作 / Global church partnership","普通人的声音 / Voices of ordinary people"].map(x => <li key={x}>· {x}</li>)}
+              {["福音中心 / Gospel-centered","跨文化理解 / Cross-cultural understanding","理性公共讨论 / Reasoned public discourse","宗教自由 / Religious liberty","家庭与社区 / Families and communities","全球教会合作 / Global church partnership","普通人的声音 / Voices of ordinary people"].map(x => (
+                <li key={x} className="flex gap-2"><Check className="h-4 w-4 mt-1 text-accent shrink-0" /><span>{x}</span></li>
+              ))}
             </ul>
           </div>
           <div>
-            <h3 className="serif text-2xl mb-4">{t("我们反对", "We reject")}</h3>
+            <h3 className="serif text-2xl mb-4 flex items-center gap-2"><XIcon className="h-5 w-5 text-stone-warm" /> {t("我们反对", "We reject")}</h3>
             <ul className="space-y-2 text-foreground/85">
-              {["极端民族主义 / Extreme nationalism","极端意识形态 / Ideological extremism","仇恨言论 / Hate speech","阴谋论传播 / Conspiracy theorizing","将福音工具化 / Weaponizing the Gospel","成功神学 / Prosperity gospel"].map(x => <li key={x}>· {x}</li>)}
+              {["极端民族主义 / Extreme nationalism","极端意识形态 / Ideological extremism","仇恨言论 / Hate speech","阴谋论传播 / Conspiracy theorizing","将福音工具化 / Weaponizing the Gospel","成功神学 / Prosperity gospel"].map(x => (
+                <li key={x} className="flex gap-2"><XIcon className="h-4 w-4 mt-1 text-stone-warm shrink-0" /><span>{x}</span></li>
+              ))}
             </ul>
           </div>
         </div>

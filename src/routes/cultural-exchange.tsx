@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
 import eventImg from "@/assets/event.jpg";
+import { CalendarDays, MapPin, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/cultural-exchange")({
   head: () => ({
@@ -50,9 +51,10 @@ function ExchangePage() {
               <h3 className="serif text-2xl mt-2 leading-snug">{t(e.zh, e.en)}</h3>
               <p className="serif italic text-sm text-stone-warm mt-1">{t(e.en, e.zh)}</p>
               <div className="mt-5 pt-5 border-t border-border flex items-center justify-between text-sm">
-                <span>{e.date}</span><span className="text-stone-warm">{e.place}</span>
+                <span className="inline-flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5 text-accent" /> {e.date}</span>
+                <span className="inline-flex items-center gap-1.5 text-stone-warm"><MapPin className="h-3.5 w-3.5" /> {e.place}</span>
               </div>
-              <button className="mt-5 text-sm uppercase tracking-widest text-accent">{t("报名 / 了解", "Register / Learn")} →</button>
+              <button className="mt-5 inline-flex items-center gap-1.5 text-sm uppercase tracking-widest text-accent">{t("报名 / 了解", "Register / Learn")} <ArrowRight className="h-3.5 w-3.5" /></button>
             </div>
           </article>
         ))}

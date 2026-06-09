@@ -5,6 +5,7 @@ import newsImg from "@/assets/news.jpg";
 import dialogueImg from "@/assets/dialogue.jpg";
 import theologyImg from "@/assets/theology.jpg";
 import eventImg from "@/assets/event.jpg";
+import { CalendarDays, Tag } from "lucide-react";
 
 export const Route = createFileRoute("/news")({
   head: () => ({
@@ -51,7 +52,7 @@ function NewsPage() {
               <div className="aspect-[4/3] overflow-hidden bg-muted">
                 <img src={a.img} alt="" loading="lazy" width={1280} height={896} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
               </div>
-              <p className="eyebrow mt-5">{t(a.cat.zh, a.cat.en)} · {a.date}</p>
+              <p className="eyebrow mt-5 inline-flex items-center gap-3"><span className="inline-flex items-center gap-1"><Tag className="h-3 w-3 text-accent" />{t(a.cat.zh, a.cat.en)}</span><span className="inline-flex items-center gap-1"><CalendarDays className="h-3 w-3 text-accent" />{a.date}</span></p>
               <h3 className="serif text-xl mt-2 leading-snug">{t(a.zh, a.en)}</h3>
               <p className="serif italic text-sm text-stone-warm mt-1">{t(a.en, a.zh)}</p>
               <p className="mt-3 text-sm text-foreground/75 leading-relaxed">{t(a.excerpt.zh, a.excerpt.en)}</p>

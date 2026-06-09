@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, Globe } from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import { BridgeMark } from "./Brand";
 
 const nav = [
   { to: "/", zh: "首页", en: "Home" },
@@ -23,7 +24,9 @@ export function Header() {
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className="container-prose flex items-center justify-between h-16 lg:h-20">
         <Link to="/" className="flex items-center gap-3 group">
-          <span className="inline-block h-8 w-8 rounded-sm bg-accent text-accent-foreground grid place-items-center font-serif text-lg">M</span>
+          <span className="inline-flex h-10 w-10 items-center justify-center rounded-sm bg-accent/10 text-accent ring-1 ring-accent/30 group-hover:bg-accent/15 transition-colors">
+            <BridgeMark className="h-6 w-6" />
+          </span>
           <span className="leading-tight">
             <span className="block font-serif text-base lg:text-lg text-foreground">{t("多元文化桥梁计划", "Multicultural Bridge")}</span>
             <span className="block text-[10px] tracking-[0.2em] uppercase text-stone-warm">MBI · Building Bridges</span>
