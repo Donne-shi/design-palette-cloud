@@ -19,17 +19,17 @@ export const Route = createFileRoute("/faith-public")({
 function PublicPage() {
   const { t } = useLang();
   const sections = [
-    { zh: "美国政府与宗教", en: "Government & Religion", items: [
+    { Icon: Landmark, zh: "美国政府与宗教", en: "Government & Religion", items: [
       { zh: "新政策解读：今年值得关注的三项", en: "New policy: three things to watch this year" },
       { zh: "宗教自由案例追踪", en: "Religious-liberty case tracker" },
       { zh: "法院判决分析", en: "Court rulings, in review" },
     ]},
-    { zh: "信仰回应", en: "Faithful Responses", items: [
+    { Icon: MessageSquareQuote, zh: "信仰回应", en: "Faithful Responses", items: [
       { zh: "伦理：基因编辑与生命的边界", en: "Ethics: gene editing and the boundaries of life" },
       { zh: "教育：家长在课程之争中的角色", en: "Education: parents' role in the curriculum debate" },
       { zh: "家庭：在多元社会养育孩子", en: "Family: raising children in a pluralistic society" },
     ]},
-    { zh: "普通人的声音", en: "Ordinary Voices", items: [
+    { Icon: Mic, zh: "普通人的声音", en: "Ordinary Voices", items: [
       { zh: "一位高中老师的来信", en: "Letter from a high-school teacher" },
       { zh: "一个小企业主的两年", en: "Two years of a small-business owner" },
       { zh: "留学生眼中的美国教会", en: "American churches through a student's eyes" },
@@ -44,9 +44,11 @@ function PublicPage() {
         lead={t("我们刻意避免精英主义，让普通人的真实经验成为重要的声音。", "We intentionally resist elitism — the real experience of ordinary people belongs at the center.")}
       />
       <section className="container-prose py-20 space-y-16">
-        {sections.map((s) => (
+        {sections.map((s) => {
+          const Icon = s.Icon;
+          return (
           <div key={s.en}>
-            <p className="eyebrow mb-3">{t(s.zh, s.en)} · <span className="italic">{t(s.en, s.zh)}</span></p>
+            <p className="eyebrow mb-3 flex items-center gap-2 text-accent"><Icon className="h-4 w-4" /> <span className="text-stone-warm">{t(s.zh, s.en)} · <span className="italic">{t(s.en, s.zh)}</span></span></p>
             <div className="grid md:grid-cols-3 gap-6">
               {s.items.map((it, i) => (
                 <article key={i} className="border-t-2 border-accent pt-5">
@@ -56,7 +58,7 @@ function PublicPage() {
               ))}
             </div>
           </div>
-        ))}
+        );})}
       </section>
     </SiteShell>
   );

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
 import journalImg from "@/assets/journal.jpg";
+import { BookOpenText, FileDown, Archive } from "lucide-react";
 
 export const Route = createFileRoute("/journal")({
   head: () => ({
@@ -38,8 +39,8 @@ function JournalPage() {
         <div className="md:col-span-5">
           <img src={journalImg} alt="" loading="lazy" width={1280} height={896} className="w-full aspect-[3/4] object-cover shadow-[0_30px_60px_-30px_rgba(45,36,24,0.35)]" />
           <div className="mt-6 flex gap-3">
-            <button className="bg-accent text-accent-foreground px-5 py-2.5 text-sm tracking-widest uppercase">{t("网页阅读","Read online")}</button>
-            <button className="border border-input px-5 py-2.5 text-sm tracking-widest uppercase">PDF</button>
+            <button className="inline-flex items-center gap-1.5 bg-accent text-accent-foreground px-5 py-2.5 text-sm tracking-widest uppercase"><BookOpenText className="h-4 w-4" /> {t("网页阅读","Read online")}</button>
+            <button className="inline-flex items-center gap-1.5 border border-input px-5 py-2.5 text-sm tracking-widest uppercase"><FileDown className="h-4 w-4" /> PDF</button>
           </div>
         </div>
         <div className="md:col-span-7">
@@ -68,7 +69,7 @@ function JournalPage() {
 
       <section className="bg-secondary/40 border-y border-border/70 py-20">
         <div className="container-prose">
-          <p className="eyebrow mb-3">Archive · 往期</p>
+          <p className="eyebrow mb-3 flex items-center gap-2"><Archive className="h-4 w-4 text-accent" /> Archive · 往期</p>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
             {["2026 Spring","2025 Winter","2025 Autumn","2025 Summer"].map((iss, i) => (
               <article key={iss} className="border border-border bg-card p-6">
