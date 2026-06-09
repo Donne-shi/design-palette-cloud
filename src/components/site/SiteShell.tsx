@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { Ornament } from "./Brand";
 
 export function SiteShell({ children }: { children: ReactNode }) {
   return (
@@ -19,7 +20,8 @@ export function PageHero({ eyebrow, titleZh, titleEn, lead }: { eyebrow?: string
         {eyebrow && <p className="eyebrow mb-4">{eyebrow}</p>}
         <h1 className="serif text-4xl md:text-6xl leading-[1.05] text-foreground max-w-3xl">{titleZh}</h1>
         <p className="serif italic text-xl md:text-2xl text-stone-warm mt-3">{titleEn}</p>
-        {lead && <p className="mt-8 max-w-2xl text-base md:text-lg text-foreground/80 leading-relaxed">{lead}</p>}
+        <Ornament className="mt-8" />
+        {lead && <p className="mt-6 max-w-2xl text-base md:text-lg text-foreground/80 leading-relaxed">{lead}</p>}
       </div>
     </section>
   );
