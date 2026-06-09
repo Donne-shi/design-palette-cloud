@@ -9,8 +9,56 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TheologyRouteImport } from './routes/theology'
+import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as NewsRouteImport } from './routes/news'
+import { Route as JournalRouteImport } from './routes/journal'
+import { Route as FaithPublicRouteImport } from './routes/faith-public'
+import { Route as CulturalExchangeRouteImport } from './routes/cultural-exchange'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TheologyRoute = TheologyRouteImport.update({
+  id: '/theology',
+  path: '/theology',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalRoute = JournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaithPublicRoute = FaithPublicRouteImport.update({
+  id: '/faith-public',
+  path: '/faith-public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CulturalExchangeRoute = CulturalExchangeRouteImport.update({
+  id: '/cultural-exchange',
+  path: '/cultural-exchange',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +67,144 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/cultural-exchange': typeof CulturalExchangeRoute
+  '/faith-public': typeof FaithPublicRoute
+  '/journal': typeof JournalRoute
+  '/news': typeof NewsRoute
+  '/resources': typeof ResourcesRoute
+  '/theology': typeof TheologyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/cultural-exchange': typeof CulturalExchangeRoute
+  '/faith-public': typeof FaithPublicRoute
+  '/journal': typeof JournalRoute
+  '/news': typeof NewsRoute
+  '/resources': typeof ResourcesRoute
+  '/theology': typeof TheologyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/contact': typeof ContactRoute
+  '/cultural-exchange': typeof CulturalExchangeRoute
+  '/faith-public': typeof FaithPublicRoute
+  '/journal': typeof JournalRoute
+  '/news': typeof NewsRoute
+  '/resources': typeof ResourcesRoute
+  '/theology': typeof TheologyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/cultural-exchange'
+    | '/faith-public'
+    | '/journal'
+    | '/news'
+    | '/resources'
+    | '/theology'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/cultural-exchange'
+    | '/faith-public'
+    | '/journal'
+    | '/news'
+    | '/resources'
+    | '/theology'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/cultural-exchange'
+    | '/faith-public'
+    | '/journal'
+    | '/news'
+    | '/resources'
+    | '/theology'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
+  ContactRoute: typeof ContactRoute
+  CulturalExchangeRoute: typeof CulturalExchangeRoute
+  FaithPublicRoute: typeof FaithPublicRoute
+  JournalRoute: typeof JournalRoute
+  NewsRoute: typeof NewsRoute
+  ResourcesRoute: typeof ResourcesRoute
+  TheologyRoute: typeof TheologyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/theology': {
+      id: '/theology'
+      path: '/theology'
+      fullPath: '/theology'
+      preLoaderRoute: typeof TheologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal': {
+      id: '/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof JournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faith-public': {
+      id: '/faith-public'
+      path: '/faith-public'
+      fullPath: '/faith-public'
+      preLoaderRoute: typeof FaithPublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cultural-exchange': {
+      id: '/cultural-exchange'
+      path: '/cultural-exchange'
+      fullPath: '/cultural-exchange'
+      preLoaderRoute: typeof CulturalExchangeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,7 +217,25 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
+  ContactRoute: ContactRoute,
+  CulturalExchangeRoute: CulturalExchangeRoute,
+  FaithPublicRoute: FaithPublicRoute,
+  JournalRoute: JournalRoute,
+  NewsRoute: NewsRoute,
+  ResourcesRoute: ResourcesRoute,
+  TheologyRoute: TheologyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
