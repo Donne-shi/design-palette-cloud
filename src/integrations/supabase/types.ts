@@ -14,6 +14,156 @@ export type Database = {
   }
   public: {
     Tables: {
+      articles: {
+        Row: {
+          author_id: string | null
+          body_en: string | null
+          body_zh: string | null
+          category: string
+          cover_url: string | null
+          created_at: string
+          excerpt_en: string | null
+          excerpt_zh: string | null
+          id: string
+          published_at: string | null
+          slug: string | null
+          status: string
+          title_en: string | null
+          title_zh: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          body_en?: string | null
+          body_zh?: string | null
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt_en?: string | null
+          excerpt_zh?: string | null
+          id?: string
+          published_at?: string | null
+          slug?: string | null
+          status?: string
+          title_en?: string | null
+          title_zh: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          body_en?: string | null
+          body_zh?: string | null
+          category?: string
+          cover_url?: string | null
+          created_at?: string
+          excerpt_en?: string | null
+          excerpt_zh?: string | null
+          id?: string
+          published_at?: string | null
+          slug?: string | null
+          status?: string
+          title_en?: string | null
+          title_zh?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          capacity: number | null
+          cover_url: string | null
+          created_at: string
+          description_en: string | null
+          description_zh: string | null
+          end_at: string | null
+          id: string
+          location: string | null
+          start_at: string
+          status: string
+          title_en: string | null
+          title_zh: string
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number | null
+          cover_url?: string | null
+          created_at?: string
+          description_en?: string | null
+          description_zh?: string | null
+          end_at?: string | null
+          id?: string
+          location?: string | null
+          start_at: string
+          status?: string
+          title_en?: string | null
+          title_zh: string
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number | null
+          cover_url?: string | null
+          created_at?: string
+          description_en?: string | null
+          description_zh?: string | null
+          end_at?: string | null
+          id?: string
+          location?: string | null
+          start_at?: string
+          status?: string
+          title_en?: string | null
+          title_zh?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      journal_issues: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          id: string
+          issue_number: number
+          pdf_url: string | null
+          published_at: string | null
+          status: string
+          summary_en: string | null
+          summary_zh: string | null
+          title_en: string | null
+          title_zh: string
+          updated_at: string
+          volume: number
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          issue_number: number
+          pdf_url?: string | null
+          published_at?: string | null
+          status?: string
+          summary_en?: string | null
+          summary_zh?: string | null
+          title_en?: string | null
+          title_zh: string
+          updated_at?: string
+          volume: number
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          id?: string
+          issue_number?: number
+          pdf_url?: string | null
+          published_at?: string | null
+          status?: string
+          summary_en?: string | null
+          summary_zh?: string | null
+          title_en?: string | null
+          title_zh?: string
+          updated_at?: string
+          volume?: number
+        }
+        Relationships: []
+      }
       subscribers: {
         Row: {
           created_at: string
