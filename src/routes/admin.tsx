@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tan
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
-import { LayoutDashboard, FileText, Calendar, BookOpen, Users, Mail, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, Calendar, BookOpen, Users, Mail, LogOut, Inbox, Settings } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin · MBI" }, { name: "robots", content: "noindex,nofollow" }] }),
@@ -14,8 +14,10 @@ const sidebar = [
   { to: "/admin/articles", label: "Articles", icon: FileText },
   { to: "/admin/events", label: "Events", icon: Calendar },
   { to: "/admin/journal", label: "Journal", icon: BookOpen },
+  { to: "/admin/messages", label: "Messages", icon: Inbox },
   { to: "/admin/subscribers", label: "Subscribers", icon: Mail },
   { to: "/admin/users", label: "Users & Roles", icon: Users },
+  { to: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 function AdminLayout() {

@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { FileUpload } from "@/components/admin/FileUpload";
 
 export const Route = createFileRoute("/admin/events")({ component: EventsAdmin });
 
@@ -25,14 +26,18 @@ function EventsAdmin() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Partial<Ev> | null>(null);
   const [saving, setSaving] = useState(false);
+  const [filter, setFilter] = useState<"all" | "upcoming" | "past">("all");
 
   const load = async () => {
     setLoading(true);
-    const { data, error } = await supabase.from("events").select("*").order("start_at", { ascending: false });
+    let q = supabase.from("events").select("*").order("start_at", { ascending: false });
+    if (filter === "upcoming") q = q.gte("start_at", new Date().toISOString());
+    if (filter === "past") q = q.lt("start_at", new Date().toISOString());
+    const { data, error } = await q;
     if (error) toast.error(error.message); else setRows((data as Ev[]) || []);
     setLoading(false);
   };
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); /* eslint-disable-next-line */ }, [filter]);
 
   const save = async () => {
     if (!editing?.title_zh || !editing?.start_at) { toast.error("标题与开始时间必填"); return; }
@@ -57,13 +62,23 @@ function EventsAdmin() {
 
   return (
     <div className="p-10">
-      <div className="flex items-end justify-between">
+      <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <p className="eyebrow mb-2">Admin</p>
           <h1 className="serif text-4xl">活动管理 · Events</h1>
           <p className="text-muted-foreground mt-2 text-sm">论坛、对话、讲座的排程与发布。</p>
         </div>
-        <Button onClick={() => setEditing(empty)} className="gap-2"><Plus className="h-4 w-4"/>新建活动</Button>
+        <div className="flex gap-2">
+          <Select value={filter} onValueChange={(v: any) => setFilter(v)}>
+            <SelectTrigger className="w-36"><SelectValue/></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">全部</SelectItem>
+              <SelectItem value="upcoming">即将到来</SelectItem>
+              <SelectItem value="past">已结束</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button onClick={() => setEditing(empty)} className="gap-2"><Plus className="h-4 w-4"/>新建活动</Button>
+        </div>
       </div>
 
       <div className="mt-8 border border-border bg-card">
@@ -111,7 +126,10 @@ function EventsAdmin() {
                 <div><Label>中文简介</Label><Textarea rows={4} value={editing.description_zh || ""} onChange={(e) => setEditing({ ...editing, description_zh: e.target.value })}/></div>
                 <div><Label>English Description</Label><Textarea rows={4} value={editing.description_en || ""} onChange={(e) => setEditing({ ...editing, description_en: e.target.value })}/></div>
               </div>
-              <div><Label>封面图 URL</Label><Input value={editing.cover_url || ""} onChange={(e) => setEditing({ ...editing, cover_url: e.target.value })}/></div>
+              <div>
+                <Label>封面图</Label>
+                <FileUpload value={editing.cover_url} onChange={(url) => setEditing({ ...editing, cover_url: url })} folder="events"/>
+              </div>
               <div>
                 <Label>状态</Label>
                 <Select value={editing.status} onValueChange={(v) => setEditing({ ...editing, status: v })}>
