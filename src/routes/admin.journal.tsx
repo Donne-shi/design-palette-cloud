@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { FileUpload } from "@/components/admin/FileUpload";
 
 export const Route = createFileRoute("/admin/journal")({ component: JournalAdmin });
 
@@ -105,8 +106,14 @@ function JournalAdmin() {
                 <div><Label>中文摘要</Label><Textarea rows={4} value={editing.summary_zh || ""} onChange={(e) => setEditing({ ...editing, summary_zh: e.target.value })}/></div>
                 <div><Label>English Summary</Label><Textarea rows={4} value={editing.summary_en || ""} onChange={(e) => setEditing({ ...editing, summary_en: e.target.value })}/></div>
               </div>
-              <div><Label>封面图 URL</Label><Input value={editing.cover_url || ""} onChange={(e) => setEditing({ ...editing, cover_url: e.target.value })}/></div>
-              <div><Label>PDF URL</Label><Input value={editing.pdf_url || ""} onChange={(e) => setEditing({ ...editing, pdf_url: e.target.value })}/></div>
+              <div>
+                <Label>封面图</Label>
+                <FileUpload value={editing.cover_url} onChange={(url) => setEditing({ ...editing, cover_url: url })} folder="journal"/>
+              </div>
+              <div>
+                <Label>PDF 文件</Label>
+                <FileUpload value={editing.pdf_url} onChange={(url) => setEditing({ ...editing, pdf_url: url })} folder="journal" accept="application/pdf" previewKind="file"/>
+              </div>
               <div>
                 <Label>状态</Label>
                 <Select value={editing.status} onValueChange={(v) => setEditing({ ...editing, status: v })}>
