@@ -64,6 +64,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "Multicultural Bridge Initiative" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "多元文化桥梁计划 · Multicultural Bridge Initiative" },
+      { name: "twitter:title", content: "多元文化桥梁计划 · Multicultural Bridge Initiative" },
+      { property: "og:description", content: "以福音连接文化，以真理回应时代，以恩典促进对话。A platform for Gospel-centered, cross-cultural dialogue and public engagement." },
+      { name: "twitter:description", content: "以福音连接文化，以真理回应时代，以恩典促进对话。A platform for Gospel-centered, cross-cultural dialogue and public engagement." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/51aee231-3779-4334-9f07-ab4b3392b4c8/id-preview-2818def8--e0a4d911-55f2-43f3-af79-84a4f0e79989.lovable.app-1781221144969.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/51aee231-3779-4334-9f07-ab4b3392b4c8/id-preview-2818def8--e0a4d911-55f2-43f3-af79-84a4f0e79989.lovable.app-1781221144969.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
