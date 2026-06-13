@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, Globe2, Heart, MessageSquareQuote, Mic, Newspaper, Users } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
+import { listPublishedArticles, listPublishedEvents, listPublishedIssues, type PublicArticle, type PublicEvent } from "@/lib/content.functions";
 import hero from "@/assets/hero.jpg";
 import newsImg from "@/assets/news.jpg";
 import theologyImg from "@/assets/theology.jpg";
@@ -20,11 +21,34 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: "/" }],
   }),
+  loader: async () => {
+    const [articles, events, issues] = await Promise.all([
+      listPublishedArticles(),
+      listPublishedEvents(),
+      listPublishedIssues(),
+    ]);
+    return {
+      articles: articles.slice(0, 3),
+      events: events.filter(e => !e.start_at || new Date(e.start_at) >= new Date()).slice(0, 3),
+      latestIssue: issues[0] ?? null,
+    };
+  },
+  errorComponent: ({ error }) => <div className="p-10 text-sm text-destructive">{error.message}</div>,
+  notFoundComponent: () => <div className="p-10">Not found.</div>,
   component: Home,
 });
 
+const NEWS_FALLBACK = [newsImg, dialogueImg, theologyImg];
+
+function fmtDate(s: string | null | undefined) {
+  if (!s) return "";
+  try { return new Date(s).toISOString().slice(0, 10).replace(/-/g, "."); } catch { return ""; }
+}
+
 function Home() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const { articles, events, latestIssue } = Route.useLoaderData();
+
   return (
     <SiteShell>
       {/* HERO */}
@@ -54,7 +78,7 @@ function Home() {
             <Link to="/journal" className="border border-foreground/30 text-foreground px-6 py-3 text-sm tracking-[0.18em] uppercase hover:border-accent hover:text-accent">
               {t("订阅电子期刊", "Subscribe to journal")}
             </Link>
-            <Link to="/cultural-exchange" className="px-6 py-3 text-sm tracking-[0.18em] uppercase text-foreground/70 hover:text-accent">
+            <Link to="/events" className="px-6 py-3 text-sm tracking-[0.18em] uppercase text-foreground/70 hover:text-accent">
               {t("参与活动", "Upcoming events")} →
             </Link>
           </div>
@@ -98,7 +122,7 @@ function Home() {
         </div>
       </section>
 
-      {/* NEWS */}
+      {/* NEWS — dynamic */}
       <section className="bg-secondary/40 border-y border-border/70">
         <div className="container-prose py-24">
           <div className="flex items-end justify-between mb-12">
@@ -110,22 +134,38 @@ function Home() {
               {t("查看全部", "View all")} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { img: newsImg, tag: t("美国基督教动态", "U.S. Church"), zh: "福音派现状：在两党政治之间的福音见证", en: "Evangelicalism today: gospel witness between two parties", date: "2026.05.28" },
-              { img: dialogueImg, tag: t("社会议题观察", "Society"), zh: "AI、青少年与心理健康：教会能做什么？", en: "AI, youth, and mental health: what can the church do?", date: "2026.05.22" },
-              { img: theologyImg, tag: t("国际基督教新闻", "Global"), zh: "全球宣教运动新动向：从北到南的转变", en: "Global mission today: a shift from north to south", date: "2026.05.15" },
-            ].map((a, i) => (
-              <article key={i} className="group">
-                <div className="aspect-[4/3] overflow-hidden bg-muted">
-                  <img src={a.img} alt="" loading="lazy" width={1280} height={896} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
-                </div>
-                <p className="eyebrow mt-5">{a.tag} · {a.date}</p>
-                <h3 className="serif text-xl mt-2 leading-snug">{t(a.zh, a.en)}</h3>
-                <p className="serif italic text-sm text-stone-warm mt-1">{t(a.en, a.zh)}</p>
-              </article>
-            ))}
-          </div>
+          {articles.length === 0 ? (
+            <p className="text-muted-foreground">{t("暂无文章，敬请期待。", "No articles yet. Stay tuned.")}</p>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-8">
+              {articles.map((a: PublicArticle, i: number) => {
+                const title = lang === "en" && a.title_en ? a.title_en : a.title_zh;
+                const subtitle = lang === "en" ? a.title_zh : (a.title_en ?? "");
+                return (
+                  <Link
+                    key={a.id}
+                    to="/news/$slug"
+                    params={{ slug: a.slug || a.id }}
+                    className="group block"
+                  >
+                    <div className="aspect-[4/3] overflow-hidden bg-muted">
+                      <img
+                        src={a.cover_url || NEWS_FALLBACK[i % NEWS_FALLBACK.length]}
+                        alt=""
+                        loading="lazy"
+                        width={1280}
+                        height={896}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      />
+                    </div>
+                    <p className="eyebrow mt-5">{a.category || "Article"} · {fmtDate(a.published_at || a.created_at)}</p>
+                    <h3 className="serif text-xl mt-2 leading-snug group-hover:text-accent">{title}</h3>
+                    {subtitle && <p className="serif italic text-sm text-stone-warm mt-1">{subtitle}</p>}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -145,19 +185,6 @@ function Home() {
                 "We invite theologians and pastors from different traditions to engage rigorously and graciously with today's key questions — Scripture, church and society, voices in conversation."
               )}
             </p>
-            <div className="mt-10 grid sm:grid-cols-3 gap-6 text-sm">
-              {[
-                { zh: "圣经解释", en: "Scripture", count: "24" },
-                { zh: "教会与社会", en: "Church & Society", count: "18" },
-                { zh: "神学家观点", en: "Voices", count: "31" },
-              ].map((c) => (
-                <div key={c.en} className="border-t border-border pt-4">
-                  <p className="serif text-3xl">{c.count}</p>
-                  <p className="mt-1">{t(c.zh, c.en)}</p>
-                  <p className="italic text-stone-warm text-xs">{t(c.en, c.zh)}</p>
-                </div>
-              ))}
-            </div>
             <Link to="/theology" className="inline-flex items-center gap-2 mt-10 text-sm uppercase tracking-widest text-accent">
               {t("进入神学争鸣", "Enter the forum")} <ArrowRight className="h-4 w-4" />
             </Link>
@@ -165,7 +192,7 @@ function Home() {
         </div>
       </section>
 
-      {/* CULTURAL EXCHANGE */}
+      {/* EVENTS — dynamic */}
       <section className="bg-primary text-primary-foreground">
         <div className="container-prose py-24">
           <div className="flex items-end justify-between mb-12">
@@ -173,29 +200,40 @@ function Home() {
               <p className="eyebrow mb-3 text-primary-foreground/60">Cultural Exchange</p>
               <h2 className="serif text-4xl md:text-5xl">{t("文化交流活动", "Where conversations happen")}</h2>
             </div>
-            <Link to="/cultural-exchange" className="hidden sm:inline-flex text-sm uppercase tracking-widest items-center gap-1.5 text-primary-foreground/80 hover:text-accent">
+            <Link to="/events" className="hidden sm:inline-flex text-sm uppercase tracking-widest items-center gap-1.5 text-primary-foreground/80 hover:text-accent">
               {t("全部活动", "All events")} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { zh: "中美文化交流论坛", en: "U.S.–China Cultural Forum", date: "2026.07.12", place: "Boston, MA", status: t("报名中", "Open") },
-              { zh: "青年领袖暑期培训", en: "Youth Leadership Summer", date: "2026.08.04", place: "Online", status: t("即将开始", "Soon") },
-              { zh: "国际学生秋季交流", en: "Intl. Students Autumn Meet", date: "2026.09.20", place: "Pasadena, CA", status: t("报名中", "Open") },
-            ].map((e, i) => (
-              <article key={i} className="border border-primary-foreground/15 p-6 hover:border-accent transition-colors">
-                <div className="aspect-[16/10] mb-5 overflow-hidden bg-primary-foreground/5">
-                  <img src={eventImg} alt="" loading="lazy" width={1280} height={896} className="h-full w-full object-cover opacity-90" />
-                </div>
-                <p className="text-xs uppercase tracking-widest text-accent">{e.status}</p>
-                <h3 className="serif text-xl mt-2">{t(e.zh, e.en)}</h3>
-                <p className="serif italic text-sm text-primary-foreground/60 mt-1">{t(e.en, e.zh)}</p>
-                <div className="mt-5 flex items-center justify-between text-sm text-primary-foreground/70">
-                  <span>{e.date}</span><span>{e.place}</span>
-                </div>
-              </article>
-            ))}
-          </div>
+          {events.length === 0 ? (
+            <p className="text-primary-foreground/70">{t("暂无活动安排。", "No upcoming events.")}</p>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-6">
+              {events.map((e: PublicEvent) => {
+                const title = lang === "en" && e.title_en ? e.title_en : e.title_zh;
+                const subtitle = lang === "en" ? e.title_zh : (e.title_en ?? "");
+                return (
+                  <Link
+                    key={e.id}
+                    to="/events/$id"
+                    params={{ id: e.id }}
+                    className="block border border-primary-foreground/15 p-6 hover:border-accent transition-colors"
+                  >
+                    <div className="aspect-[16/10] mb-5 overflow-hidden bg-primary-foreground/5">
+                      <img src={e.cover_url || eventImg} alt="" loading="lazy" width={1280} height={896} className="h-full w-full object-cover opacity-90" />
+                    </div>
+                    <p className="text-xs uppercase tracking-widest text-accent">
+                      {fmtDate(e.start_at)}
+                    </p>
+                    <h3 className="serif text-xl mt-2">{title}</h3>
+                    {subtitle && <p className="serif italic text-sm text-primary-foreground/60 mt-1">{subtitle}</p>}
+                    {e.location && (
+                      <div className="mt-5 text-sm text-primary-foreground/70">{e.location}</div>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -223,26 +261,49 @@ function Home() {
         </div>
       </section>
 
-      {/* JOURNAL */}
+      {/* JOURNAL — dynamic latest issue */}
       <section className="bg-secondary/40 border-y border-border/70">
         <div className="container-prose py-24 grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <img src={journalImg} alt="" loading="lazy" width={1280} height={896} className="w-full aspect-[4/5] object-cover shadow-[0_30px_60px_-30px_rgba(45,36,24,0.35)]" />
+            <img
+              src={latestIssue?.cover_url || journalImg}
+              alt=""
+              loading="lazy"
+              width={1280}
+              height={896}
+              className="w-full aspect-[4/5] object-cover shadow-[0_30px_60px_-30px_rgba(45,36,24,0.35)]"
+            />
           </div>
           <div>
-            <p className="eyebrow mb-3">Bridge Quarterly · 桥梁季刊</p>
-            <h2 className="serif text-4xl md:text-5xl leading-tight">
-              {t("第一期：在分裂的时代，重新学习对话", "Issue 01: Re-learning dialogue in a divided age")}
-            </h2>
-            <p className="mt-6 text-foreground/80 leading-relaxed">
-              {t(
-                "本期收录五篇专题文章，从神学、社会观察、文化评论到事工案例，邀请读者一同思考——在一个易于分裂的时代，福音如何重塑公共生活。",
-                "Five long-form essays — from theology and social observation to cultural critique and ministry case studies — invite readers to consider how the Gospel reshapes public life."
-              )}
+            <p className="eyebrow mb-3">
+              Bridge Quarterly · 桥梁季刊
+              {latestIssue && ` · Vol. ${latestIssue.volume} No. ${latestIssue.issue_number}`}
             </p>
+            <h2 className="serif text-4xl md:text-5xl leading-tight">
+              {latestIssue
+                ? (lang === "en" && latestIssue.title_en ? latestIssue.title_en : latestIssue.title_zh)
+                : t("电子期刊即将上线", "Journal coming soon")}
+            </h2>
+            {latestIssue && (
+              <p className="mt-6 text-foreground/80 leading-relaxed">
+                {lang === "en" && latestIssue.summary_en ? latestIssue.summary_en : (latestIssue.summary_zh || "")}
+              </p>
+            )}
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/journal" className="bg-accent text-accent-foreground px-6 py-3 text-sm tracking-widest uppercase">{t("阅读本期", "Read this issue")}</Link>
-              <Link to="/journal" className="border border-foreground/30 px-6 py-3 text-sm tracking-widest uppercase">PDF</Link>
+              {latestIssue ? (
+                <>
+                  <Link to="/journal/$id" params={{ id: latestIssue.id }} className="bg-accent text-accent-foreground px-6 py-3 text-sm tracking-widest uppercase">
+                    {t("阅读本期", "Read this issue")}
+                  </Link>
+                  {latestIssue.pdf_url && (
+                    <a href={latestIssue.pdf_url} target="_blank" rel="noopener" className="border border-foreground/30 px-6 py-3 text-sm tracking-widest uppercase">PDF</a>
+                  )}
+                </>
+              ) : (
+                <Link to="/journal" className="border border-foreground/30 px-6 py-3 text-sm tracking-widest uppercase">
+                  {t("查看所有期次", "Browse issues")}
+                </Link>
+              )}
             </div>
           </div>
         </div>
