@@ -15,6 +15,7 @@ import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as FaithPublicRouteImport } from './routes/faith-public'
+import { Route as EventsRouteImport } from './routes/events'
 import { Route as CulturalExchangeRouteImport } from './routes/cultural-exchange'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -22,6 +23,9 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as NewsSlugRouteImport } from './routes/news.$slug'
+import { Route as JournalIdRouteImport } from './routes/journal.$id'
+import { Route as EventsIdRouteImport } from './routes/events.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
@@ -60,6 +64,11 @@ const FaithPublicRoute = FaithPublicRouteImport.update({
   path: '/faith-public',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EventsRoute = EventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CulturalExchangeRoute = CulturalExchangeRouteImport.update({
   id: '/cultural-exchange',
   path: '/cultural-exchange',
@@ -94,6 +103,21 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
+} as any)
+const NewsSlugRoute = NewsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => NewsRoute,
+} as any)
+const JournalIdRoute = JournalIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => JournalRoute,
+} as any)
+const EventsIdRoute = EventsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => EventsRoute,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
@@ -138,9 +162,10 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/cultural-exchange': typeof CulturalExchangeRoute
+  '/events': typeof EventsRouteWithChildren
   '/faith-public': typeof FaithPublicRoute
-  '/journal': typeof JournalRoute
-  '/news': typeof NewsRoute
+  '/journal': typeof JournalRouteWithChildren
+  '/news': typeof NewsRouteWithChildren
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/theology': typeof TheologyRoute
@@ -151,6 +176,9 @@ export interface FileRoutesByFullPath {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/users': typeof AdminUsersRoute
+  '/events/$id': typeof EventsIdRoute
+  '/journal/$id': typeof JournalIdRoute
+  '/news/$slug': typeof NewsSlugRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -159,9 +187,10 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/cultural-exchange': typeof CulturalExchangeRoute
+  '/events': typeof EventsRouteWithChildren
   '/faith-public': typeof FaithPublicRoute
-  '/journal': typeof JournalRoute
-  '/news': typeof NewsRoute
+  '/journal': typeof JournalRouteWithChildren
+  '/news': typeof NewsRouteWithChildren
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/theology': typeof TheologyRoute
@@ -172,6 +201,9 @@ export interface FileRoutesByTo {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/users': typeof AdminUsersRoute
+  '/events/$id': typeof EventsIdRoute
+  '/journal/$id': typeof JournalIdRoute
+  '/news/$slug': typeof NewsSlugRoute
   '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
@@ -182,9 +214,10 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/cultural-exchange': typeof CulturalExchangeRoute
+  '/events': typeof EventsRouteWithChildren
   '/faith-public': typeof FaithPublicRoute
-  '/journal': typeof JournalRoute
-  '/news': typeof NewsRoute
+  '/journal': typeof JournalRouteWithChildren
+  '/news': typeof NewsRouteWithChildren
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/theology': typeof TheologyRoute
@@ -195,6 +228,9 @@ export interface FileRoutesById {
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/users': typeof AdminUsersRoute
+  '/events/$id': typeof EventsIdRoute
+  '/journal/$id': typeof JournalIdRoute
+  '/news/$slug': typeof NewsSlugRoute
   '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -206,6 +242,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/cultural-exchange'
+    | '/events'
     | '/faith-public'
     | '/journal'
     | '/news'
@@ -219,6 +256,9 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscribers'
     | '/admin/users'
+    | '/events/$id'
+    | '/journal/$id'
+    | '/news/$slug'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -227,6 +267,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/cultural-exchange'
+    | '/events'
     | '/faith-public'
     | '/journal'
     | '/news'
@@ -240,6 +281,9 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscribers'
     | '/admin/users'
+    | '/events/$id'
+    | '/journal/$id'
+    | '/news/$slug'
     | '/admin'
   id:
     | '__root__'
@@ -249,6 +293,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/contact'
     | '/cultural-exchange'
+    | '/events'
     | '/faith-public'
     | '/journal'
     | '/news'
@@ -262,6 +307,9 @@ export interface FileRouteTypes {
     | '/admin/settings'
     | '/admin/subscribers'
     | '/admin/users'
+    | '/events/$id'
+    | '/journal/$id'
+    | '/news/$slug'
     | '/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -272,9 +320,10 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   CulturalExchangeRoute: typeof CulturalExchangeRoute
+  EventsRoute: typeof EventsRouteWithChildren
   FaithPublicRoute: typeof FaithPublicRoute
-  JournalRoute: typeof JournalRoute
-  NewsRoute: typeof NewsRoute
+  JournalRoute: typeof JournalRouteWithChildren
+  NewsRoute: typeof NewsRouteWithChildren
   ResourcesRoute: typeof ResourcesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TheologyRoute: typeof TheologyRoute
@@ -322,6 +371,13 @@ declare module '@tanstack/react-router' {
       path: '/faith-public'
       fullPath: '/faith-public'
       preLoaderRoute: typeof FaithPublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events': {
+      id: '/events'
+      path: '/events'
+      fullPath: '/events'
+      preLoaderRoute: typeof EventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cultural-exchange': {
@@ -372,6 +428,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/news/$slug': {
+      id: '/news/$slug'
+      path: '/$slug'
+      fullPath: '/news/$slug'
+      preLoaderRoute: typeof NewsSlugRouteImport
+      parentRoute: typeof NewsRoute
+    }
+    '/journal/$id': {
+      id: '/journal/$id'
+      path: '/$id'
+      fullPath: '/journal/$id'
+      preLoaderRoute: typeof JournalIdRouteImport
+      parentRoute: typeof JournalRoute
+    }
+    '/events/$id': {
+      id: '/events/$id'
+      path: '/$id'
+      fullPath: '/events/$id'
+      preLoaderRoute: typeof EventsIdRouteImport
+      parentRoute: typeof EventsRoute
     }
     '/admin/users': {
       id: '/admin/users'
@@ -449,6 +526,38 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface EventsRouteChildren {
+  EventsIdRoute: typeof EventsIdRoute
+}
+
+const EventsRouteChildren: EventsRouteChildren = {
+  EventsIdRoute: EventsIdRoute,
+}
+
+const EventsRouteWithChildren =
+  EventsRoute._addFileChildren(EventsRouteChildren)
+
+interface JournalRouteChildren {
+  JournalIdRoute: typeof JournalIdRoute
+}
+
+const JournalRouteChildren: JournalRouteChildren = {
+  JournalIdRoute: JournalIdRoute,
+}
+
+const JournalRouteWithChildren =
+  JournalRoute._addFileChildren(JournalRouteChildren)
+
+interface NewsRouteChildren {
+  NewsSlugRoute: typeof NewsSlugRoute
+}
+
+const NewsRouteChildren: NewsRouteChildren = {
+  NewsSlugRoute: NewsSlugRoute,
+}
+
+const NewsRouteWithChildren = NewsRoute._addFileChildren(NewsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -456,9 +565,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   CulturalExchangeRoute: CulturalExchangeRoute,
+  EventsRoute: EventsRouteWithChildren,
   FaithPublicRoute: FaithPublicRoute,
-  JournalRoute: JournalRoute,
-  NewsRoute: NewsRoute,
+  JournalRoute: JournalRouteWithChildren,
+  NewsRoute: NewsRouteWithChildren,
   ResourcesRoute: ResourcesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TheologyRoute: TheologyRoute,
@@ -466,13 +576,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
