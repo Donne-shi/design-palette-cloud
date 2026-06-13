@@ -3,6 +3,7 @@ import { SiteShell } from "@/components/site/SiteShell";
 import { getArticleBySlug, type PublicArticle } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
 import { CalendarDays, Tag, ArrowLeft } from "lucide-react";
+import { CommentsSection } from "@/components/site/Comments";
 
 const SITE = "https://bridgeaway.org";
 
@@ -80,6 +81,7 @@ function ArticleDetail() {
         <div className="prose-content mt-10 serif text-lg leading-relaxed text-foreground/85 whitespace-pre-wrap">
           {body || <p className="text-muted-foreground italic">{t("正文待编辑。", "Body coming soon.")}</p>}
         </div>
+        <CommentsSection articleId={a.id} />
       </article>
     </SiteShell>
   );

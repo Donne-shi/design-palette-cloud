@@ -3,6 +3,7 @@ import { SiteShell } from "@/components/site/SiteShell";
 import { getEventById, type PublicEvent } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
 import { ArrowLeft, CalendarDays, MapPin, Users } from "lucide-react";
+import { RegistrationPanel } from "@/components/site/RegistrationPanel";
 
 const SITE = "https://bridgeaway.org";
 
@@ -57,22 +58,27 @@ function EventDetail() {
 
   return (
     <SiteShell>
-      <article className="container-prose py-16 md:py-24 max-w-3xl">
-        <Link to="/events" className="inline-flex items-center gap-1 text-xs uppercase tracking-widest text-stone-warm hover:text-accent">
-          <ArrowLeft className="h-3 w-3" /> {t("所有活动", "All events")}
-        </Link>
-        <h1 className="serif text-4xl md:text-5xl mt-6 leading-tight">{title}</h1>
+      <article className="container-prose py-16 md:py-24 grid md:grid-cols-12 gap-10">
+        <div className="md:col-span-8">
+          <Link to="/events" className="inline-flex items-center gap-1 text-xs uppercase tracking-widest text-stone-warm hover:text-accent">
+            <ArrowLeft className="h-3 w-3" /> {t("所有活动", "All events")}
+          </Link>
+          <h1 className="serif text-4xl md:text-5xl mt-6 leading-tight">{title}</h1>
 
-        <ul className="mt-6 space-y-2 text-sm text-foreground/80">
-          <li className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-accent" />{new Date(e.start_at).toLocaleString()}{e.end_at && ` — ${new Date(e.end_at).toLocaleString()}`}</li>
-          {e.location && <li className="inline-flex items-center gap-2"><MapPin className="h-4 w-4 text-accent" />{e.location}</li>}
-          {e.capacity && <li className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-accent" />{t(`名额 ${e.capacity}`, `Capacity ${e.capacity}`)}</li>}
-        </ul>
+          <ul className="mt-6 space-y-2 text-sm text-foreground/80">
+            <li className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-accent" />{new Date(e.start_at).toLocaleString()}{e.end_at && ` — ${new Date(e.end_at).toLocaleString()}`}</li>
+            {e.location && <li className="inline-flex items-center gap-2"><MapPin className="h-4 w-4 text-accent" />{e.location}</li>}
+            {e.capacity && <li className="inline-flex items-center gap-2"><Users className="h-4 w-4 text-accent" />{t(`名额 ${e.capacity}`, `Capacity ${e.capacity}`)}</li>}
+          </ul>
 
-        {e.cover_url && <img src={e.cover_url} alt="" className="mt-10 w-full aspect-[16/9] object-cover" />}
+          {e.cover_url && <img src={e.cover_url} alt="" className="mt-10 w-full aspect-[16/9] object-cover" />}
 
-        <div className="mt-10 serif text-lg leading-relaxed text-foreground/85 whitespace-pre-wrap">
-          {desc || <p className="text-muted-foreground italic">{t("详细介绍待发布。", "Details coming soon.")}</p>}
+          <div className="mt-10 serif text-lg leading-relaxed text-foreground/85 whitespace-pre-wrap">
+            {desc || <p className="text-muted-foreground italic">{t("详细介绍待发布。", "Details coming soon.")}</p>}
+          </div>
+        </div>
+        <div className="md:col-span-4">
+          <RegistrationPanel eventId={e.id} capacity={e.capacity} />
         </div>
       </article>
     </SiteShell>
