@@ -8,6 +8,7 @@ const nav = [
   { to: "/", zh: "首页", en: "Home" },
   { to: "/about", zh: "关于我们", en: "About" },
   { to: "/news", zh: "新闻与评论", en: "News" },
+  { to: "/events", zh: "活动", en: "Events" },
   { to: "/theology", zh: "神学争鸣", en: "Theology" },
   { to: "/cultural-exchange", zh: "文化交流", en: "Exchange" },
   { to: "/faith-public", zh: "公共议题", en: "Public Life" },
