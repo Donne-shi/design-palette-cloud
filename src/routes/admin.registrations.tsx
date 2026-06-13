@@ -123,8 +123,8 @@ function AdminRegistrations() {
                   <td className="p-4 text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</td>
                   <td className="p-4">
                     <div className="flex gap-1">
-                      {r.status !== "confirmed" && <Button size="sm" variant="outline" onClick={() => confirm(r, "confirmed")}>确认</Button>}
-                      {r.status !== "waitlist" && <Button size="sm" variant="ghost" onClick={() => confirm(r, "waitlist")}>候补</Button>}
+                      {r.status !== "confirmed" && <Button size="sm" variant="outline" onClick={() => setStatus(r, "confirmed")}>确认</Button>}
+                      {r.status !== "waitlist" && <Button size="sm" variant="ghost" onClick={() => setStatus(r, "waitlist")}>候补</Button>}
                       <Button size="icon" variant="ghost" onClick={() => remove(r.id)}><Trash2 className="h-4 w-4 text-destructive"/></Button>
                     </div>
                   </td>
