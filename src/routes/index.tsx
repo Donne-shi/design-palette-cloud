@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, Globe2, Heart, MessageSquareQuote, Mic, Newspaper, Users } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
-import { listPublishedArticles, listPublishedEvents, listPublishedIssues } from "@/lib/content.functions";
+import { listPublishedArticles, listPublishedEvents, listPublishedIssues, type PublicArticle, type PublicEvent } from "@/lib/content.functions";
 import hero from "@/assets/hero.jpg";
 import newsImg from "@/assets/news.jpg";
 import theologyImg from "@/assets/theology.jpg";
@@ -138,7 +138,7 @@ function Home() {
             <p className="text-muted-foreground">{t("暂无文章，敬请期待。", "No articles yet. Stay tuned.")}</p>
           ) : (
             <div className="grid md:grid-cols-3 gap-8">
-              {articles.map((a, i) => {
+              {articles.map((a: PublicArticle, i: number) => {
                 const title = lang === "en" && a.title_en ? a.title_en : a.title_zh;
                 const subtitle = lang === "en" ? a.title_zh : (a.title_en ?? "");
                 return (
@@ -208,7 +208,7 @@ function Home() {
             <p className="text-primary-foreground/70">{t("暂无活动安排。", "No upcoming events.")}</p>
           ) : (
             <div className="grid md:grid-cols-3 gap-6">
-              {events.map((e) => {
+              {events.map((e: PublicEvent) => {
                 const title = lang === "en" && e.title_en ? e.title_en : e.title_zh;
                 const subtitle = lang === "en" ? e.title_zh : (e.title_en ?? "");
                 return (
