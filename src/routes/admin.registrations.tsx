@@ -39,14 +39,14 @@ function AdminRegistrations() {
     })();
   }, [selected]);
 
-  const confirm = async (r: Reg, next: string) => {
+  const setStatus = async (r: Reg, next: string) => {
     const { error } = await supabase.from("event_registrations").update({ status: next }).eq("id", r.id);
     if (error) return toast.error(error.message);
     setRegs(regs.map(x => x.id === r.id ? { ...x, status: next } : x));
   };
 
   const remove = async (id: string) => {
-    if (!confirm("删除该报名？")) return;
+    if (!window.confirm("删除该报名？")) return;
     const { error } = await supabase.from("event_registrations").delete().eq("id", id);
     if (error) return toast.error(error.message);
     setRegs(regs.filter(r => r.id !== id));

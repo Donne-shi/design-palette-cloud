@@ -29,9 +29,11 @@ import { Route as EventsIdRouteImport } from './routes/events.$id'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminRegistrationsRouteImport } from './routes/admin.registrations'
 import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
 import { Route as AdminJournalRouteImport } from './routes/admin.journal'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
+import { Route as AdminCommentsRouteImport } from './routes/admin.comments'
 import { Route as AdminArticlesRouteImport } from './routes/admin.articles'
 
 const TheologyRoute = TheologyRouteImport.update({
@@ -134,6 +136,11 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminRegistrationsRoute = AdminRegistrationsRouteImport.update({
+  id: '/registrations',
+  path: '/registrations',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminMessagesRoute = AdminMessagesRouteImport.update({
   id: '/messages',
   path: '/messages',
@@ -147,6 +154,11 @@ const AdminJournalRoute = AdminJournalRouteImport.update({
 const AdminEventsRoute = AdminEventsRouteImport.update({
   id: '/events',
   path: '/events',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCommentsRoute = AdminCommentsRouteImport.update({
+  id: '/comments',
+  path: '/comments',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminArticlesRoute = AdminArticlesRouteImport.update({
@@ -170,9 +182,11 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/theology': typeof TheologyRoute
   '/admin/articles': typeof AdminArticlesRoute
+  '/admin/comments': typeof AdminCommentsRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/journal': typeof AdminJournalRoute
   '/admin/messages': typeof AdminMessagesRoute
+  '/admin/registrations': typeof AdminRegistrationsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/users': typeof AdminUsersRoute
@@ -195,9 +209,11 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/theology': typeof TheologyRoute
   '/admin/articles': typeof AdminArticlesRoute
+  '/admin/comments': typeof AdminCommentsRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/journal': typeof AdminJournalRoute
   '/admin/messages': typeof AdminMessagesRoute
+  '/admin/registrations': typeof AdminRegistrationsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/users': typeof AdminUsersRoute
@@ -222,9 +238,11 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/theology': typeof TheologyRoute
   '/admin/articles': typeof AdminArticlesRoute
+  '/admin/comments': typeof AdminCommentsRoute
   '/admin/events': typeof AdminEventsRoute
   '/admin/journal': typeof AdminJournalRoute
   '/admin/messages': typeof AdminMessagesRoute
+  '/admin/registrations': typeof AdminRegistrationsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
   '/admin/users': typeof AdminUsersRoute
@@ -250,9 +268,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/theology'
     | '/admin/articles'
+    | '/admin/comments'
     | '/admin/events'
     | '/admin/journal'
     | '/admin/messages'
+    | '/admin/registrations'
     | '/admin/settings'
     | '/admin/subscribers'
     | '/admin/users'
@@ -275,9 +295,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/theology'
     | '/admin/articles'
+    | '/admin/comments'
     | '/admin/events'
     | '/admin/journal'
     | '/admin/messages'
+    | '/admin/registrations'
     | '/admin/settings'
     | '/admin/subscribers'
     | '/admin/users'
@@ -301,9 +323,11 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/theology'
     | '/admin/articles'
+    | '/admin/comments'
     | '/admin/events'
     | '/admin/journal'
     | '/admin/messages'
+    | '/admin/registrations'
     | '/admin/settings'
     | '/admin/subscribers'
     | '/admin/users'
@@ -471,6 +495,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/registrations': {
+      id: '/admin/registrations'
+      path: '/registrations'
+      fullPath: '/admin/registrations'
+      preLoaderRoute: typeof AdminRegistrationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/messages': {
       id: '/admin/messages'
       path: '/messages'
@@ -492,6 +523,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEventsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/comments': {
+      id: '/admin/comments'
+      path: '/comments'
+      fullPath: '/admin/comments'
+      preLoaderRoute: typeof AdminCommentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/articles': {
       id: '/admin/articles'
       path: '/articles'
@@ -504,9 +542,11 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminArticlesRoute: typeof AdminArticlesRoute
+  AdminCommentsRoute: typeof AdminCommentsRoute
   AdminEventsRoute: typeof AdminEventsRoute
   AdminJournalRoute: typeof AdminJournalRoute
   AdminMessagesRoute: typeof AdminMessagesRoute
+  AdminRegistrationsRoute: typeof AdminRegistrationsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -515,9 +555,11 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminArticlesRoute: AdminArticlesRoute,
+  AdminCommentsRoute: AdminCommentsRoute,
   AdminEventsRoute: AdminEventsRoute,
   AdminJournalRoute: AdminJournalRoute,
   AdminMessagesRoute: AdminMessagesRoute,
+  AdminRegistrationsRoute: AdminRegistrationsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
   AdminUsersRoute: AdminUsersRoute,
