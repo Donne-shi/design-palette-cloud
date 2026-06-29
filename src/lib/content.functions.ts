@@ -68,12 +68,11 @@ export const getArticleBySlug = createServerFn({ method: "GET" })
   .inputValidator((d: unknown) => SlugSchema.parse(d))
   .handler(async ({ data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: row, error } = await supabaseAdmin
-      .from("articles")
-      .select(ARTICLE_COLS)
-      .eq("status", "published")
-      .or(`slug.eq.${data.slug},id.eq.${data.slug}`)
-      .maybeSingle();
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(data.slug);
+    const base = supabaseAdmin.from("articles").select(ARTICLE_COLS).eq("status", "published");
+    const { data: row, error } = await (isUuid
+      ? base.eq("id", data.slug).maybeSingle()
+      : base.eq("slug", data.slug).maybeSingle());
     if (error) throw new Error(error.message);
     return (row as PublicArticle | null) ?? null;
   });
