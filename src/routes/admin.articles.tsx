@@ -44,6 +44,35 @@ function ArticlesAdmin() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Partial<Article> | null>(null);
   const [saving, setSaving] = useState(false);
+  const [translating, setTranslating] = useState(false);
+
+  const autoTranslate = async () => {
+    if (!editing) return;
+    const title = (editing.title_en || "").trim();
+    if (!title) { toast.error("请先填写 English Title"); return; }
+    setTranslating(true);
+    try {
+      const { zh, es } = await translateEnglishToZhEs([
+        editing.title_en || "",
+        editing.excerpt_en || "",
+        editing.body_en || "",
+      ]);
+      setEditing({
+        ...editing,
+        title_zh: editing.title_zh || zh[0],
+        title_es: editing.title_es || es[0],
+        excerpt_zh: editing.excerpt_zh || zh[1],
+        excerpt_es: editing.excerpt_es || es[1],
+        body_zh: editing.body_zh || zh[2],
+        body_es: editing.body_es || es[2],
+      });
+      toast.success("已生成中文与西班牙语翻译，请审阅后保存");
+    } catch (e: any) {
+      toast.error(e?.message || "翻译失败");
+    } finally {
+      setTranslating(false);
+    }
+  };
 
   const [q, setQ] = useState("");
   const [category, setCategory] = useState<string>("all");
