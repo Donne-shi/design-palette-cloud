@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
-import { Mail, MapPin, Send } from "lucide-react";
+import { Mail, Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -65,17 +65,20 @@ function ContactPage() {
       <section className="container-prose py-20 grid md:grid-cols-12 gap-12">
         <div className="md:col-span-5 space-y-8">
           <div>
-            <p className="eyebrow mb-2">Email</p>
-            <p className="serif text-xl flex items-center gap-2"><Mail className="h-4 w-4 text-accent" /> hello@bridgeaway.org</p>
+            <p className="eyebrow mb-2">Email · 投稿 / 联系</p>
+            <a href="mailto:INFO.BRIDGEAWAY@GMAIL.COM" className="serif text-xl flex items-center gap-2 hover:text-accent break-all">
+              <Mail className="h-4 w-4 text-accent shrink-0" /> INFO.BRIDGEAWAY@GMAIL.COM
+            </a>
+            <p className="text-sm text-muted-foreground mt-2">
+              {t("投稿、合作、媒体咨询请使用此邮箱，我们会在 1–3 个工作日内回复。", "For submissions, partnerships and media inquiries — we reply within 1–3 business days.")}
+            </p>
           </div>
           <div>
-            <p className="eyebrow mb-2">Editorial · 投稿</p>
-            <p className="serif text-xl flex items-center gap-2"><Mail className="h-4 w-4 text-accent" /> editor@bridgeaway.org</p>
-          </div>
-          <div>
-            <p className="eyebrow mb-2">Office · 办公地址</p>
-            <p className="serif text-xl flex items-center gap-2"><MapPin className="h-4 w-4 text-accent" /> Pasadena, California, USA</p>
-            <p className="text-sm text-muted-foreground mt-1">{t("（地址将在正式上线时公布）", "(Full address published at launch.)")}</p>
+            <p className="eyebrow mb-2">{t("办公方式", "How we work")}</p>
+            <p className="serif text-lg">{t("远程协作 · Remote-first", "Remote-first")}</p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {t("我们是一个分布式的网络团队，目前以线上方式开展工作。", "We are a distributed network team, currently operating online.")}
+            </p>
           </div>
         </div>
         <form onSubmit={submit} className="md:col-span-7 space-y-5">

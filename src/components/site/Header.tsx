@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Menu, X, Globe } from "lucide-react";
-import { useLang } from "@/lib/i18n";
-import { BridgeMark } from "./Brand";
+import { useEffect, useRef, useState } from "react";
+import { Menu, X, Globe, ChevronDown } from "lucide-react";
+import { useLang, type Lang } from "@/lib/i18n";
+import logoAsset from "@/assets/mbi-logo.png.asset.json";
 
 const nav = [
   { to: "/", zh: "首页", en: "Home" },
@@ -17,19 +17,33 @@ const nav = [
   { to: "/contact", zh: "联系我们", en: "Contact" },
 ] as const;
 
+const LANGS: { code: Lang; label: string }[] = [
+  { code: "en", label: "EN" },
+  { code: "zh", label: "中文" },
+  { code: "es", label: "ES" },
+];
+
 export function Header() {
   const { lang, setLang, t } = useLang();
   const [open, setOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
       <div className="container-prose flex items-center justify-between h-16 lg:h-20">
         <Link to="/" className="flex items-center gap-3 group">
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-sm bg-accent/10 text-accent ring-1 ring-accent/30 group-hover:bg-accent/15 transition-colors">
-            <BridgeMark className="h-6 w-6" />
-          </span>
-          <span className="leading-tight">
-            <span className="block font-serif text-base lg:text-lg text-foreground">{t("多元文化桥梁计划", "Multicultural Bridge")}</span>
+          <img src={logoAsset.url} alt="Multicultural Bridge Initiative" width={48} height={48} className="h-10 w-auto lg:h-12" />
+          <span className="leading-tight hidden sm:block">
+            <span className="block font-serif text-base lg:text-lg text-foreground">{t("多元文化桥梁计划", "Multicultural Bridge Initiative")}</span>
             <span className="block text-[10px] tracking-[0.2em] uppercase text-stone-warm">MBI · Building Bridges</span>
           </span>
         </Link>
@@ -49,14 +63,30 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setLang(lang === "zh" ? "en" : "zh")}
-            className="hidden sm:flex items-center gap-1.5 text-xs tracking-widest uppercase text-stone-warm hover:text-accent transition-colors"
-            aria-label="Toggle language"
-          >
-            <Globe className="h-3.5 w-3.5" />
-            {lang === "zh" ? "EN" : "中"}
-          </button>
+          <div ref={langRef} className="relative">
+            <button
+              onClick={() => setLangOpen((v) => !v)}
+              className="flex items-center gap-1.5 text-xs tracking-widest uppercase text-stone-warm hover:text-accent transition-colors px-2 py-1.5"
+              aria-label="Language"
+            >
+              <Globe className="h-3.5 w-3.5" />
+              {LANGS.find((l) => l.code === lang)?.label}
+              <ChevronDown className="h-3 w-3" />
+            </button>
+            {langOpen && (
+              <div className="absolute right-0 mt-1 min-w-[7rem] border border-border bg-background shadow-lg">
+                {LANGS.map((l) => (
+                  <button
+                    key={l.code}
+                    onClick={() => { setLang(l.code); setLangOpen(false); }}
+                    className={`block w-full text-left px-3 py-2 text-xs uppercase tracking-widest hover:bg-secondary ${lang === l.code ? "text-accent" : "text-foreground"}`}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
           <button
             className="lg:hidden p-2 -mr-2"
             onClick={() => setOpen((v) => !v)}
@@ -81,12 +111,6 @@ export function Header() {
                 {t(n.zh, n.en)}
               </Link>
             ))}
-            <button
-              onClick={() => setLang(lang === "zh" ? "en" : "zh")}
-              className="mt-2 inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-stone-warm"
-            >
-              <Globe className="h-3.5 w-3.5" /> {lang === "zh" ? "English" : "中文"}
-            </button>
           </nav>
         </div>
       )}
