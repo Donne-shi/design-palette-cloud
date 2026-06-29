@@ -62,7 +62,7 @@ function EventsPage() {
 }
 
 function EventCard({ e, lang, compact }: { e: PublicEvent; lang: "zh" | "en" | "es"; compact?: boolean }) {
-  const title = lang === "zh" ? e.title_zh : (e.title_en || e.title_zh);
+  const title = pickLocalized(lang, { zh: e.title_zh, en: e.title_en, es: e.title_es });
   const when = new Date(e.start_at).toLocaleString();
   return (
     <Link to="/events/$id" params={{ id: e.id }} className="group block">
