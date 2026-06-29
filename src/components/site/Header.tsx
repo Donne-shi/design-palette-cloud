@@ -120,12 +120,20 @@ export function Header() {
               {userOpen && (
                 <div className="absolute right-0 mt-1 min-w-[10rem] border border-border bg-background shadow-lg">
                   <Link
+                    to="/account"
+                    onClick={() => setUserOpen(false)}
+                    className="block w-full text-left px-3 py-2 text-xs uppercase tracking-widest hover:bg-secondary"
+                  >
+                    {t("我的账号", "Account")}
+                  </Link>
+                  <Link
                     to="/admin"
                     onClick={() => setUserOpen(false)}
                     className="block w-full text-left px-3 py-2 text-xs uppercase tracking-widest hover:bg-secondary"
                   >
                     {t("后台", "Admin")}
                   </Link>
+
                   <button
                     onClick={signOut}
                     className="flex items-center gap-2 w-full text-left px-3 py-2 text-xs uppercase tracking-widest hover:bg-secondary"
