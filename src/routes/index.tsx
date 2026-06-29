@@ -267,12 +267,12 @@ function Home() {
             </p>
             <h2 className="serif text-4xl md:text-5xl leading-tight">
               {latestIssue
-                ? (lang === "en" && latestIssue.title_en ? latestIssue.title_en : latestIssue.title_zh)
+                ? pickLocalized(lang, { zh: latestIssue.title_zh, en: latestIssue.title_en, es: latestIssue.title_es })
                 : t("电子期刊即将上线", "Journal coming soon")}
             </h2>
             {latestIssue && (
               <p className="mt-6 text-foreground/80 leading-relaxed">
-                {lang === "en" && latestIssue.summary_en ? latestIssue.summary_en : (latestIssue.summary_zh || "")}
+                {pickLocalized(lang, { zh: latestIssue.summary_zh, en: latestIssue.summary_en, es: latestIssue.summary_es })}
               </p>
             )}
             <div className="mt-8 flex flex-wrap gap-3">
