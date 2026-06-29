@@ -248,21 +248,64 @@ function NewsQueuePage() {
                   查看原文 <ExternalLink className="h-3 w-3" />
                 </a>
               </div>
-              <h2 className="serif text-2xl mt-2 leading-snug">{d.title_zh || d.original_title}</h2>
-              {d.title_en && <p className="serif italic text-stone-warm mt-1">{d.title_en}</p>}
-              {d.relevance_reason && (
-                <p className="text-xs text-muted-foreground italic mt-2">编辑评分理由：{d.relevance_reason}</p>
+              {(filter === "pending" || filter === "top") ? (
+                <div className="mt-3 space-y-3">
+                  <div>
+                    <p className="eyebrow text-[10px] mb-1">中文标题（可编辑）</p>
+                    <input
+                      value={String(editVal(d, "title_zh") ?? "")}
+                      onChange={(e) => setEdit(d.id, "title_zh", e.target.value)}
+                      className="w-full border border-border bg-background px-3 py-2 serif text-lg"
+                    />
+                  </div>
+                  <div>
+                    <p className="eyebrow text-[10px] mb-1">English title (editable)</p>
+                    <input
+                      value={String(editVal(d, "title_en") ?? "")}
+                      onChange={(e) => setEdit(d.id, "title_en", e.target.value)}
+                      className="w-full border border-border bg-background px-3 py-2 serif italic"
+                    />
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="eyebrow text-[10px] mb-1">中文摘要（可编辑）</p>
+                      <textarea
+                        value={String(editVal(d, "excerpt_zh") ?? "")}
+                        onChange={(e) => setEdit(d.id, "excerpt_zh", e.target.value)}
+                        rows={5}
+                        className="w-full border border-border bg-background px-3 py-2 text-sm leading-relaxed"
+                      />
+                    </div>
+                    <div>
+                      <p className="eyebrow text-[10px] mb-1">English summary (editable)</p>
+                      <textarea
+                        value={String(editVal(d, "excerpt_en") ?? "")}
+                        onChange={(e) => setEdit(d.id, "excerpt_en", e.target.value)}
+                        rows={5}
+                        className="w-full border border-border bg-background px-3 py-2 text-sm leading-relaxed"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h2 className="serif text-2xl mt-2 leading-snug">{d.title_zh || d.original_title}</h2>
+                  {d.title_en && <p className="serif italic text-stone-warm mt-1">{d.title_en}</p>}
+                  {d.relevance_reason && (
+                    <p className="text-xs text-muted-foreground italic mt-2">编辑评分理由：{d.relevance_reason}</p>
+                  )}
+                  <div className="grid md:grid-cols-2 gap-6 mt-4 text-sm leading-relaxed text-foreground/80">
+                    <div>
+                      <p className="eyebrow text-[10px] mb-1">中文摘要</p>
+                      <p>{d.excerpt_zh || <span className="text-muted-foreground">（无）</span>}</p>
+                    </div>
+                    <div>
+                      <p className="eyebrow text-[10px] mb-1">English summary</p>
+                      <p>{d.excerpt_en || <span className="text-muted-foreground">(none)</span>}</p>
+                    </div>
+                  </div>
+                </>
               )}
-              <div className="grid md:grid-cols-2 gap-6 mt-4 text-sm leading-relaxed text-foreground/80">
-                <div>
-                  <p className="eyebrow text-[10px] mb-1">中文摘要</p>
-                  <p>{d.excerpt_zh || <span className="text-muted-foreground">（无）</span>}</p>
-                </div>
-                <div>
-                  <p className="eyebrow text-[10px] mb-1">English summary</p>
-                  <p>{d.excerpt_en || <span className="text-muted-foreground">(none)</span>}</p>
-                </div>
-              </div>
               <p className="text-xs text-muted-foreground mt-4">
                 抓取于 {new Date(d.fetched_at).toLocaleString()}
                 {d.published_at_source ? ` · 原文发布 ${new Date(d.published_at_source).toLocaleDateString()}` : ""}
