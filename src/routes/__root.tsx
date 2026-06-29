@@ -19,7 +19,7 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <p className="eyebrow mb-3">404</p>
-        <h1 className="serif text-4xl text-foreground">页面未找到 · Page not found</h1>
+        <h1 className="serif text-4xl text-foreground">Page not found</h1>
         <p className="mt-3 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
