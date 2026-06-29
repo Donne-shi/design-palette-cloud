@@ -261,7 +261,7 @@ function Home() {
           </div>
           <div>
             <p className="eyebrow mb-3">
-              Bridge Quarterly · 桥梁季刊
+              {t("桥梁季刊", "Bridge Quarterly")}
               {latestIssue && ` · Vol. ${latestIssue.volume} No. ${latestIssue.issue_number}`}
             </p>
             <h2 className="serif text-4xl md:text-5xl leading-tight">
