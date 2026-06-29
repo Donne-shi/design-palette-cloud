@@ -7,20 +7,24 @@ import { createClient } from "@supabase/supabase-js";
 
 type Source = { name: string; url: string; category: string };
 
+// Sources curated for Multicultural Bridge Initiative — Gospel-centered,
+// cross-cultural (East/West, Chinese diaspora), faith & public life.
 const SOURCES: Source[] = [
-  { name: "Pew Research — Religion", url: "https://www.pewresearch.org/religion/feed/", category: "Society" },
+  { name: "Pew Research — Religion", url: "https://www.pewresearch.org/religion/feed/", category: "Society & Research" },
   { name: "Christianity Today", url: "https://www.christianitytoday.com/ct/rss.xml", category: "U.S. Church" },
   { name: "Religion News Service", url: "https://religionnews.com/feed/", category: "Global Christianity" },
+  { name: "The Gospel Coalition", url: "https://www.thegospelcoalition.org/feed/", category: "Theology & Culture" },
+  { name: "Desiring God", url: "https://www.desiringgod.org/rss/articles.xml", category: "Discipleship" },
+  { name: "World Magazine", url: "https://wng.org/feed", category: "Faith & Public Life" },
+  { name: "First Things", url: "https://www.firstthings.com/rss/all-articles", category: "Faith & Public Life" },
+  { name: "Catholic News Agency", url: "https://www.catholicnewsagency.com/rss/news.xml", category: "Global Christianity" },
+  { name: "Vatican News", url: "https://www.vaticannews.va/en.rss.xml", category: "Global Christianity" },
 ];
 
-const PER_SOURCE_LIMIT = 5;
+const PER_SOURCE_LIMIT = 6;
+const TOP_PICKS = 5;
 
-type RssItem = {
-  title: string;
-  link: string;
-  description: string;
-  pubDate: string | null;
-};
+type RssItem = { title: string; link: string; description: string; pubDate: string | null };
 
 function stripTags(s: string): string {
   return s
@@ -69,8 +73,30 @@ function parseRss(xml: string): RssItem[] {
 
 type Summary = { title_en: string; title_zh: string; excerpt_en: string; excerpt_zh: string };
 
+async function callAI(apiKey: string, system: string, user: string): Promise<any> {
+  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
+    body: JSON.stringify({
+      model: "google/gemini-3-flash-preview",
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ],
+      response_format: { type: "json_object" },
+    }),
+  });
+  if (!res.ok) {
+    const t = await res.text().catch(() => "");
+    throw new Error(`AI call failed: ${res.status} ${t.slice(0, 200)}`);
+  }
+  const j: any = await res.json();
+  const content = j?.choices?.[0]?.message?.content ?? "{}";
+  try { return JSON.parse(content); } catch { return {}; }
+}
+
 async function summarizeBatch(apiKey: string, items: { title: string; description: string }[]): Promise<Summary[]> {
-  const sys = `You are a bilingual (English / Simplified Chinese) editor for a Gospel-centered Christian publication. For each news item provided, write:
+  const sys = `You are a bilingual (English / Simplified Chinese) editor for Multicultural Bridge Initiative (MBI), a Gospel-centered, cross-cultural Christian publication serving Chinese diaspora and Western readers. For each news item provided, write:
 - title_en: a clean editorial English headline (max 90 chars)
 - title_zh: a faithful Chinese headline (中文，最长 40 字)
 - excerpt_en: a neutral 120–150 word English summary suitable for editorial preview
@@ -79,26 +105,7 @@ async function summarizeBatch(apiKey: string, items: { title: string; descriptio
 Be accurate and neutral; never invent facts. Preserve proper nouns. Do NOT translate "Multicultural Bridge Initiative" or "MBI".
 Return STRICT JSON: {"summaries":[{title_en,title_zh,excerpt_en,excerpt_zh}, ...]} with exactly ${items.length} items in the same order. No prose outside JSON.`;
   const user = JSON.stringify({ items: items.map((it) => ({ title: it.title, source_text: it.description })) });
-  const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Lovable-API-Key": apiKey },
-    body: JSON.stringify({
-      model: "google/gemini-3-flash-preview",
-      messages: [
-        { role: "system", content: sys },
-        { role: "user", content: user },
-      ],
-      response_format: { type: "json_object" },
-    }),
-  });
-  if (!res.ok) {
-    const t = await res.text().catch(() => "");
-    throw new Error(`AI summarize failed: ${res.status} ${t.slice(0, 200)}`);
-  }
-  const j: any = await res.json();
-  const content = j?.choices?.[0]?.message?.content ?? "{}";
-  let parsed: any;
-  try { parsed = JSON.parse(content); } catch { parsed = {}; }
+  const parsed = await callAI(apiKey, sys, user);
   const arr: any[] = Array.isArray(parsed?.summaries) ? parsed.summaries : [];
   return items.map((it, i) => {
     const s = arr[i] || {};
@@ -109,6 +116,50 @@ Return STRICT JSON: {"summaries":[{title_en,title_zh,excerpt_en,excerpt_zh}, ...
       excerpt_zh: typeof s.excerpt_zh === "string" ? s.excerpt_zh.trim() : "",
     };
   });
+}
+
+type ScoreOut = { id: string; score: number; reason: string };
+
+async function scoreForMBI(
+  apiKey: string,
+  items: { id: string; title_en: string; excerpt_en: string; source_name: string; category: string | null }[],
+): Promise<ScoreOut[]> {
+  const sys = `You are the senior editor of Multicultural Bridge Initiative (MBI). MBI's positioning:
+- Gospel-centered, evangelical Christian perspective
+- Serving the global Chinese diaspora and bridging East ↔ West
+- Faith & public life: church, religion in society, religious liberty, ethics, family
+- Cultural exchange between Chinese & Western Christianity
+- Theology, discipleship, missions, intercultural ministry
+
+Score each news item 0–100 for how important and on-mission it is for MBI readers TODAY:
+- 90–100: must-publish, directly central to MBI mission (e.g. Chinese church, diaspora faith, major global Christian event, landmark religion-and-public-life story)
+- 70–89: highly relevant
+- 40–69: tangentially relevant
+- 0–39: off-mission, skip
+
+Penalize: hyper-local U.S. parish news, celebrity gossip, narrow denominational politics with no broader bearing.
+Reward: stories touching China, Asia, diaspora, persecution, religious freedom, major theological/cultural shifts, cross-cultural missions.
+
+Return STRICT JSON: {"scores":[{"id":"...","score":0-100,"reason":"<=20 words, English"}, ...]} for every input id, no prose outside JSON.`;
+  const user = JSON.stringify({
+    items: items.map((it) => ({
+      id: it.id,
+      source: it.source_name,
+      category: it.category,
+      title: it.title_en,
+      excerpt: it.excerpt_en.slice(0, 400),
+    })),
+  });
+  const parsed = await callAI(apiKey, sys, user);
+  const arr: any[] = Array.isArray(parsed?.scores) ? parsed.scores : [];
+  const byId = new Map<string, ScoreOut>();
+  for (const s of arr) {
+    if (typeof s?.id === "string") {
+      const score = Math.max(0, Math.min(100, Math.round(Number(s.score) || 0)));
+      byId.set(s.id, { id: s.id, score, reason: typeof s.reason === "string" ? s.reason.slice(0, 240) : "" });
+    }
+  }
+  return items.map((it) => byId.get(it.id) ?? { id: it.id, score: 0, reason: "" });
 }
 
 export const Route = createFileRoute("/api/public/cron/scrape-news")({
@@ -131,18 +182,28 @@ export const Route = createFileRoute("/api/public/cron/scrape-news")({
           auth: { persistSession: false, autoRefreshToken: false },
         });
 
-        const result = { fetched: 0, queued: 0, skipped: 0, errors: [] as string[] };
+        const result = {
+          fetched: 0,
+          queued: 0,
+          skipped: 0,
+          scored: 0,
+          top_picks: 0,
+          errors: [] as string[],
+        };
+
+        const insertedIds: string[] = [];
 
         for (const src of SOURCES) {
           try {
-            const r = await fetch(src.url, { headers: { "user-agent": "MBI-NewsBot/1.0 (+https://bridgeaway.org)" } });
+            const r = await fetch(src.url, {
+              headers: { "user-agent": "MBI-NewsBot/1.0 (+https://bridgeaway.org)" },
+            });
             if (!r.ok) { result.errors.push(`${src.name}: HTTP ${r.status}`); continue; }
             const xml = await r.text();
             const items = parseRss(xml).slice(0, PER_SOURCE_LIMIT);
             result.fetched += items.length;
             if (items.length === 0) continue;
 
-            // Dedupe against existing drafts
             const urls = items.map((it) => it.link);
             const { data: existing } = await supabase
               .from("news_drafts")
@@ -153,7 +214,10 @@ export const Route = createFileRoute("/api/public/cron/scrape-news")({
             result.skipped += items.length - fresh.length;
             if (fresh.length === 0) continue;
 
-            const summaries = await summarizeBatch(lovableKey, fresh.map((f) => ({ title: f.title, description: f.description })));
+            const summaries = await summarizeBatch(
+              lovableKey,
+              fresh.map((f) => ({ title: f.title, description: f.description })),
+            );
 
             const rows = fresh.map((it, i) => ({
               source_name: src.name,
@@ -169,13 +233,60 @@ export const Route = createFileRoute("/api/public/cron/scrape-news")({
               status: "pending" as const,
             }));
 
-            const { error: insErr } = await supabase
+            const { data: inserted, error: insErr } = await supabase
               .from("news_drafts")
-              .insert(rows);
+              .insert(rows)
+              .select("id");
             if (insErr) { result.errors.push(`${src.name} insert: ${insErr.message}`); continue; }
             result.queued += rows.length;
+            for (const row of inserted ?? []) insertedIds.push((row as any).id);
           } catch (e: any) {
             result.errors.push(`${src.name}: ${e?.message ?? String(e)}`);
+          }
+        }
+
+        // ===== Second pass: score newly-inserted drafts for MBI relevance =====
+        if (insertedIds.length > 0) {
+          try {
+            const { data: toScore } = await supabase
+              .from("news_drafts")
+              .select("id,source_name,category,title_en,excerpt_en")
+              .in("id", insertedIds);
+            const list = (toScore ?? []) as any[];
+            if (list.length > 0) {
+              const scores = await scoreForMBI(lovableKey, list.map((d) => ({
+                id: d.id,
+                title_en: d.title_en || "",
+                excerpt_en: d.excerpt_en || "",
+                source_name: d.source_name,
+                category: d.category,
+              })));
+              const scoredAt = new Date().toISOString();
+
+              // Update each row's score
+              await Promise.all(
+                scores.map((s) =>
+                  supabase
+                    .from("news_drafts")
+                    .update({ relevance_score: s.score, relevance_reason: s.reason, scored_at: scoredAt })
+                    .eq("id", s.id),
+                ),
+              );
+              result.scored = scores.length;
+
+              // Mark TOP_PICKS highest-scoring as is_top_pick (only within today's batch)
+              const top = [...scores].sort((a, b) => b.score - a.score).slice(0, TOP_PICKS).map((s) => s.id);
+              if (top.length > 0) {
+                const { error: tpErr } = await supabase
+                  .from("news_drafts")
+                  .update({ is_top_pick: true })
+                  .in("id", top);
+                if (tpErr) result.errors.push(`top_pick: ${tpErr.message}`);
+                else result.top_picks = top.length;
+              }
+            }
+          } catch (e: any) {
+            result.errors.push(`scoring: ${e?.message ?? String(e)}`);
           }
         }
 

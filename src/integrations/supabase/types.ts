@@ -378,10 +378,14 @@ export type Database = {
           excerpt_zh: string | null
           fetched_at: string
           id: string
+          is_top_pick: boolean
           original_excerpt: string | null
           original_title: string
           published_article_id: string | null
           published_at_source: string | null
+          relevance_reason: string | null
+          relevance_score: number | null
+          scored_at: string | null
           source_name: string
           source_url: string
           status: string
@@ -397,10 +401,14 @@ export type Database = {
           excerpt_zh?: string | null
           fetched_at?: string
           id?: string
+          is_top_pick?: boolean
           original_excerpt?: string | null
           original_title: string
           published_article_id?: string | null
           published_at_source?: string | null
+          relevance_reason?: string | null
+          relevance_score?: number | null
+          scored_at?: string | null
           source_name: string
           source_url: string
           status?: string
@@ -416,10 +424,14 @@ export type Database = {
           excerpt_zh?: string | null
           fetched_at?: string
           id?: string
+          is_top_pick?: boolean
           original_excerpt?: string | null
           original_title?: string
           published_article_id?: string | null
           published_at_source?: string | null
+          relevance_reason?: string | null
+          relevance_score?: number | null
+          scored_at?: string | null
           source_name?: string
           source_url?: string
           status?: string

@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ExternalLink, CheckCircle2, XCircle, RefreshCcw, Loader2 } from "lucide-react";
+import { ExternalLink, CheckCircle2, XCircle, RefreshCcw, Loader2, Star } from "lucide-react";
 import { slugify } from "@/lib/slug";
 
 export const Route = createFileRoute("/admin/news-queue")({
@@ -23,21 +23,33 @@ type Draft = {
   fetched_at: string;
   published_at_source: string | null;
   status: "pending" | "published" | "ignored";
+  relevance_score: number | null;
+  relevance_reason: string | null;
+  is_top_pick: boolean | null;
 };
+
+type FilterKey = "top" | "pending" | "published" | "ignored";
 
 function NewsQueuePage() {
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [scraping, setScraping] = useState(false);
-  const [filter, setFilter] = useState<"pending" | "published" | "ignored">("pending");
+  const [filter, setFilter] = useState<FilterKey>("top");
 
   const load = async () => {
     setLoading(true);
-    const { data, error } = await supabase
+    let q = supabase
       .from("news_drafts")
-      .select("id,source_name,source_url,original_title,title_en,title_zh,excerpt_en,excerpt_zh,category,fetched_at,published_at_source,status")
-      .eq("status", filter)
+      .select("id,source_name,source_url,original_title,title_en,title_zh,excerpt_en,excerpt_zh,category,fetched_at,published_at_source,status,relevance_score,relevance_reason,is_top_pick");
+    if (filter === "top") {
+      q = q.eq("status", "pending").eq("is_top_pick", true);
+    } else {
+      q = q.eq("status", filter);
+    }
+    const { data, error } = await q
+      .order("is_top_pick", { ascending: false })
+      .order("relevance_score", { ascending: false, nullsFirst: false })
       .order("fetched_at", { ascending: false })
       .limit(100);
     if (error) toast.error(error.message);
@@ -58,7 +70,7 @@ function NewsQueuePage() {
       });
       const j = await r.json();
       if (!r.ok) throw new Error(j?.error || `HTTP ${r.status}`);
-      toast.success(`抓取完成：新入队 ${j.queued} 条，跳过 ${j.skipped} 条`);
+      toast.success(`抓取完成：入队 ${j.queued} · 跳过 ${j.skipped} · 评分 ${j.scored ?? 0} · Top ${j.top_picks ?? 0}`);
       await load();
     } catch (e: any) {
       toast.error(`抓取失败：${e.message}`);
@@ -127,6 +139,13 @@ function NewsQueuePage() {
     setBusyId(null);
   };
 
+  const emptyLabel: Record<FilterKey, string> = {
+    top: "本批没有 Top 5（请先点「手动抓取」或等待每日 cron）",
+    pending: "暂无待审草稿",
+    published: "暂无已发布",
+    ignored: "暂无已忽略",
+  };
+
   return (
     <div className="p-10">
       <div className="flex items-start justify-between gap-6">
@@ -134,8 +153,10 @@ function NewsQueuePage() {
           <p className="eyebrow mb-2">News Queue</p>
           <h1 className="serif text-4xl">RSS 抓取审核队列</h1>
           <p className="text-muted-foreground mt-2 max-w-2xl">
-            每天定时从 Pew、Christianity Today、Religion News Service 抓取最新条目，AI 自动生成中英双语标题与摘要，
-            审核后一键发布到 <Link to="/news" className="text-accent underline">News &amp; Commentary</Link>。
+            每日定时从 Pew、Christianity Today、Religion News Service、The Gospel Coalition、Desiring God、World、First Things、Catholic News Agency、Vatican News
+            抓取最新条目，AI 生成中英双语标题与摘要并按 MBI 定位（华人离散群体 / 信仰与公共生活 / 中西文化桥梁）打分 0–100，
+            自动标记当批 <span className="text-accent font-medium">Top 5</span> 推荐。审核后一键发布到{" "}
+            <Link to="/news" className="text-accent underline">News &amp; Commentary</Link>。
           </p>
         </div>
         <button
@@ -148,14 +169,15 @@ function NewsQueuePage() {
         </button>
       </div>
 
-      <div className="mt-8 flex gap-2 text-xs uppercase tracking-widest">
-        {(["pending", "published", "ignored"] as const).map((k) => (
+      <div className="mt-8 flex gap-2 text-xs uppercase tracking-widest flex-wrap">
+        {(["top", "pending", "published", "ignored"] as const).map((k) => (
           <button
             key={k}
             onClick={() => setFilter(k)}
-            className={`border px-4 py-2 ${filter === k ? "bg-foreground text-background border-foreground" : "border-border text-foreground/70 hover:border-accent"}`}
+            className={`border px-4 py-2 inline-flex items-center gap-2 ${filter === k ? "bg-foreground text-background border-foreground" : "border-border text-foreground/70 hover:border-accent"}`}
           >
-            {k === "pending" ? "待审 Pending" : k === "published" ? "已发布 Published" : "已忽略 Ignored"}
+            {k === "top" && <Star className="h-3 w-3" />}
+            {k === "top" ? "Top 5 今日" : k === "pending" ? "全部待审" : k === "published" ? "已发布" : "已忽略"}
           </button>
         ))}
       </div>
@@ -164,18 +186,41 @@ function NewsQueuePage() {
         {loading ? (
           <p className="text-sm text-muted-foreground">加载中…</p>
         ) : drafts.length === 0 ? (
-          <p className="text-sm text-muted-foreground">暂无{filter === "pending" ? "待审" : filter === "published" ? "已发布" : "已忽略"}的草稿。</p>
+          <p className="text-sm text-muted-foreground">{emptyLabel[filter]}。</p>
         ) : (
           drafts.map((d) => (
-            <article key={d.id} className="border border-border bg-card p-6">
+            <article key={d.id} className={`border bg-card p-6 ${d.is_top_pick ? "border-accent ring-1 ring-accent/30" : "border-border"}`}>
               <div className="flex items-center justify-between gap-4 flex-wrap">
-                <p className="eyebrow">{d.source_name} · {d.category || "—"}</p>
+                <div className="flex items-center gap-3 flex-wrap">
+                  <p className="eyebrow">{d.source_name} · {d.category || "—"}</p>
+                  {d.is_top_pick && (
+                    <span className="inline-flex items-center gap-1 bg-accent text-accent-foreground px-2 py-0.5 text-[10px] uppercase tracking-widest">
+                      <Star className="h-3 w-3" /> Top Pick
+                    </span>
+                  )}
+                  {typeof d.relevance_score === "number" && (
+                    <span
+                      className={`px-2 py-0.5 text-[10px] uppercase tracking-widest border ${
+                        d.relevance_score >= 80
+                          ? "border-accent text-accent"
+                          : d.relevance_score >= 60
+                            ? "border-foreground/40 text-foreground/70"
+                            : "border-border text-muted-foreground"
+                      }`}
+                    >
+                      MBI {d.relevance_score}
+                    </span>
+                  )}
+                </div>
                 <a href={d.source_url} target="_blank" rel="noreferrer" className="text-xs text-accent inline-flex items-center gap-1 hover:underline">
                   查看原文 <ExternalLink className="h-3 w-3" />
                 </a>
               </div>
               <h2 className="serif text-2xl mt-2 leading-snug">{d.title_zh || d.original_title}</h2>
               {d.title_en && <p className="serif italic text-stone-warm mt-1">{d.title_en}</p>}
+              {d.relevance_reason && (
+                <p className="text-xs text-muted-foreground italic mt-2">编辑评分理由：{d.relevance_reason}</p>
+              )}
               <div className="grid md:grid-cols-2 gap-6 mt-4 text-sm leading-relaxed text-foreground/80">
                 <div>
                   <p className="eyebrow text-[10px] mb-1">中文摘要</p>
@@ -191,7 +236,7 @@ function NewsQueuePage() {
                 {d.published_at_source ? ` · 原文发布 ${new Date(d.published_at_source).toLocaleDateString()}` : ""}
               </p>
               <div className="mt-4 flex gap-2">
-                {filter === "pending" && (
+                {(filter === "pending" || filter === "top") && (
                   <>
                     <button
                       onClick={() => publish(d)}
