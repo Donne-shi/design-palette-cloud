@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
-import { Mail, Send } from "lucide-react";
+import { Mail, Send, Heart, HandCoins, Building2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -104,6 +104,61 @@ function ContactPage() {
             <Send className="h-4 w-4" /> {sending ? "…" : t("发送","Send")}
           </button>
         </form>
+      </section>
+
+      {/* SUPPORT US / DONATE */}
+      <section className="bg-secondary/40 border-y border-border/70">
+        <div className="container-prose py-20 md:py-24">
+          <div className="max-w-2xl">
+            <p className="eyebrow mb-3 flex items-center gap-2"><Heart className="h-4 w-4 text-accent"/> {t("支持我们", "Support Us")}</p>
+            <h2 className="serif text-4xl md:text-5xl leading-tight">
+              {t("以奉献参与这项事工", "Partner with us through your giving")}
+            </h2>
+            <p className="mt-6 text-foreground/80 leading-relaxed">
+              {t(
+                "Multicultural Bridge Initiative 是一个以福音为中心的非营利事工。每一笔奉献都将用于内容创作、跨文化对话、活动与期刊出版。我们承诺所有奉献都将忠心、透明地使用。",
+                "Multicultural Bridge Initiative is a Gospel-centered non-profit ministry. Every gift supports our editorial work, cross-cultural dialogue, events, and journal. We are committed to using all gifts faithfully and transparently."
+              )}
+            </p>
+          </div>
+
+          <div className="mt-12 grid md:grid-cols-3 gap-6">
+            <div className="border border-border bg-card p-6">
+              <HandCoins className="h-6 w-6 text-accent mb-4" />
+              <h3 className="serif text-xl">{t("在线奉献", "Online Giving")}</h3>
+              <p className="mt-3 text-sm text-foreground/70 leading-relaxed">
+                {t("在线奉献通道正在筹备中，敬请期待。", "Our online giving portal is coming soon.")}
+              </p>
+              <p className="mt-4 text-xs uppercase tracking-widest text-accent">{t("即将上线", "Coming Soon")}</p>
+            </div>
+
+            <div className="border border-border bg-card p-6">
+              <Building2 className="h-6 w-6 text-accent mb-4" />
+              <h3 className="serif text-xl">{t("支票/银行转账", "Check / Bank Transfer")}</h3>
+              <p className="mt-3 text-sm text-foreground/70 leading-relaxed">
+                {t("如需以支票或银行转账方式奉献，请通过下方邮箱与我们联系，我们会发送详细信息。", "To give by check or bank transfer, please contact us by email and we will send full instructions.")}
+              </p>
+              <a href="mailto:INFO.BRIDGEAWAY@GMAIL.COM?subject=Donation%20Inquiry" className="mt-4 inline-flex items-center gap-2 text-sm text-accent hover:underline">
+                <Mail className="h-4 w-4"/> INFO.BRIDGEAWAY@GMAIL.COM
+              </a>
+            </div>
+
+            <div className="border border-border bg-card p-6">
+              <Heart className="h-6 w-6 text-accent mb-4" />
+              <h3 className="serif text-xl">{t("代祷支持", "Pray With Us")}</h3>
+              <p className="mt-3 text-sm text-foreground/70 leading-relaxed">
+                {t("我们最看重的支持，是您持续的代祷。愿主使用这事工,服事祂的众教会。", "The support we value most is your prayer. May the Lord use this ministry to serve His church.")}
+              </p>
+            </div>
+          </div>
+
+          <p className="mt-8 text-xs text-muted-foreground">
+            {t(
+              "* 我们正在申请美国 501(c)(3) 非营利身份；获得批准后,美国纳税人的奉献可享受税务抵扣。",
+              "* We are in the process of applying for U.S. 501(c)(3) status; once approved, gifts from U.S. taxpayers will be tax-deductible."
+            )}
+          </p>
+        </div>
       </section>
     </SiteShell>
   );
