@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
-import newsImg from "@/assets/news.jpg";
+
 import { CalendarDays, Tag } from "lucide-react";
 import { listPublishedArticles, type PublicArticle } from "@/lib/content.functions";
 import { useState } from "react";
@@ -50,28 +50,27 @@ function NewsPage() {
         {filtered.length === 0 ? (
           <p className="text-muted-foreground">{t("暂无文章。请稍后再来。", "No articles yet — please check back soon.")}</p>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+          <ul className="divide-y divide-border/70">
             {filtered.map((a) => {
               const title = lang === "en" ? a.title_en || a.title_zh : a.title_zh;
               const sub = lang === "en" ? a.title_zh : a.title_en;
               const excerpt = lang === "en" ? a.excerpt_en || a.excerpt_zh : a.excerpt_zh || a.excerpt_en;
               const date = new Date(a.published_at || a.created_at).toLocaleDateString();
               return (
-                <Link key={a.id} to="/news/$slug" params={{ slug: a.slug || a.id }} className="group block">
-                  <div className="aspect-[4/3] overflow-hidden bg-muted">
-                    <img src={a.cover_url || newsImg} alt="" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
-                  </div>
-                  <p className="eyebrow mt-5 inline-flex items-center gap-3">
-                    <span className="inline-flex items-center gap-1"><Tag className="h-3 w-3 text-accent" />{a.category}</span>
-                    <span className="inline-flex items-center gap-1"><CalendarDays className="h-3 w-3 text-accent" />{date}</span>
-                  </p>
-                  <h3 className="serif text-xl mt-2 leading-snug group-hover:text-accent transition-colors">{title}</h3>
-                  {sub && <p className="serif italic text-sm text-stone-warm mt-1">{sub}</p>}
-                  {excerpt && <p className="mt-3 text-sm text-foreground/75 leading-relaxed line-clamp-3">{excerpt}</p>}
-                </Link>
+                <li key={a.id} className="py-8 first:pt-0">
+                  <Link to="/news/$slug" params={{ slug: a.slug || a.id }} className="group block">
+                    <p className="eyebrow inline-flex items-center gap-4 text-foreground/60">
+                      {a.category && <span className="inline-flex items-center gap-1"><Tag className="h-3 w-3 text-accent" />{a.category}</span>}
+                      <span className="inline-flex items-center gap-1"><CalendarDays className="h-3 w-3 text-accent" />{date}</span>
+                    </p>
+                    <h3 className="serif text-2xl md:text-3xl mt-2 leading-snug group-hover:text-accent transition-colors">{title}</h3>
+                    {sub && <p className="serif italic text-base text-stone-warm mt-1">{sub}</p>}
+                    {excerpt && <p className="mt-3 text-[0.95rem] text-foreground/75 leading-relaxed line-clamp-3 max-w-3xl">{excerpt}</p>}
+                  </Link>
+                </li>
               );
             })}
-          </div>
+          </ul>
         )}
       </section>
     </SiteShell>
