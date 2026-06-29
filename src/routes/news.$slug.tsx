@@ -1,4 +1,5 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { getArticleBySlug, type PublicArticle } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
