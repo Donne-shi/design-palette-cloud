@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { BridgeMark, Ornament } from "./Brand";
+import { Ornament } from "./Brand";
+import logoAsset from "@/assets/mbi-logo.png.asset.json";
 import { Mail, MapPin, Send, Github, Twitter, Youtube, Rss } from "lucide-react";
 
 export function Footer() {
