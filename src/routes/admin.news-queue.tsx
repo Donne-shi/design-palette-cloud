@@ -177,15 +177,29 @@ function NewsQueuePage() {
             <Link to="/news" className="text-accent underline">News &amp; Commentary</Link>。
           </p>
         </div>
-        <button
-          onClick={runScrape}
-          disabled={scraping}
-          className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 text-xs uppercase tracking-widest hover:bg-accent disabled:opacity-50"
-        >
-          {scraping ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw className="h-4 w-4" />}
-          手动抓取
-        </button>
+        <div className="flex gap-2 flex-wrap justify-end">
+          {filter === "top" && (
+            <button
+              onClick={publishAllTopPicks}
+              disabled={batchBusy || drafts.length === 0}
+              className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2.5 text-xs uppercase tracking-widest hover:opacity-90 disabled:opacity-50"
+              title="一键发布当前列表中所有 Top Pick"
+            >
+              {batchBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
+              一键发布 Top 5
+            </button>
+          )}
+          <button
+            onClick={runScrape}
+            disabled={scraping}
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 text-xs uppercase tracking-widest hover:bg-accent disabled:opacity-50"
+          >
+            {scraping ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw className="h-4 w-4" />}
+            手动抓取
+          </button>
+        </div>
       </div>
+
 
       <div className="mt-8 flex gap-2 text-xs uppercase tracking-widest flex-wrap">
         {(["top", "pending", "published", "ignored"] as const).map((k) => (
