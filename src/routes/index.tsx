@@ -137,34 +137,27 @@ function Home() {
           {articles.length === 0 ? (
             <p className="text-muted-foreground">{t("暂无文章，敬请期待。", "No articles yet. Stay tuned.")}</p>
           ) : (
-            <div className="grid md:grid-cols-3 gap-8">
-              {articles.map((a: PublicArticle, i: number) => {
+            <ul className="divide-y divide-border/70">
+              {articles.map((a: PublicArticle) => {
                 const title = lang === "en" && a.title_en ? a.title_en : a.title_zh;
                 const subtitle = lang === "en" ? a.title_zh : (a.title_en ?? "");
+                const excerpt = lang === "en" ? (a.excerpt_en || a.excerpt_zh) : (a.excerpt_zh || a.excerpt_en);
                 return (
-                  <Link
-                    key={a.id}
-                    to="/news/$slug"
-                    params={{ slug: a.slug || a.id }}
-                    className="group block"
-                  >
-                    <div className="aspect-[4/3] overflow-hidden bg-muted">
-                      <img
-                        src={a.cover_url || NEWS_FALLBACK[i % NEWS_FALLBACK.length]}
-                        alt=""
-                        loading="lazy"
-                        width={1280}
-                        height={896}
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                      />
-                    </div>
-                    <p className="eyebrow mt-5">{a.category || "Article"} · {fmtDate(a.published_at || a.created_at)}</p>
-                    <h3 className="serif text-xl mt-2 leading-snug group-hover:text-accent">{title}</h3>
-                    {subtitle && <p className="serif italic text-sm text-stone-warm mt-1">{subtitle}</p>}
-                  </Link>
+                  <li key={a.id} className="py-7 first:pt-0">
+                    <Link
+                      to="/news/$slug"
+                      params={{ slug: a.slug || a.id }}
+                      className="group block"
+                    >
+                      <p className="eyebrow text-foreground/60">{a.category || "Article"} · {fmtDate(a.published_at || a.created_at)}</p>
+                      <h3 className="serif text-2xl md:text-3xl mt-2 leading-snug group-hover:text-accent transition-colors">{title}</h3>
+                      {subtitle && <p className="serif italic text-base text-stone-warm mt-1">{subtitle}</p>}
+                      {excerpt && <p className="mt-3 text-[0.95rem] text-foreground/75 leading-relaxed line-clamp-2 max-w-3xl">{excerpt}</p>}
+                    </Link>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           )}
         </div>
       </section>
