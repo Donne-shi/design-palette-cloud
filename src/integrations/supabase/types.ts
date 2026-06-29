@@ -104,6 +104,13 @@ export type Database = {
             referencedRelation: "articles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "comments_user_id_profiles_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       contact_messages: {
