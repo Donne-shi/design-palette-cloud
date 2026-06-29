@@ -211,7 +211,7 @@ function Home() {
                       {fmtDate(e.start_at)}
                     </p>
                     <h3 className="serif text-xl mt-2">{title}</h3>
-                    {subtitle && <p className="serif italic text-sm text-primary-foreground/60 mt-1">{subtitle}</p>}
+                    {subtitle && lang !== "en" && <p className="serif italic text-sm text-primary-foreground/60 mt-1">{subtitle}</p>}
                     {e.location && (
                       <div className="mt-5 text-sm text-primary-foreground/70">{e.location}</div>
                     )}
