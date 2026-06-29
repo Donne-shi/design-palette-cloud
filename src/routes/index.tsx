@@ -196,8 +196,8 @@ function Home() {
           ) : (
             <div className="grid md:grid-cols-3 gap-6">
               {events.map((e: PublicEvent) => {
-                const title = lang === "en" && e.title_en ? e.title_en : e.title_zh;
-                const subtitle = lang === "en" ? e.title_zh : (e.title_en ?? "");
+                const title = pickLocalized(lang, { zh: e.title_zh, en: e.title_en, es: e.title_es });
+                const subtitle = lang === "zh" ? (e.title_en ?? "") : (lang === "en" ? e.title_zh : (e.title_en ?? e.title_zh));
                 return (
                   <Link
                     key={e.id}
