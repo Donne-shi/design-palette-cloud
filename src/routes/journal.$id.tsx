@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-rout
 import { SiteShell } from "@/components/site/SiteShell";
 import { getIssueById, type PublicIssue } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
+import { pickLocalized } from "@/lib/pickLocalized";
 import { ArrowLeft, FileDown, BookOpenText } from "lucide-react";
 
 const SITE = "https://bridgeaway.org";
