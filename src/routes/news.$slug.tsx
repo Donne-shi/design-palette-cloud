@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { getArticleBySlug, type PublicArticle } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
+import { pickLocalized } from "@/lib/pickLocalized";
 import { CalendarDays, Tag, ArrowLeft, ExternalLink } from "lucide-react";
 import { CommentsSection } from "@/components/site/Comments";
 
