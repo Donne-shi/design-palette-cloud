@@ -108,7 +108,6 @@ function Home() {
                   <Icon className="h-5 w-5 mt-1 text-accent shrink-0" />
                   <div>
                     <p className="serif text-lg">{t(zh, en)}</p>
-                    <p className="text-sm text-muted-foreground italic">{t(en, zh)}</p>
                   </div>
                 </div>
               ))}
