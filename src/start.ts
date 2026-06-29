@@ -3,7 +3,14 @@ import { createStart, createMiddleware } from "@tanstack/react-start";
 import { renderErrorPage } from "./lib/error-page";
 import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
 
-const errorMiddleware = createMiddleware().server(async ({ next }) => {
+const errorMiddleware = createMiddleware().server(async ({ request, next }) => {
+  // Pass /lovable/* (email webhook, preview, queue processor) and the public
+  // unsubscribe route straight through — they handle their own auth/signature
+  // verification and must not be wrapped in the SSR error fallback HTML.
+  const url = new URL(request.url);
+  if (url.pathname.startsWith("/lovable/") || url.pathname === "/email/unsubscribe") {
+    return next();
+  }
   try {
     return await next();
   } catch (error) {

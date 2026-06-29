@@ -31,7 +31,7 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "design-palette-cloud"
+const SITE_NAME = "Multicultural Bridge Initiative"
 const SENDER_DOMAIN = "notify.bridgeaway.org"
 const ROOT_DOMAIN = "bridgeaway.org"
 const FROM_DOMAIN = "notify.bridgeaway.org"
