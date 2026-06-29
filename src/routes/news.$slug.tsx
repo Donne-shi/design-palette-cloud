@@ -1,9 +1,42 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { getArticleBySlug, type PublicArticle } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
-import { CalendarDays, Tag, ArrowLeft } from "lucide-react";
+import { CalendarDays, Tag, ArrowLeft, ExternalLink } from "lucide-react";
 import { CommentsSection } from "@/components/site/Comments";
+
+// Strip the auto-appended "— Source: <name>\n<url>" / "— 来源：<name>\n<url>" tail
+// from scraped article bodies and surface it as a structured "Read Original" link.
+function extractSource(body: string | null | undefined): { body: string; sourceUrl: string | null; sourceName: string | null } {
+  if (!body) return { body: "", sourceUrl: null, sourceName: null };
+  const re = /\n+\s*(?:—|--)\s*(?:Source|来源)\s*[:：]\s*([^\n]+?)\n+(https?:\/\/\S+)\s*$/i;
+  const m = body.match(re);
+  if (!m) return { body, sourceUrl: null, sourceName: null };
+  return { body: body.slice(0, m.index).trimEnd(), sourceName: m[1].trim(), sourceUrl: m[2].trim() };
+}
+
+// Minimal, safe inline-markdown renderer: paragraphs + **bold** + *italic* + [text](url).
+function renderBody(text: string) {
+  const paragraphs = text.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+  const inline = (s: string) => {
+    const parts: Array<ReactNode> = [];
+    const regex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+    let last = 0; let m: RegExpExecArray | null; let i = 0;
+    while ((m = regex.exec(s))) {
+      if (m.index > last) parts.push(s.slice(last, m.index));
+      if (m[2]) parts.push(<a key={i++} href={m[2]} target="_blank" rel="noreferrer" className="text-accent underline underline-offset-4 hover:opacity-80">{m[1]}</a>);
+      else if (m[3]) parts.push(<strong key={i++}>{m[3]}</strong>);
+      else if (m[4]) parts.push(<em key={i++}>{m[4]}</em>);
+      last = regex.lastIndex;
+    }
+    if (last < s.length) parts.push(s.slice(last));
+    return parts;
+  };
+  return paragraphs.map((p, idx) => (
+    <p key={idx} className="mb-5 whitespace-pre-wrap">{inline(p)}</p>
+  ));
+}
 
 const SITE = "https://bridgeaway.org";
 
@@ -55,7 +88,8 @@ export const Route = createFileRoute("/news/$slug")({
 function ArticleDetail() {
   const a = Route.useLoaderData() as PublicArticle;
   const { t, lang } = useLang();
-  const body = lang === "en" ? a.body_en || a.body_zh : a.body_zh || a.body_en;
+  const rawBody = lang === "en" ? a.body_en || a.body_zh : a.body_zh || a.body_en;
+  const { body, sourceUrl, sourceName } = extractSource(rawBody);
   const title = lang === "en" ? a.title_en || a.title_zh : a.title_zh;
   const subtitle = lang === "en" ? a.title_zh : a.title_en;
   const date = new Date(a.published_at || a.created_at).toLocaleDateString();
@@ -68,7 +102,7 @@ function ArticleDetail() {
         <Link to="/news" className="inline-flex items-center gap-1 text-xs uppercase tracking-widest text-stone-warm hover:text-accent">
           <ArrowLeft className="h-3 w-3" /> {t("返回新闻", "Back to News")}
         </Link>
-        <p className="eyebrow mt-6 inline-flex items-center gap-3">
+        <p className="eyebrow mt-6 inline-flex items-center gap-3 flex-wrap">
           <span className="inline-flex items-center gap-1"><Tag className="h-3 w-3 text-accent" />{a.category}</span>
           <span className="inline-flex items-center gap-1"><CalendarDays className="h-3 w-3 text-accent" />{date}</span>
           <span>· {readMin} {t("分钟阅读", "min read")}</span>
@@ -78,9 +112,24 @@ function ArticleDetail() {
         {a.cover_url && (
           <img src={a.cover_url} alt="" className="mt-10 w-full aspect-[16/9] object-cover" />
         )}
-        <div className="prose-content mt-10 serif text-lg leading-relaxed text-foreground/85 whitespace-pre-wrap">
-          {body || <p className="text-muted-foreground italic">{t("正文待编辑。", "Body coming soon.")}</p>}
+        <div className="prose-content mt-10 serif text-lg leading-relaxed text-foreground/85">
+          {body ? renderBody(body) : <p className="text-muted-foreground italic">{t("正文待编辑。", "Body coming soon.")}</p>}
         </div>
+        {sourceUrl && (
+          <aside className="mt-12 border-t border-border pt-6">
+            <p className="eyebrow text-foreground/60 mb-2">{t("原文出处", "Original source")}</p>
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-5 py-3 text-xs uppercase tracking-widest hover:opacity-90"
+            >
+              {t("阅读原文", "Read the original")}{sourceName ? ` · ${sourceName}` : ""}
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+            <p className="mt-3 text-xs text-muted-foreground break-all">{sourceUrl}</p>
+          </aside>
+        )}
         <CommentsSection articleId={a.id} />
       </article>
     </SiteShell>

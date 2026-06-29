@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ExternalLink, CheckCircle2, XCircle, RefreshCcw, Loader2, Star } from "lucide-react";
+import { ExternalLink, CheckCircle2, XCircle, RefreshCcw, Loader2, Star, Rocket } from "lucide-react";
 import { slugify } from "@/lib/slug";
 
 export const Route = createFileRoute("/admin/news-queue")({
@@ -35,7 +35,13 @@ function NewsQueuePage() {
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [scraping, setScraping] = useState(false);
+  const [batchBusy, setBatchBusy] = useState(false);
   const [filter, setFilter] = useState<FilterKey>("top");
+  // Per-card local edits before publishing (keyed by draft id).
+  const [edits, setEdits] = useState<Record<string, Partial<Draft>>>({});
+  const editVal = (d: Draft, k: keyof Draft) => (edits[d.id]?.[k] as string | null | undefined) ?? (d[k] as any);
+  const setEdit = (id: string, k: keyof Draft, v: string) =>
+    setEdits((prev) => ({ ...prev, [id]: { ...prev[id], [k]: v } }));
 
   const load = async () => {
     setLoading(true);
@@ -79,51 +85,63 @@ function NewsQueuePage() {
     }
   };
 
-  const publish = async (d: Draft) => {
-    setBusyId(d.id);
+  // Single-draft publish using whatever (possibly edited) values are in `edits`.
+  const publishOne = async (d: Draft): Promise<{ ok: boolean; error?: string }> => {
     try {
-      const title_zh = (d.title_zh || d.original_title).trim();
-      const title_en = (d.title_en || d.original_title).trim();
-      const excerpt_zh = (d.excerpt_zh || "").trim();
-      const excerpt_en = (d.excerpt_en || "").trim();
+      const title_zh = String(editVal(d, "title_zh") || d.original_title).trim();
+      const title_en = String(editVal(d, "title_en") || d.original_title).trim();
+      const excerpt_zh = String(editVal(d, "excerpt_zh") || "").trim();
+      const excerpt_en = String(editVal(d, "excerpt_en") || "").trim();
       const body_en = `${excerpt_en}\n\n— Source: ${d.source_name}\n${d.source_url}`;
       const body_zh = `${excerpt_zh}\n\n— 来源：${d.source_name}\n${d.source_url}`;
-
       const baseSlug = slugify(title_en || title_zh) || `news-${d.id.slice(0, 8)}`;
       const slug = `${baseSlug}-${d.id.slice(0, 6)}`;
 
       const { data: art, error: insErr } = await supabase
         .from("articles")
         .insert({
-          slug,
-          title_zh,
-          title_en,
-          excerpt_zh,
-          excerpt_en,
-          body_zh,
-          body_en,
+          slug, title_zh, title_en, excerpt_zh, excerpt_en, body_zh, body_en,
           category: d.category || "News & Commentary",
           status: "published",
           published_at: new Date().toISOString(),
         })
         .select("id")
         .single();
-      if (insErr) throw insErr;
+      if (insErr) return { ok: false, error: insErr.message };
 
       const { error: upErr } = await supabase
         .from("news_drafts")
         .update({ status: "published", published_article_id: art!.id })
         .eq("id", d.id);
-      if (upErr) throw upErr;
-
-      toast.success("已发布到 News & Commentary");
-      await load();
+      if (upErr) return { ok: false, error: upErr.message };
+      return { ok: true };
     } catch (e: any) {
-      toast.error(`发布失败：${e.message}`);
-    } finally {
-      setBusyId(null);
+      return { ok: false, error: e.message };
     }
   };
+
+  const publish = async (d: Draft) => {
+    setBusyId(d.id);
+    const r = await publishOne(d);
+    if (r.ok) { toast.success("已发布到 News & Commentary"); await load(); }
+    else toast.error(`发布失败：${r.error}`);
+    setBusyId(null);
+  };
+
+  const publishAllTopPicks = async () => {
+    const targets = drafts.filter((d) => d.is_top_pick && d.status === "pending");
+    if (targets.length === 0) { toast.info("当前列表没有可发布的 Top Pick"); return; }
+    setBatchBusy(true);
+    let ok = 0, fail = 0;
+    for (const d of targets) {
+      const r = await publishOne(d);
+      if (r.ok) ok++; else fail++;
+    }
+    toast[fail === 0 ? "success" : "warning"](`批量发布完成：成功 ${ok} · 失败 ${fail}`);
+    setBatchBusy(false);
+    await load();
+  };
+
 
   const ignore = async (d: Draft) => {
     setBusyId(d.id);
@@ -159,15 +177,29 @@ function NewsQueuePage() {
             <Link to="/news" className="text-accent underline">News &amp; Commentary</Link>。
           </p>
         </div>
-        <button
-          onClick={runScrape}
-          disabled={scraping}
-          className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 text-xs uppercase tracking-widest hover:bg-accent disabled:opacity-50"
-        >
-          {scraping ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw className="h-4 w-4" />}
-          手动抓取
-        </button>
+        <div className="flex gap-2 flex-wrap justify-end">
+          {filter === "top" && (
+            <button
+              onClick={publishAllTopPicks}
+              disabled={batchBusy || drafts.length === 0}
+              className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2.5 text-xs uppercase tracking-widest hover:opacity-90 disabled:opacity-50"
+              title="一键发布当前列表中所有 Top Pick"
+            >
+              {batchBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Rocket className="h-4 w-4" />}
+              一键发布 Top 5
+            </button>
+          )}
+          <button
+            onClick={runScrape}
+            disabled={scraping}
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 text-xs uppercase tracking-widest hover:bg-accent disabled:opacity-50"
+          >
+            {scraping ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw className="h-4 w-4" />}
+            手动抓取
+          </button>
+        </div>
       </div>
+
 
       <div className="mt-8 flex gap-2 text-xs uppercase tracking-widest flex-wrap">
         {(["top", "pending", "published", "ignored"] as const).map((k) => (
@@ -216,21 +248,64 @@ function NewsQueuePage() {
                   查看原文 <ExternalLink className="h-3 w-3" />
                 </a>
               </div>
-              <h2 className="serif text-2xl mt-2 leading-snug">{d.title_zh || d.original_title}</h2>
-              {d.title_en && <p className="serif italic text-stone-warm mt-1">{d.title_en}</p>}
-              {d.relevance_reason && (
-                <p className="text-xs text-muted-foreground italic mt-2">编辑评分理由：{d.relevance_reason}</p>
+              {(filter === "pending" || filter === "top") ? (
+                <div className="mt-3 space-y-3">
+                  <div>
+                    <p className="eyebrow text-[10px] mb-1">中文标题（可编辑）</p>
+                    <input
+                      value={String(editVal(d, "title_zh") ?? "")}
+                      onChange={(e) => setEdit(d.id, "title_zh", e.target.value)}
+                      className="w-full border border-border bg-background px-3 py-2 serif text-lg"
+                    />
+                  </div>
+                  <div>
+                    <p className="eyebrow text-[10px] mb-1">English title (editable)</p>
+                    <input
+                      value={String(editVal(d, "title_en") ?? "")}
+                      onChange={(e) => setEdit(d.id, "title_en", e.target.value)}
+                      className="w-full border border-border bg-background px-3 py-2 serif italic"
+                    />
+                  </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="eyebrow text-[10px] mb-1">中文摘要（可编辑）</p>
+                      <textarea
+                        value={String(editVal(d, "excerpt_zh") ?? "")}
+                        onChange={(e) => setEdit(d.id, "excerpt_zh", e.target.value)}
+                        rows={5}
+                        className="w-full border border-border bg-background px-3 py-2 text-sm leading-relaxed"
+                      />
+                    </div>
+                    <div>
+                      <p className="eyebrow text-[10px] mb-1">English summary (editable)</p>
+                      <textarea
+                        value={String(editVal(d, "excerpt_en") ?? "")}
+                        onChange={(e) => setEdit(d.id, "excerpt_en", e.target.value)}
+                        rows={5}
+                        className="w-full border border-border bg-background px-3 py-2 text-sm leading-relaxed"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h2 className="serif text-2xl mt-2 leading-snug">{d.title_zh || d.original_title}</h2>
+                  {d.title_en && <p className="serif italic text-stone-warm mt-1">{d.title_en}</p>}
+                  {d.relevance_reason && (
+                    <p className="text-xs text-muted-foreground italic mt-2">编辑评分理由：{d.relevance_reason}</p>
+                  )}
+                  <div className="grid md:grid-cols-2 gap-6 mt-4 text-sm leading-relaxed text-foreground/80">
+                    <div>
+                      <p className="eyebrow text-[10px] mb-1">中文摘要</p>
+                      <p>{d.excerpt_zh || <span className="text-muted-foreground">（无）</span>}</p>
+                    </div>
+                    <div>
+                      <p className="eyebrow text-[10px] mb-1">English summary</p>
+                      <p>{d.excerpt_en || <span className="text-muted-foreground">(none)</span>}</p>
+                    </div>
+                  </div>
+                </>
               )}
-              <div className="grid md:grid-cols-2 gap-6 mt-4 text-sm leading-relaxed text-foreground/80">
-                <div>
-                  <p className="eyebrow text-[10px] mb-1">中文摘要</p>
-                  <p>{d.excerpt_zh || <span className="text-muted-foreground">（无）</span>}</p>
-                </div>
-                <div>
-                  <p className="eyebrow text-[10px] mb-1">English summary</p>
-                  <p>{d.excerpt_en || <span className="text-muted-foreground">(none)</span>}</p>
-                </div>
-              </div>
               <p className="text-xs text-muted-foreground mt-4">
                 抓取于 {new Date(d.fetched_at).toLocaleString()}
                 {d.published_at_source ? ` · 原文发布 ${new Date(d.published_at_source).toLocaleDateString()}` : ""}
