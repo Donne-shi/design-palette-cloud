@@ -64,8 +64,12 @@ function JournalPage() {
           </div>
         </section>
       ) : (
-        <section className="container-prose py-20">
-          <p className="text-muted-foreground">{t("尚未发布任何期次。", "No issues published yet.")}</p>
+        <section className="container-prose py-32 text-center">
+          <p className="eyebrow mb-6 text-accent">Coming Soon</p>
+          <h2 className="serif text-4xl md:text-5xl">{t("敬请期待", "Stay tuned")}</h2>
+          <p className="mt-6 text-foreground/70 max-w-lg mx-auto">
+            {t("《桥梁季刊》创刊号正在筹备中，第一期将很快与读者见面。", "The inaugural issue of Bridge Quarterly is in preparation and will be released soon.")}
+          </p>
         </section>
       )}
 

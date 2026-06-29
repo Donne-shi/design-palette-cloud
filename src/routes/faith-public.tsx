@@ -1,15 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
-import { Landmark, MessageSquareQuote, Mic } from "lucide-react";
+import { Landmark, MessageSquareQuote, Mic, ShieldCheck, Home as HomeIcon, GraduationCap } from "lucide-react";
 
 export const Route = createFileRoute("/faith-public")({
   head: () => ({
     meta: [
       { title: "公共议题与信仰 · Faith & Public Life — MBI" },
-      { name: "description", content: "政府与宗教、信仰回应、普通人的声音——避免精英主义，倾听真实经验。" },
+      { name: "description", content: "信仰与公共生活、宗教自由、家庭与社会议题、教育与文化、全球基督教相关公共议题。" },
       { property: "og:title", content: "Faith & Public Life — MBI" },
-      { property: "og:description", content: "Government & religion, faithful responses, ordinary voices." },
+      { property: "og:description", content: "Faith and public life, religious liberty, family & society, education & culture." },
       { property: "og:url", content: "/faith-public" },
     ],
     links: [{ rel: "canonical", href: "/faith-public" }],
@@ -19,22 +19,13 @@ export const Route = createFileRoute("/faith-public")({
 
 function PublicPage() {
   const { t } = useLang();
-  const sections = [
-    { Icon: Landmark, zh: "美国政府与宗教", en: "Government & Religion", items: [
-      { zh: "新政策解读：今年值得关注的三项", en: "New policy: three things to watch this year" },
-      { zh: "宗教自由案例追踪", en: "Religious-liberty case tracker" },
-      { zh: "法院判决分析", en: "Court rulings, in review" },
-    ]},
-    { Icon: MessageSquareQuote, zh: "信仰回应", en: "Faithful Responses", items: [
-      { zh: "伦理：基因编辑与生命的边界", en: "Ethics: gene editing and the boundaries of life" },
-      { zh: "教育：家长在课程之争中的角色", en: "Education: parents' role in the curriculum debate" },
-      { zh: "家庭：在多元社会养育孩子", en: "Family: raising children in a pluralistic society" },
-    ]},
-    { Icon: Mic, zh: "普通人的声音", en: "Ordinary Voices", items: [
-      { zh: "一位高中老师的来信", en: "Letter from a high-school teacher" },
-      { zh: "一个小企业主的两年", en: "Two years of a small-business owner" },
-      { zh: "留学生眼中的美国教会", en: "American churches through a student's eyes" },
-    ]},
+  const themes = [
+    { Icon: Landmark, zh: "信仰与公共生活", en: "Faith & Public Life" },
+    { Icon: ShieldCheck, zh: "宗教自由", en: "Religious Liberty" },
+    { Icon: HomeIcon, zh: "家庭与社会议题", en: "Family & Society" },
+    { Icon: GraduationCap, zh: "教育与文化", en: "Education & Culture" },
+    { Icon: Mic, zh: "普通人的声音", en: "Ordinary Voices" },
+    { Icon: MessageSquareQuote, zh: "全球基督教公共议题", en: "Global Christianity in Public Life" },
   ];
   return (
     <SiteShell>
@@ -42,24 +33,26 @@ function PublicPage() {
         eyebrow="Faith & Public Life · 信仰与公共生活"
         titleZh={t("信仰从不是私事——它如何进入公共生活？", "Faith was never private — how does it enter public life?")}
         titleEn={t("Faith was never private — how does it enter public life?", "信仰如何进入公共生活？")}
-        lead={t("我们刻意避免精英主义，让普通人的真实经验成为重要的声音。", "We intentionally resist elitism — the real experience of ordinary people belongs at the center.")}
+        lead={t("本栏目将整理与转载与信仰、宗教自由、家庭、教育、文化相关的公共议题文章，刻意避免精英主义，让普通人的真实经验成为重要的声音。", "This section will gather and republish writing on faith, religious liberty, family, education and culture — intentionally resisting elitism so that real, ordinary voices are heard.")}
       />
-      <section className="container-prose py-20 space-y-16">
-        {sections.map((s) => {
-          const Icon = s.Icon;
-          return (
-          <div key={s.en}>
-            <p className="eyebrow mb-3 flex items-center gap-2 text-accent"><Icon className="h-4 w-4" /> <span className="text-stone-warm">{t(s.zh, s.en)} · <span className="italic">{t(s.en, s.zh)}</span></span></p>
-            <div className="grid md:grid-cols-3 gap-6">
-              {s.items.map((it, i) => (
-                <article key={i} className="border-t-2 border-accent pt-5">
-                  <h3 className="serif text-xl leading-snug">{t(it.zh, it.en)}</h3>
-                  <p className="serif italic text-sm text-stone-warm mt-1">{t(it.en, it.zh)}</p>
-                </article>
-              ))}
+      <section className="container-prose py-20">
+        <p className="eyebrow mb-6">{t("栏目方向", "Editorial themes")}</p>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {themes.map(({ Icon, zh, en }) => (
+            <div key={en} className="border border-border p-6">
+              <Icon className="h-5 w-5 text-accent mb-3" />
+              <h3 className="serif text-xl">{t(zh, en)}</h3>
+              <p className="serif italic text-sm text-stone-warm mt-1">{t(en, zh)}</p>
             </div>
-          </div>
-        );})}
+          ))}
+        </div>
+      </section>
+      <section className="container-prose pb-32 text-center">
+        <p className="eyebrow mb-6 text-accent">Coming Soon</p>
+        <h2 className="serif text-4xl md:text-5xl">{t("敬请期待", "Stay tuned")}</h2>
+        <p className="mt-6 text-foreground/70 max-w-lg mx-auto">
+          {t("内容素材正在整理中，首批文章将很快与你见面。", "Articles are being curated — the first pieces will be published soon.")}
+        </p>
       </section>
     </SiteShell>
   );
