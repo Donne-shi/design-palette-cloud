@@ -4,9 +4,7 @@ import { SiteShell } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
 import { listPublishedArticles, listPublishedEvents, listPublishedIssues, type PublicArticle, type PublicEvent } from "@/lib/content.functions";
 import hero from "@/assets/hero.jpg";
-import newsImg from "@/assets/news.jpg";
 import theologyImg from "@/assets/theology.jpg";
-import dialogueImg from "@/assets/dialogue.jpg";
 import journalImg from "@/assets/journal.jpg";
 import eventImg from "@/assets/event.jpg";
 
