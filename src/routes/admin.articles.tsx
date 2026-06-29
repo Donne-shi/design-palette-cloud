@@ -7,10 +7,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Pencil, Trash2, Eye, EyeOff, Search, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Search, ChevronLeft, ChevronRight, RefreshCw, Languages, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { FileUpload } from "@/components/admin/FileUpload";
 import { slugify } from "@/lib/slug";
+import { translateEnglishToZhEs } from "@/lib/auto-translate";
 
 export const Route = createFileRoute("/admin/articles")({ component: ArticlesAdmin });
 
