@@ -47,7 +47,7 @@ function AboutPage() {
       />
       <section className="container-prose py-20 grid md:grid-cols-12 gap-12">
         <div className="md:col-span-4">
-          <p className="eyebrow mb-3">Vision · 愿景</p>
+          <p className="eyebrow mb-3">Vision</p>
           <h2 className="serif text-3xl leading-tight">{t("让福音成为文化之间的桥梁。", "Let the Gospel be a bridge between cultures.")}</h2>
         </div>
         <div className="md:col-span-8 space-y-4 text-lg leading-relaxed text-foreground/85">
@@ -59,7 +59,7 @@ function AboutPage() {
       <section className="bg-secondary/40 border-y border-border/70 py-20">
         <div className="container-prose grid md:grid-cols-12 gap-12">
           <div className="md:col-span-4">
-            <p className="eyebrow mb-3">Mission · 使命</p>
+            <p className="eyebrow mb-3">Mission</p>
             <h2 className="serif text-3xl">{t("我们做什么", "What we do")}</h2>
           </div>
           <ul className="md:col-span-8 grid sm:grid-cols-2 gap-x-8 gap-y-5 text-foreground/85">
@@ -77,7 +77,7 @@ function AboutPage() {
       </section>
 
       <section className="container-prose py-24">
-        <p className="eyebrow mb-4">Core Values · 核心价值</p>
+        <p className="eyebrow mb-4">Core Values</p>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
           {values.map(({ Icon, ...v }) => (
             <div key={v.en} className="border-t-2 border-accent pt-5">
@@ -90,7 +90,7 @@ function AboutPage() {
       </section>
 
       <section className="container-prose pb-24">
-        <p className="eyebrow mb-4">Editorial Principles · 内容原则</p>
+        <p className="eyebrow mb-4">Editorial Principles</p>
         <div className="grid md:grid-cols-2 gap-12">
           <div>
             <h3 className="serif text-2xl mb-4 flex items-center gap-2"><Check className="h-5 w-5 text-accent" /> {t("我们支持", "We support")}</h3>
