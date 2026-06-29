@@ -60,8 +60,8 @@ function EventsPage() {
   );
 }
 
-function EventCard({ e, lang, compact }: { e: PublicEvent; lang: "zh" | "en"; compact?: boolean }) {
-  const title = lang === "en" ? e.title_en || e.title_zh : e.title_zh;
+function EventCard({ e, lang, compact }: { e: PublicEvent; lang: "zh" | "en" | "es"; compact?: boolean }) {
+  const title = lang === "zh" ? e.title_zh : (e.title_en || e.title_zh);
   const when = new Date(e.start_at).toLocaleString();
   return (
     <Link to="/events/$id" params={{ id: e.id }} className="group block">
