@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
@@ -127,10 +127,18 @@ function AuthPage() {
             {loading ? "…" : mode === "signin" ? t("登录","Sign in") : t("注册","Sign up")}
           </button>
         </form>
-        <button onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          className="mt-6 text-xs uppercase tracking-widest text-stone-warm hover:text-accent">
-          {mode === "signin" ? t("没有账号？创建一个","No account? Create one") : t("已有账号？登录","Have an account? Sign in")}
-        </button>
+        <div className="mt-6 flex items-center justify-between gap-3">
+          <button onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+            className="text-xs uppercase tracking-widest text-stone-warm hover:text-accent">
+            {mode === "signin" ? t("没有账号？创建一个","No account? Create one") : t("已有账号？登录","Have an account? Sign in")}
+          </button>
+          {mode === "signin" && (
+            <Link to="/forgot-password" className="text-xs uppercase tracking-widest text-stone-warm hover:text-accent">
+              {t("忘记密码？", "Forgot password?")}
+            </Link>
+          )}
+        </div>
+
       </div>
     </div>
   );
