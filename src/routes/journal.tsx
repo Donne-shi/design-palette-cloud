@@ -82,7 +82,7 @@ function JournalPage() {
               {rest.map((iss) => (
                 <Link key={iss.id} to="/journal/$id" params={{ id: iss.id }} className="border border-border bg-card p-6 hover:border-accent transition-colors block">
                   <p className="text-xs uppercase tracking-widest text-stone-warm">Vol.{iss.volume} · Issue {iss.issue_number}</p>
-                  <p className="serif text-xl mt-2">{lang === "en" ? iss.title_en || iss.title_zh : iss.title_zh}</p>
+                  <p className="serif text-xl mt-2">{pickLocalized(lang, { zh: iss.title_zh, en: iss.title_en, es: iss.title_es })}</p>
                   {iss.published_at && <p className="serif italic text-sm text-stone-warm mt-1">{new Date(iss.published_at).toLocaleDateString()}</p>}
                 </Link>
               ))}
