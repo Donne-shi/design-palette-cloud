@@ -27,7 +27,7 @@ function AdminComments() {
     setLoading(true);
     let q = supabase
       .from("comments")
-      .select("id,body,status,created_at,user_id,article_id,articles(title_zh,slug),profiles(display_name)")
+      .select("id,body,status,created_at,user_id,article_id,articles(title_zh,slug)")
       .order("created_at", { ascending: false });
     if (filter !== "all") q = q.eq("status", filter);
     const { data, error } = await q;
