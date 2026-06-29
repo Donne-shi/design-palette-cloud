@@ -109,8 +109,15 @@ function AboutPage() {
           <div>
             <h3 className="serif text-2xl mb-4 flex items-center gap-2"><XIcon className="h-5 w-5 text-stone-warm" /> {t("我们反对", "We reject")}</h3>
             <ul className="space-y-2 text-foreground/85">
-              {["极端民族主义 / Extreme nationalism","极端意识形态 / Ideological extremism","仇恨言论 / Hate speech","阴谋论传播 / Conspiracy theorizing","将福音工具化 / Weaponizing the Gospel","成功神学 / Prosperity gospel"].map(x => (
-                <li key={x} className="flex gap-2"><XIcon className="h-4 w-4 mt-1 text-stone-warm shrink-0" /><span>{x}</span></li>
+              {[
+                { zh: "极端民族主义", en: "Extreme nationalism" },
+                { zh: "极端意识形态", en: "Ideological extremism" },
+                { zh: "仇恨言论", en: "Hate speech" },
+                { zh: "阴谋论传播", en: "Conspiracy theorizing" },
+                { zh: "将福音工具化", en: "Weaponizing the Gospel" },
+                { zh: "成功神学", en: "Prosperity gospel" },
+              ].map(x => (
+                <li key={x.en} className="flex gap-2"><XIcon className="h-4 w-4 mt-1 text-stone-warm shrink-0" /><span>{t(x.zh, x.en)}</span></li>
               ))}
             </ul>
           </div>
