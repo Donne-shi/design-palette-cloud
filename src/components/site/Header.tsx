@@ -102,6 +102,8 @@ export function Header() {
                     {l.label}
                   </button>
                 ))}
+              </div>
+            )}
           </div>
 
           {email ? (
@@ -144,9 +146,6 @@ export function Header() {
             </Link>
           )}
 
-
-            )}
-          </div>
           <button
             className="lg:hidden p-2 -mr-2"
             onClick={() => setOpen((v) => !v)}
