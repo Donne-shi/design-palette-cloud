@@ -2,8 +2,40 @@ import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-rout
 import { SiteShell } from "@/components/site/SiteShell";
 import { getArticleBySlug, type PublicArticle } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
-import { CalendarDays, Tag, ArrowLeft } from "lucide-react";
+import { CalendarDays, Tag, ArrowLeft, ExternalLink } from "lucide-react";
 import { CommentsSection } from "@/components/site/Comments";
+
+// Strip the auto-appended "— Source: <name>\n<url>" / "— 来源：<name>\n<url>" tail
+// from scraped article bodies and surface it as a structured "Read Original" link.
+function extractSource(body: string | null | undefined): { body: string; sourceUrl: string | null; sourceName: string | null } {
+  if (!body) return { body: "", sourceUrl: null, sourceName: null };
+  const re = /\n+\s*(?:—|--)\s*(?:Source|来源)\s*[:：]\s*([^\n]+?)\n+(https?:\/\/\S+)\s*$/i;
+  const m = body.match(re);
+  if (!m) return { body, sourceUrl: null, sourceName: null };
+  return { body: body.slice(0, m.index).trimEnd(), sourceName: m[1].trim(), sourceUrl: m[2].trim() };
+}
+
+// Minimal, safe inline-markdown renderer: paragraphs + **bold** + *italic* + [text](url).
+function renderBody(text: string) {
+  const paragraphs = text.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+  const inline = (s: string) => {
+    const parts: Array<string | JSX.Element> = [];
+    const regex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
+    let last = 0; let m: RegExpExecArray | null; let i = 0;
+    while ((m = regex.exec(s))) {
+      if (m.index > last) parts.push(s.slice(last, m.index));
+      if (m[2]) parts.push(<a key={i++} href={m[2]} target="_blank" rel="noreferrer" className="text-accent underline underline-offset-4 hover:opacity-80">{m[1]}</a>);
+      else if (m[3]) parts.push(<strong key={i++}>{m[3]}</strong>);
+      else if (m[4]) parts.push(<em key={i++}>{m[4]}</em>);
+      last = regex.lastIndex;
+    }
+    if (last < s.length) parts.push(s.slice(last));
+    return parts;
+  };
+  return paragraphs.map((p, idx) => (
+    <p key={idx} className="mb-5 whitespace-pre-wrap">{inline(p)}</p>
+  ));
+}
 
 const SITE = "https://bridgeaway.org";
 
