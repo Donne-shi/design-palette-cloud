@@ -6,8 +6,8 @@ import { Compass, Sparkles, MessagesSquare, HandHeart, Sunrise, Check, X as XIco
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "关于我们 · About — Multicultural Bridge Initiative" },
-      { name: "description", content: "MBI 的愿景、使命与核心价值：Truth, Grace, Dialogue, Service, Hope." },
+      { title: "About · Multicultural Bridge Initiative" },
+      { name: "description", content: "MBI vision, mission and core values: Truth, Grace, Dialogue, Service, Hope." },
       { property: "og:title", content: "About — MBI" },
       { property: "og:description", content: "Vision, mission, and the principles guiding our work." },
       { property: "og:url", content: "/about" },
@@ -37,7 +37,7 @@ function AboutPage() {
   return (
     <SiteShell>
       <PageHero
-        eyebrow="About / 关于我们"
+        eyebrow="About"
         titleZh={t("让福音成为文化之间的桥梁。", "Let the Gospel be a bridge between cultures.")}
         titleEn={t("Let the Gospel be a bridge between cultures.", "让福音成为文化之间的桥梁。")}
         lead={t(

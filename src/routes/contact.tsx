@@ -10,8 +10,8 @@ import { z } from "zod";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "联系我们 · Contact — MBI" },
-      { name: "description", content: "与多元文化桥梁计划联系——投稿、合作、媒体咨询。" },
+      { title: "Contact · MBI" },
+      { name: "description", content: "Get in touch with the Multicultural Bridge Initiative — submissions, partnerships, media inquiries." },
       { property: "og:title", content: "Contact — MBI" },
       { property: "og:description", content: "Submissions, partnerships, media inquiries." },
       { property: "og:url", content: "/contact" },
@@ -58,14 +58,14 @@ function ContactPage() {
   return (
     <SiteShell>
       <PageHero
-        eyebrow="Contact · 联系我们"
+        eyebrow="Contact"
         titleZh={t("我们很乐意听见你。", "We'd love to hear from you.")}
         titleEn={t("We'd love to hear from you.", "我们很乐意听见你。")}
       />
       <section className="container-prose py-20 grid md:grid-cols-12 gap-12">
         <div className="md:col-span-5 space-y-8">
           <div>
-            <p className="eyebrow mb-2">Email · 投稿 / 联系</p>
+            <p className="eyebrow mb-2">Email</p>
             <a href="mailto:INFO.BRIDGEAWAY@GMAIL.COM" className="serif text-xl flex items-center gap-2 hover:text-accent break-all">
               <Mail className="h-4 w-4 text-accent shrink-0" /> INFO.BRIDGEAWAY@GMAIL.COM
             </a>

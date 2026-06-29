@@ -6,8 +6,8 @@ import { BookMarked, Globe2, Home, Cpu, Landmark } from "lucide-react";
 export const Route = createFileRoute("/resources")({
   head: () => ({
     meta: [
-      { title: "资源中心 · Resources — MBI" },
-      { name: "description", content: "神学、宣教、家庭教育、AI与信仰、公共议题研究等资源。" },
+      { title: "Resources · MBI" },
+      { name: "description", content: "Theology, mission, family education, AI & faith, and public issues research." },
       { property: "og:title", content: "Resources — MBI" },
       { property: "og:description", content: "Theology, mission, family education, AI & faith, public issues." },
       { property: "og:url", content: "/resources" },
@@ -29,7 +29,7 @@ function Resources() {
   return (
     <SiteShell>
       <PageHero
-        eyebrow="Resources · 资源中心"
+        eyebrow="Resources"
         titleZh={t("可以阅读、可以下载、可以使用的资源。", "Resources to read, download, and put to use.")}
         titleEn={t("Resources to read, download, and put to use.", "可读、可下载、可使用。")}
         lead={t("PDF、视频、PPT、课程——为牧者、教师、家庭与一般读者预备的资源。", "PDFs, video, slides and courses for pastors, teachers, families and general readers.")}

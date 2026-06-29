@@ -10,8 +10,8 @@ export const Route = createFileRoute("/news/")({
   loader: () => listPublishedArticles(),
   head: () => ({
     meta: [
-      { title: "新闻与评论 · News & Commentary — MBI" },
-      { name: "description", content: "美国基督教动态、社会议题观察、国际基督教新闻——以福音视角回应时代。" },
+      { title: "News & Commentary · MBI" },
+      { name: "description", content: "U.S. church news, contemporary issues, and global Christianity — through a Gospel lens." },
       { property: "og:title", content: "News & Commentary — MBI" },
       { property: "og:description", content: "U.S. church news, society, and global Christianity — through a Gospel lens." },
       { property: "og:url", content: "https://bridgeaway.org/news" },

@@ -6,8 +6,8 @@ import { Scale, ShieldCheck, Scroll, Quote, MessageCircle, Pencil } from "lucide
 export const Route = createFileRoute("/theology")({
   head: () => ({
     meta: [
-      { title: "神学争鸣 · Theology Forum — MBI" },
-      { name: "description", content: "在真理与爱中进行神学讨论——圣经解释、教会与社会、神学家观点。" },
+      { title: "Theology Forum · MBI" },
+      { name: "description", content: "Theological discussion in truth and love — Scripture, church and society, voices in conversation." },
       { property: "og:title", content: "Theology Forum — MBI" },
       { property: "og:description", content: "Theological discussion in truth and love — Scripture, church & society, voices." },
       { property: "og:url", content: "/theology" },
@@ -46,14 +46,14 @@ function TheologyPage() {
   return (
     <SiteShell>
       <PageHero
-        eyebrow="Theology Forum · 神学争鸣"
+        eyebrow="Theology Forum"
         titleZh={t("在真理与爱中进行神学讨论。", "Theology — in truth and in love.")}
         titleEn={t("In truth and love.", "在真理与爱中。")}
         lead={t("我们不代表任何宗派；我们邀请福音派、改革宗、卫理宗、长老会、浸信会与其他历史正统传统进入开放、严谨而温和的讨论。", "We belong to no single denomination. We invite Evangelical, Reformed, Methodist, Presbyterian, Baptist, and other historically orthodox traditions into open, rigorous, and gracious discussion.")}
       />
 
       <section className="container-prose py-20">
-        <p className="eyebrow mb-3">Open Debates · 当前讨论</p>
+        <p className="eyebrow mb-3">Open Debates</p>
         <div className="mt-8 space-y-14">
           {debates.map((d, i) => {
             const Icon = d.Icon;
@@ -88,7 +88,7 @@ function TheologyPage() {
 
       <section className="bg-secondary/40 border-y border-border/70 py-20">
         <div className="container-prose">
-          <p className="eyebrow mb-3">Voices in conversation · 神学家观点</p>
+          <p className="eyebrow mb-3">Voices in conversation</p>
           <h2 className="serif text-4xl">{t("我们邀请这些声音进入对话", "Voices we engage")}</h2>
           <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 text-sm">
             {voices.map((v) => (

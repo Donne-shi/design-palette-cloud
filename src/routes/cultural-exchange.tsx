@@ -5,8 +5,8 @@ import { useLang } from "@/lib/i18n";
 export const Route = createFileRoute("/cultural-exchange")({
   head: () => ({
     meta: [
-      { title: "文化交流 · Cultural Exchange — MBI" },
-      { name: "description", content: "论坛、讲座、青年培训、国际学生交流、教会参访、宣教分享。" },
+      { title: "Cultural Exchange · MBI" },
+      { name: "description", content: "Forums, lectures, youth training, student exchange, church visits, and mission gatherings." },
       { property: "og:title", content: "Cultural Exchange — MBI" },
       { property: "og:description", content: "Forums, lectures, youth training, student exchange, mission gatherings." },
       { property: "og:url", content: "/cultural-exchange" },
@@ -21,7 +21,7 @@ function ExchangePage() {
   return (
     <SiteShell>
       <PageHero
-        eyebrow="Cultural Exchange · 文化交流"
+        eyebrow="Cultural Exchange"
         titleZh={t("让对话在真实空间发生。", "Where conversations happen in real space.")}
         titleEn={t("Where conversations happen.", "让对话发生。")}
         lead={t("我们将组织论坛、讲座、青年培训、国际学生交流、教会参访与宣教分享，建立跨文化、跨教会、跨领域的关系网络。", "We will host forums, lectures, youth training, student exchange, church visits, and mission gatherings — building cross-cultural, cross-church, cross-discipline networks.")}

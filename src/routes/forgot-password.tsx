@@ -8,7 +8,7 @@ import { z } from "zod";
 export const Route = createFileRoute("/forgot-password")({
   head: () => ({
     meta: [
-      { title: "忘记密码 · Forgot Password — MBI" },
+      { title: "Forgot Password · MBI" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),

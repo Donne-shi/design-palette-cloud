@@ -6,8 +6,8 @@ import { Landmark, MessageSquareQuote, Mic, ShieldCheck, Home as HomeIcon, Gradu
 export const Route = createFileRoute("/faith-public")({
   head: () => ({
     meta: [
-      { title: "公共议题与信仰 · Faith & Public Life — MBI" },
-      { name: "description", content: "信仰与公共生活、宗教自由、家庭与社会议题、教育与文化、全球基督教相关公共议题。" },
+      { title: "Faith & Public Life · MBI" },
+      { name: "description", content: "Faith and public life, religious liberty, family and society, education and culture, global Christianity." },
       { property: "og:title", content: "Faith & Public Life — MBI" },
       { property: "og:description", content: "Faith and public life, religious liberty, family & society, education & culture." },
       { property: "og:url", content: "/faith-public" },
@@ -30,7 +30,7 @@ function PublicPage() {
   return (
     <SiteShell>
       <PageHero
-        eyebrow="Faith & Public Life · 信仰与公共生活"
+        eyebrow="Faith & Public Life"
         titleZh={t("信仰从不是私事——它如何进入公共生活？", "Faith was never private — how does it enter public life?")}
         titleEn={t("Faith was never private — how does it enter public life?", "信仰如何进入公共生活？")}
         lead={t("本栏目将整理与转载与信仰、宗教自由、家庭、教育、文化相关的公共议题文章，刻意避免精英主义，让普通人的真实经验成为重要的声音。", "This section will gather and republish writing on faith, religious liberty, family, education and culture — intentionally resisting elitism so that real, ordinary voices are heard.")}

@@ -10,8 +10,8 @@ export const Route = createFileRoute("/events")({
   loader: () => listPublishedEvents(),
   head: () => ({
     meta: [
-      { title: "活动 · Events — MBI" },
-      { name: "description", content: "Multicultural Bridge Initiative 主办的对话、讲座与研讨会。" },
+      { title: "Events · MBI" },
+      { name: "description", content: "Talks, dialogues, and seminars hosted by the Multicultural Bridge Initiative." },
       { property: "og:title", content: "Events — MBI" },
       { property: "og:description", content: "Talks, dialogues, and gatherings hosted by MBI." },
       { property: "og:url", content: `${SITE}/events` },
