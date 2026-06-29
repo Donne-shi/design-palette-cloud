@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
+import { pickLocalized } from "@/lib/pickLocalized";
 import { BookOpenText, FileDown, Archive } from "lucide-react";
 import { listPublishedIssues, type PublicIssue } from "@/lib/content.functions";
 
@@ -55,10 +56,10 @@ function JournalPage() {
           </div>
           <div className="md:col-span-7">
             <p className="eyebrow mb-3">Vol.{latest.volume} · Issue {latest.issue_number}{latest.published_at && ` · ${new Date(latest.published_at).toLocaleDateString()}`}</p>
-            <h2 className="serif text-4xl md:text-5xl leading-tight">{lang === "en" ? latest.title_en || latest.title_zh : latest.title_zh}</h2>
-            {(latest.summary_zh || latest.summary_en) && (
+            <h2 className="serif text-4xl md:text-5xl leading-tight">{pickLocalized(lang, { zh: latest.title_zh, en: latest.title_en, es: latest.title_es })}</h2>
+            {(latest.summary_zh || latest.summary_en || latest.summary_es) && (
               <p className="mt-6 text-foreground/80 leading-relaxed whitespace-pre-wrap">
-                {lang === "en" ? latest.summary_en || latest.summary_zh : latest.summary_zh || latest.summary_en}
+                {pickLocalized(lang, { zh: latest.summary_zh, en: latest.summary_en, es: latest.summary_es })}
               </p>
             )}
           </div>
@@ -81,7 +82,7 @@ function JournalPage() {
               {rest.map((iss) => (
                 <Link key={iss.id} to="/journal/$id" params={{ id: iss.id }} className="border border-border bg-card p-6 hover:border-accent transition-colors block">
                   <p className="text-xs uppercase tracking-widest text-stone-warm">Vol.{iss.volume} · Issue {iss.issue_number}</p>
-                  <p className="serif text-xl mt-2">{lang === "en" ? iss.title_en || iss.title_zh : iss.title_zh}</p>
+                  <p className="serif text-xl mt-2">{pickLocalized(lang, { zh: iss.title_zh, en: iss.title_en, es: iss.title_es })}</p>
                   {iss.published_at && <p className="serif italic text-sm text-stone-warm mt-1">{new Date(iss.published_at).toLocaleDateString()}</p>}
                 </Link>
               ))}

@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, Globe2, Heart, MessageSquareQuote, Mic, Newspaper, Users } from "lucide-react";
 import { SiteShell } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
+import { pickLocalized } from "@/lib/pickLocalized";
 import { listPublishedArticles, listPublishedEvents, listPublishedIssues, type PublicArticle, type PublicEvent } from "@/lib/content.functions";
 import hero from "@/assets/hero.jpg";
 import theologyImg from "@/assets/theology.jpg";
@@ -133,9 +134,9 @@ function Home() {
           ) : (
             <ul className="divide-y divide-border/70">
               {articles.map((a: PublicArticle) => {
-                const title = lang === "en" && a.title_en ? a.title_en : a.title_zh;
-                const subtitle = lang === "en" ? a.title_zh : (a.title_en ?? "");
-                const excerpt = lang === "en" ? (a.excerpt_en || a.excerpt_zh) : (a.excerpt_zh || a.excerpt_en);
+                const title = pickLocalized(lang, { zh: a.title_zh, en: a.title_en, es: a.title_es });
+                const subtitle = lang === "zh" ? (a.title_en ?? "") : (lang === "en" ? a.title_zh : (a.title_en ?? a.title_zh));
+                const excerpt = pickLocalized(lang, { zh: a.excerpt_zh, en: a.excerpt_en, es: a.excerpt_es });
                 return (
                   <li key={a.id} className="py-7 first:pt-0">
                     <Link
@@ -195,8 +196,8 @@ function Home() {
           ) : (
             <div className="grid md:grid-cols-3 gap-6">
               {events.map((e: PublicEvent) => {
-                const title = lang === "en" && e.title_en ? e.title_en : e.title_zh;
-                const subtitle = lang === "en" ? e.title_zh : (e.title_en ?? "");
+                const title = pickLocalized(lang, { zh: e.title_zh, en: e.title_en, es: e.title_es });
+                const subtitle = lang === "zh" ? (e.title_en ?? "") : (lang === "en" ? e.title_zh : (e.title_en ?? e.title_zh));
                 return (
                   <Link
                     key={e.id}
@@ -266,12 +267,12 @@ function Home() {
             </p>
             <h2 className="serif text-4xl md:text-5xl leading-tight">
               {latestIssue
-                ? (lang === "en" && latestIssue.title_en ? latestIssue.title_en : latestIssue.title_zh)
+                ? pickLocalized(lang, { zh: latestIssue.title_zh, en: latestIssue.title_en, es: latestIssue.title_es })
                 : t("电子期刊即将上线", "Journal coming soon")}
             </h2>
             {latestIssue && (
               <p className="mt-6 text-foreground/80 leading-relaxed">
-                {lang === "en" && latestIssue.summary_en ? latestIssue.summary_en : (latestIssue.summary_zh || "")}
+                {pickLocalized(lang, { zh: latestIssue.summary_zh, en: latestIssue.summary_en, es: latestIssue.summary_es })}
               </p>
             )}
             <div className="mt-8 flex flex-wrap gap-3">

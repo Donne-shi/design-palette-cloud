@@ -18,51 +18,60 @@ export type Database = {
         Row: {
           author_id: string | null
           body_en: string | null
+          body_es: string | null
           body_zh: string | null
           category: string
           cover_url: string | null
           created_at: string
           excerpt_en: string | null
+          excerpt_es: string | null
           excerpt_zh: string | null
           id: string
           published_at: string | null
           slug: string | null
           status: string
           title_en: string | null
+          title_es: string | null
           title_zh: string
           updated_at: string
         }
         Insert: {
           author_id?: string | null
           body_en?: string | null
+          body_es?: string | null
           body_zh?: string | null
           category?: string
           cover_url?: string | null
           created_at?: string
           excerpt_en?: string | null
+          excerpt_es?: string | null
           excerpt_zh?: string | null
           id?: string
           published_at?: string | null
           slug?: string | null
           status?: string
           title_en?: string | null
+          title_es?: string | null
           title_zh: string
           updated_at?: string
         }
         Update: {
           author_id?: string | null
           body_en?: string | null
+          body_es?: string | null
           body_zh?: string | null
           category?: string
           cover_url?: string | null
           created_at?: string
           excerpt_en?: string | null
+          excerpt_es?: string | null
           excerpt_zh?: string | null
           id?: string
           published_at?: string | null
           slug?: string | null
           status?: string
           title_en?: string | null
+          title_es?: string | null
           title_zh?: string
           updated_at?: string
         }
@@ -286,6 +295,7 @@ export type Database = {
           cover_url: string | null
           created_at: string
           description_en: string | null
+          description_es: string | null
           description_zh: string | null
           end_at: string | null
           id: string
@@ -293,6 +303,7 @@ export type Database = {
           start_at: string
           status: string
           title_en: string | null
+          title_es: string | null
           title_zh: string
           updated_at: string
         }
@@ -301,6 +312,7 @@ export type Database = {
           cover_url?: string | null
           created_at?: string
           description_en?: string | null
+          description_es?: string | null
           description_zh?: string | null
           end_at?: string | null
           id?: string
@@ -308,6 +320,7 @@ export type Database = {
           start_at: string
           status?: string
           title_en?: string | null
+          title_es?: string | null
           title_zh: string
           updated_at?: string
         }
@@ -316,6 +329,7 @@ export type Database = {
           cover_url?: string | null
           created_at?: string
           description_en?: string | null
+          description_es?: string | null
           description_zh?: string | null
           end_at?: string | null
           id?: string
@@ -323,6 +337,7 @@ export type Database = {
           start_at?: string
           status?: string
           title_en?: string | null
+          title_es?: string | null
           title_zh?: string
           updated_at?: string
         }
@@ -338,8 +353,10 @@ export type Database = {
           published_at: string | null
           status: string
           summary_en: string | null
+          summary_es: string | null
           summary_zh: string | null
           title_en: string | null
+          title_es: string | null
           title_zh: string
           updated_at: string
           volume: number
@@ -353,8 +370,10 @@ export type Database = {
           published_at?: string | null
           status?: string
           summary_en?: string | null
+          summary_es?: string | null
           summary_zh?: string | null
           title_en?: string | null
+          title_es?: string | null
           title_zh: string
           updated_at?: string
           volume: number
@@ -368,8 +387,10 @@ export type Database = {
           published_at?: string | null
           status?: string
           summary_en?: string | null
+          summary_es?: string | null
           summary_zh?: string | null
           title_en?: string | null
+          title_es?: string | null
           title_zh?: string
           updated_at?: string
           volume?: number

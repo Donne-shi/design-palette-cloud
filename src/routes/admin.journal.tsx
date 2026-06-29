@@ -7,26 +7,47 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { FileUpload } from "@/components/admin/FileUpload";
+import { translateEnglishToZhEs } from "@/lib/auto-translate";
 
 export const Route = createFileRoute("/admin/journal")({ component: JournalAdmin });
 
 type Issue = {
   id: string; volume: number; issue_number: number;
-  title_zh: string; title_en: string | null;
-  summary_zh: string | null; summary_en: string | null;
+  title_zh: string; title_en: string | null; title_es: string | null;
+  summary_zh: string | null; summary_en: string | null; summary_es: string | null;
   cover_url: string | null; pdf_url: string | null;
   published_at: string | null; status: string;
 };
-const empty: Partial<Issue> = { volume: 1, issue_number: 1, title_zh: "", title_en: "", summary_zh: "", summary_en: "", cover_url: "", pdf_url: "", status: "draft" };
+const empty: Partial<Issue> = { volume: 1, issue_number: 1, title_zh: "", title_en: "", title_es: "", summary_zh: "", summary_en: "", summary_es: "", cover_url: "", pdf_url: "", status: "draft" };
 
 function JournalAdmin() {
   const [rows, setRows] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Partial<Issue> | null>(null);
   const [saving, setSaving] = useState(false);
+  const [translating, setTranslating] = useState(false);
+
+  const autoTranslate = async () => {
+    if (!editing?.title_en?.trim()) { toast.error("请先填写 English Title"); return; }
+    setTranslating(true);
+    try {
+      const [titleT, sumT] = await Promise.all([
+        translateEnglishToZhEs([editing.title_en]),
+        editing.summary_en?.trim() ? translateEnglishToZhEs([editing.summary_en]) : Promise.resolve({ zh: [""], es: [""] }),
+      ]);
+      setEditing({ ...editing,
+        title_zh: titleT.zh[0] || editing.title_zh,
+        title_es: titleT.es[0] || editing.title_es,
+        summary_zh: sumT.zh[0] || editing.summary_zh,
+        summary_es: sumT.es[0] || editing.summary_es,
+      });
+      toast.success("已翻译");
+    } catch (e: any) { toast.error(e?.message || "翻译失败"); }
+    finally { setTranslating(false); }
+  };
 
   const load = async () => {
     setLoading(true);
@@ -93,18 +114,25 @@ function JournalAdmin() {
           <DialogHeader><DialogTitle className="serif text-2xl">{editing?.id ? "编辑期刊" : "新建期刊"}</DialogTitle></DialogHeader>
           {editing && (
             <div className="grid gap-4">
+              <div className="flex justify-end">
+                <Button type="button" variant="outline" size="sm" onClick={autoTranslate} disabled={translating} className="gap-2">
+                  <Sparkles className="h-4 w-4"/>{translating ? "翻译中…" : "Auto-translate EN → ZH/ES"}
+                </Button>
+              </div>
               <div className="grid grid-cols-3 gap-4">
                 <div><Label>卷 Volume *</Label><Input type="number" value={editing.volume ?? ""} onChange={(e) => setEditing({ ...editing, volume: parseInt(e.target.value) || 0 })}/></div>
                 <div><Label>期号 Issue *</Label><Input type="number" value={editing.issue_number ?? ""} onChange={(e) => setEditing({ ...editing, issue_number: parseInt(e.target.value) || 0 })}/></div>
                 <div><Label>发布日期</Label><Input type="date" value={editing.published_at || ""} onChange={(e) => setEditing({ ...editing, published_at: e.target.value || null })}/></div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
+                <div><Label>English Title (source)</Label><Input value={editing.title_en || ""} onChange={(e) => setEditing({ ...editing, title_en: e.target.value })}/></div>
                 <div><Label>中文标题 *</Label><Input value={editing.title_zh || ""} onChange={(e) => setEditing({ ...editing, title_zh: e.target.value })}/></div>
-                <div><Label>English Title</Label><Input value={editing.title_en || ""} onChange={(e) => setEditing({ ...editing, title_en: e.target.value })}/></div>
+                <div><Label>Título (ES)</Label><Input value={editing.title_es || ""} onChange={(e) => setEditing({ ...editing, title_es: e.target.value })}/></div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
+                <div><Label>English Summary (source)</Label><Textarea rows={4} value={editing.summary_en || ""} onChange={(e) => setEditing({ ...editing, summary_en: e.target.value })}/></div>
                 <div><Label>中文摘要</Label><Textarea rows={4} value={editing.summary_zh || ""} onChange={(e) => setEditing({ ...editing, summary_zh: e.target.value })}/></div>
-                <div><Label>English Summary</Label><Textarea rows={4} value={editing.summary_en || ""} onChange={(e) => setEditing({ ...editing, summary_en: e.target.value })}/></div>
+                <div><Label>Resumen (ES)</Label><Textarea rows={4} value={editing.summary_es || ""} onChange={(e) => setEditing({ ...editing, summary_es: e.target.value })}/></div>
               </div>
               <div>
                 <Label>封面图</Label>

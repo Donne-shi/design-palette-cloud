@@ -9,10 +9,13 @@ export type PublicArticle = {
   slug: string | null;
   title_zh: string;
   title_en: string | null;
+  title_es: string | null;
   excerpt_zh: string | null;
   excerpt_en: string | null;
+  excerpt_es: string | null;
   body_zh: string | null;
   body_en: string | null;
+  body_es: string | null;
   category: string;
   cover_url: string | null;
   published_at: string | null;
@@ -23,8 +26,10 @@ export type PublicEvent = {
   id: string;
   title_zh: string;
   title_en: string | null;
+  title_es: string | null;
   description_zh: string | null;
   description_en: string | null;
+  description_es: string | null;
   start_at: string;
   end_at: string | null;
   location: string | null;
@@ -38,19 +43,21 @@ export type PublicIssue = {
   issue_number: number;
   title_zh: string;
   title_en: string | null;
+  title_es: string | null;
   summary_zh: string | null;
   summary_en: string | null;
+  summary_es: string | null;
   cover_url: string | null;
   pdf_url: string | null;
   published_at: string | null;
 };
 
 const ARTICLE_COLS =
-  "id,slug,title_zh,title_en,excerpt_zh,excerpt_en,body_zh,body_en,category,cover_url,published_at,created_at";
+  "id,slug,title_zh,title_en,title_es,excerpt_zh,excerpt_en,excerpt_es,body_zh,body_en,body_es,category,cover_url,published_at,created_at";
 const EVENT_COLS =
-  "id,title_zh,title_en,description_zh,description_en,start_at,end_at,location,cover_url,capacity";
+  "id,title_zh,title_en,title_es,description_zh,description_en,description_es,start_at,end_at,location,cover_url,capacity";
 const ISSUE_COLS =
-  "id,volume,issue_number,title_zh,title_en,summary_zh,summary_en,cover_url,pdf_url,published_at";
+  "id,volume,issue_number,title_zh,title_en,title_es,summary_zh,summary_en,summary_es,cover_url,pdf_url,published_at";
 
 export const listPublishedArticles = createServerFn({ method: "GET" }).handler(async () => {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");

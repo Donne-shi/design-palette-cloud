@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-rout
 import { SiteShell } from "@/components/site/SiteShell";
 import { getEventById, type PublicEvent } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
+import { pickLocalized } from "@/lib/pickLocalized";
 import { ArrowLeft, CalendarDays, MapPin, Users } from "lucide-react";
 import { RegistrationPanel } from "@/components/site/RegistrationPanel";
 
@@ -53,8 +54,8 @@ export const Route = createFileRoute("/events/$id")({
 function EventDetail() {
   const e = Route.useLoaderData() as PublicEvent;
   const { t, lang } = useLang();
-  const title = lang === "en" ? e.title_en || e.title_zh : e.title_zh;
-  const desc = lang === "en" ? e.description_en || e.description_zh : e.description_zh || e.description_en;
+  const title = pickLocalized(lang, { zh: e.title_zh, en: e.title_en, es: e.title_es });
+  const desc = pickLocalized(lang, { zh: e.description_zh, en: e.description_en, es: e.description_es });
 
   return (
     <SiteShell>

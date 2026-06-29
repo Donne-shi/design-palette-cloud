@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-rout
 import { SiteShell } from "@/components/site/SiteShell";
 import { getIssueById, type PublicIssue } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
+import { pickLocalized } from "@/lib/pickLocalized";
 import { ArrowLeft, FileDown, BookOpenText } from "lucide-react";
 
 const SITE = "https://bridgeaway.org";
@@ -38,8 +39,8 @@ export const Route = createFileRoute("/journal/$id")({
 function IssueDetail() {
   const i = Route.useLoaderData() as PublicIssue;
   const { t, lang } = useLang();
-  const title = lang === "en" ? i.title_en || i.title_zh : i.title_zh;
-  const summary = lang === "en" ? i.summary_en || i.summary_zh : i.summary_zh || i.summary_en;
+  const title = pickLocalized(lang, { zh: i.title_zh, en: i.title_en, es: i.title_es });
+  const summary = pickLocalized(lang, { zh: i.summary_zh, en: i.summary_en, es: i.summary_es });
 
   return (
     <SiteShell>

@@ -2,6 +2,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { listPublishedEvents, type PublicEvent } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
+import { pickLocalized } from "@/lib/pickLocalized";
 import { CalendarDays, MapPin } from "lucide-react";
 
 const SITE = "https://bridgeaway.org";
@@ -61,7 +62,7 @@ function EventsPage() {
 }
 
 function EventCard({ e, lang, compact }: { e: PublicEvent; lang: "zh" | "en" | "es"; compact?: boolean }) {
-  const title = lang === "zh" ? e.title_zh : (e.title_en || e.title_zh);
+  const title = pickLocalized(lang, { zh: e.title_zh, en: e.title_en, es: e.title_es });
   const when = new Date(e.start_at).toLocaleString();
   return (
     <Link to="/events/$id" params={{ id: e.id }} className="group block">
