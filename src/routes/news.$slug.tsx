@@ -20,7 +20,7 @@ function extractSource(body: string | null | undefined): { body: string; sourceU
 function renderBody(text: string) {
   const paragraphs = text.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
   const inline = (s: string) => {
-    const parts: Array<string | JSX.Element> = [];
+    const parts: Array<ReactNode> = [];
     const regex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)|\*\*([^*]+)\*\*|\*([^*]+)\*/g;
     let last = 0; let m: RegExpExecArray | null; let i = 0;
     while ((m = regex.exec(s))) {
