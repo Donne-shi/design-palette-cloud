@@ -102,7 +102,49 @@ export function Header() {
                     {l.label}
                   </button>
                 ))}
-              </div>
+          </div>
+
+          {email ? (
+            <div ref={userRef} className="relative hidden sm:block">
+              <button
+                onClick={() => setUserOpen((v) => !v)}
+                className="flex items-center gap-1.5 text-xs tracking-widest uppercase text-stone-warm hover:text-accent transition-colors px-2 py-1.5"
+                aria-label="Account"
+              >
+                <User className="h-3.5 w-3.5" />
+                <span className="max-w-[8rem] truncate normal-case tracking-normal">{email}</span>
+                <ChevronDown className="h-3 w-3" />
+              </button>
+              {userOpen && (
+                <div className="absolute right-0 mt-1 min-w-[10rem] border border-border bg-background shadow-lg">
+                  <Link
+                    to="/admin"
+                    onClick={() => setUserOpen(false)}
+                    className="block w-full text-left px-3 py-2 text-xs uppercase tracking-widest hover:bg-secondary"
+                  >
+                    {t("后台", "Admin")}
+                  </Link>
+                  <button
+                    onClick={signOut}
+                    className="flex items-center gap-2 w-full text-left px-3 py-2 text-xs uppercase tracking-widest hover:bg-secondary"
+                  >
+                    <LogOut className="h-3 w-3" />
+                    {t("退出", "Sign out")}
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to="/auth"
+              className="hidden sm:flex items-center gap-1.5 text-xs tracking-widest uppercase text-stone-warm hover:text-accent transition-colors px-2 py-1.5"
+            >
+              <User className="h-3.5 w-3.5" />
+              {t("登录", "Sign in")}
+            </Link>
+          )}
+
+
             )}
           </div>
           <button
