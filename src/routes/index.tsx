@@ -240,7 +240,6 @@ function Home() {
             <div key={en} className="border-t-2 border-accent pt-6">
               <Icon className="h-6 w-6 text-accent mb-4" />
               <h3 className="serif text-2xl">{t(zh, en)}</h3>
-              <p className="serif italic text-stone-warm text-sm mt-1">{t(en, zh)}</p>
               <p className="mt-4 text-foreground/75 leading-relaxed">{body}</p>
             </div>
           ))}
