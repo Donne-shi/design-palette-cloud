@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
+import { pickLocalized } from "@/lib/pickLocalized";
 import { BookOpenText, FileDown, Archive } from "lucide-react";
 import { listPublishedIssues, type PublicIssue } from "@/lib/content.functions";
 
