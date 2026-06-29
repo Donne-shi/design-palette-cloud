@@ -90,7 +90,7 @@ function NotFoundView() {
     <SiteShell>
       <div className="container-prose py-24 text-center">
         <p className="eyebrow mb-3">404</p>
-        <h1 className="serif text-3xl">{t("活动未找到","Event not found")}</h1>
+        <h1 className="serif text-3xl">Event not found</h1>
         <Link to="/events" className="inline-block mt-6 bg-accent text-accent-foreground px-4 py-2 text-sm uppercase tracking-wider">All events</Link>
       </div>
     </SiteShell>
@@ -102,7 +102,7 @@ function ErrorView({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <SiteShell>
       <div className="container-prose py-24 text-center">
-        <h1 className="serif text-2xl">{t("加载失败","Failed to load")}</h1>
+        <h1 className="serif text-2xl">Failed to load</h1>
         <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
         <button onClick={() => { router.invalidate(); reset(); }} className="mt-6 bg-accent text-accent-foreground px-4 py-2 text-sm uppercase tracking-wider">Try again</button>
       </div>

@@ -42,7 +42,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="serif text-2xl text-foreground">这页加载失败 · Something went wrong</h1>
+        <h1 className="serif text-2xl text-foreground">Something went wrong</h1>
         <p className="mt-2 text-sm text-muted-foreground">Please try again, or return home.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button onClick={() => { router.invalidate(); reset(); }} className="bg-accent text-accent-foreground px-4 py-2 text-sm tracking-wider uppercase">Try again</button>
