@@ -35,7 +35,13 @@ function NewsQueuePage() {
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [scraping, setScraping] = useState(false);
+  const [batchBusy, setBatchBusy] = useState(false);
   const [filter, setFilter] = useState<FilterKey>("top");
+  // Per-card local edits before publishing (keyed by draft id).
+  const [edits, setEdits] = useState<Record<string, Partial<Draft>>>({});
+  const editVal = (d: Draft, k: keyof Draft) => (edits[d.id]?.[k] as string | null | undefined) ?? (d[k] as any);
+  const setEdit = (id: string, k: keyof Draft, v: string) =>
+    setEdits((prev) => ({ ...prev, [id]: { ...prev[id], [k]: v } }));
 
   const load = async () => {
     setLoading(true);
