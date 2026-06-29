@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useLang } from "@/lib/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { BridgeMark, Ornament } from "./Brand";
+import { Ornament } from "./Brand";
+import logoAsset from "@/assets/mbi-logo.png.asset.json";
 import { Mail, MapPin, Send, Github, Twitter, Youtube, Rss } from "lucide-react";
 
 export function Footer() {
@@ -31,7 +32,7 @@ export function Footer() {
       <div className="container-prose pt-16 pb-12 grid gap-12 md:grid-cols-12">
         <div className="md:col-span-5">
           <div className="flex items-center gap-3 text-accent">
-            <BridgeMark className="h-9 w-9" />
+            <img src={logoAsset.url} alt="Multicultural Bridge Initiative" width={44} height={44} className="h-11 w-auto" />
             <Ornament className="hidden sm:flex" />
           </div>
           <p className="serif text-2xl leading-snug text-foreground max-w-md mt-6">

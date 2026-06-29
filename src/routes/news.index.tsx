@@ -6,7 +6,7 @@ import { CalendarDays, Tag } from "lucide-react";
 import { listPublishedArticles, type PublicArticle } from "@/lib/content.functions";
 import { useState } from "react";
 
-export const Route = createFileRoute("/news")({
+export const Route = createFileRoute("/news/")({
   loader: () => listPublishedArticles(),
   head: () => ({
     meta: [

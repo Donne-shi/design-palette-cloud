@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TheologyRouteImport } from './routes/theology'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResourcesRouteImport } from './routes/resources'
-import { Route as NewsRouteImport } from './routes/news'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as FaithPublicRouteImport } from './routes/faith-public'
 import { Route as EventsRouteImport } from './routes/events'
@@ -22,6 +21,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as NewsIndexRouteImport } from './routes/news.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as NewsSlugRouteImport } from './routes/news.$slug'
 import { Route as JournalIdRouteImport } from './routes/journal.$id'
@@ -54,11 +54,6 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const NewsRoute = NewsRouteImport.update({
-  id: '/news',
-  path: '/news',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JournalRoute = JournalRouteImport.update({
@@ -106,15 +101,20 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NewsIndexRoute = NewsIndexRouteImport.update({
+  id: '/news/',
+  path: '/news/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
 const NewsSlugRoute = NewsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => NewsRoute,
+  id: '/news/$slug',
+  path: '/news/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const JournalIdRoute = JournalIdRouteImport.update({
   id: '/$id',
@@ -208,7 +208,6 @@ export interface FileRoutesByFullPath {
   '/events': typeof EventsRouteWithChildren
   '/faith-public': typeof FaithPublicRoute
   '/journal': typeof JournalRouteWithChildren
-  '/news': typeof NewsRouteWithChildren
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/theology': typeof TheologyRoute
@@ -226,6 +225,7 @@ export interface FileRoutesByFullPath {
   '/journal/$id': typeof JournalIdRoute
   '/news/$slug': typeof NewsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/news/': typeof NewsIndexRoute
   '/api/public/cron/scrape-news': typeof ApiPublicCronScrapeNewsRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -240,7 +240,6 @@ export interface FileRoutesByTo {
   '/events': typeof EventsRouteWithChildren
   '/faith-public': typeof FaithPublicRoute
   '/journal': typeof JournalRouteWithChildren
-  '/news': typeof NewsRouteWithChildren
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/theology': typeof TheologyRoute
@@ -258,6 +257,7 @@ export interface FileRoutesByTo {
   '/journal/$id': typeof JournalIdRoute
   '/news/$slug': typeof NewsSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/news': typeof NewsIndexRoute
   '/api/public/cron/scrape-news': typeof ApiPublicCronScrapeNewsRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -274,7 +274,6 @@ export interface FileRoutesById {
   '/events': typeof EventsRouteWithChildren
   '/faith-public': typeof FaithPublicRoute
   '/journal': typeof JournalRouteWithChildren
-  '/news': typeof NewsRouteWithChildren
   '/resources': typeof ResourcesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/theology': typeof TheologyRoute
@@ -292,6 +291,7 @@ export interface FileRoutesById {
   '/journal/$id': typeof JournalIdRoute
   '/news/$slug': typeof NewsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/news/': typeof NewsIndexRoute
   '/api/public/cron/scrape-news': typeof ApiPublicCronScrapeNewsRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
@@ -309,7 +309,6 @@ export interface FileRouteTypes {
     | '/events'
     | '/faith-public'
     | '/journal'
-    | '/news'
     | '/resources'
     | '/sitemap.xml'
     | '/theology'
@@ -327,6 +326,7 @@ export interface FileRouteTypes {
     | '/journal/$id'
     | '/news/$slug'
     | '/admin/'
+    | '/news/'
     | '/api/public/cron/scrape-news'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -341,7 +341,6 @@ export interface FileRouteTypes {
     | '/events'
     | '/faith-public'
     | '/journal'
-    | '/news'
     | '/resources'
     | '/sitemap.xml'
     | '/theology'
@@ -359,6 +358,7 @@ export interface FileRouteTypes {
     | '/journal/$id'
     | '/news/$slug'
     | '/admin'
+    | '/news'
     | '/api/public/cron/scrape-news'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -374,7 +374,6 @@ export interface FileRouteTypes {
     | '/events'
     | '/faith-public'
     | '/journal'
-    | '/news'
     | '/resources'
     | '/sitemap.xml'
     | '/theology'
@@ -392,6 +391,7 @@ export interface FileRouteTypes {
     | '/journal/$id'
     | '/news/$slug'
     | '/admin/'
+    | '/news/'
     | '/api/public/cron/scrape-news'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
@@ -408,10 +408,11 @@ export interface RootRouteChildren {
   EventsRoute: typeof EventsRouteWithChildren
   FaithPublicRoute: typeof FaithPublicRoute
   JournalRoute: typeof JournalRouteWithChildren
-  NewsRoute: typeof NewsRouteWithChildren
   ResourcesRoute: typeof ResourcesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TheologyRoute: typeof TheologyRoute
+  NewsSlugRoute: typeof NewsSlugRoute
+  NewsIndexRoute: typeof NewsIndexRoute
   ApiPublicCronScrapeNewsRoute: typeof ApiPublicCronScrapeNewsRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
@@ -439,13 +440,6 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/resources'
       preLoaderRoute: typeof ResourcesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/news': {
-      id: '/news'
-      path: '/news'
-      fullPath: '/news'
-      preLoaderRoute: typeof NewsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/journal': {
@@ -511,6 +505,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/news/': {
+      id: '/news/'
+      path: '/news'
+      fullPath: '/news/'
+      preLoaderRoute: typeof NewsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -520,10 +521,10 @@ declare module '@tanstack/react-router' {
     }
     '/news/$slug': {
       id: '/news/$slug'
-      path: '/$slug'
+      path: '/news/$slug'
       fullPath: '/news/$slug'
       preLoaderRoute: typeof NewsSlugRouteImport
-      parentRoute: typeof NewsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/journal/$id': {
       id: '/journal/$id'
@@ -692,16 +693,6 @@ const JournalRouteChildren: JournalRouteChildren = {
 const JournalRouteWithChildren =
   JournalRoute._addFileChildren(JournalRouteChildren)
 
-interface NewsRouteChildren {
-  NewsSlugRoute: typeof NewsSlugRoute
-}
-
-const NewsRouteChildren: NewsRouteChildren = {
-  NewsSlugRoute: NewsSlugRoute,
-}
-
-const NewsRouteWithChildren = NewsRoute._addFileChildren(NewsRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -712,10 +703,11 @@ const rootRouteChildren: RootRouteChildren = {
   EventsRoute: EventsRouteWithChildren,
   FaithPublicRoute: FaithPublicRoute,
   JournalRoute: JournalRouteWithChildren,
-  NewsRoute: NewsRouteWithChildren,
   ResourcesRoute: ResourcesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TheologyRoute: TheologyRoute,
+  NewsSlugRoute: NewsSlugRoute,
+  NewsIndexRoute: NewsIndexRoute,
   ApiPublicCronScrapeNewsRoute: ApiPublicCronScrapeNewsRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
