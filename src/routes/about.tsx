@@ -41,8 +41,8 @@ function AboutPage() {
         titleZh={t("让福音成为文化之间的桥梁。", "Let the Gospel be a bridge between cultures.")}
         titleEn={t("Let the Gospel be a bridge between cultures.", "让福音成为文化之间的桥梁。")}
         lead={t(
-          "Multicultural Bridge Initiative 是一个连接福音信仰、公共议题、跨文化交流与社会关怀的平台。",
-          "MBI is a platform connecting Gospel faith, public discourse, cross-cultural exchange, and social care."
+          "多元文化桥梁计划是一个连接福音信仰、公共议题、跨文化交流与社会关怀的平台。",
+          "Multicultural Bridge Initiative is a platform connecting Gospel faith, public discourse, cross-cultural exchange, and social care."
         )}
       />
       <section className="container-prose py-20 grid md:grid-cols-12 gap-12">
