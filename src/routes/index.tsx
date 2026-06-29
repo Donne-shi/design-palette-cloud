@@ -11,8 +11,8 @@ import eventImg from "@/assets/event.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "多元文化桥梁计划 · Multicultural Bridge Initiative" },
-      { name: "description", content: "以福音连接文化，以真理回应时代，以恩典促进对话。Gospel-centered cross-cultural dialogue and public engagement." },
+      { title: "Multicultural Bridge Initiative · Building Bridges Across Cultures" },
+      { name: "description", content: "Gospel-centered cross-cultural dialogue and public engagement — for families, churches and communities." },
       { property: "og:title", content: "Multicultural Bridge Initiative" },
       { property: "og:description", content: "Building bridges across cultures through the Gospel." },
       { property: "og:url", content: "/" },
