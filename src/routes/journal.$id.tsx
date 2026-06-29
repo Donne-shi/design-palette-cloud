@@ -39,8 +39,8 @@ export const Route = createFileRoute("/journal/$id")({
 function IssueDetail() {
   const i = Route.useLoaderData() as PublicIssue;
   const { t, lang } = useLang();
-  const title = lang === "en" ? i.title_en || i.title_zh : i.title_zh;
-  const summary = lang === "en" ? i.summary_en || i.summary_zh : i.summary_zh || i.summary_en;
+  const title = pickLocalized(lang, { zh: i.title_zh, en: i.title_en, es: i.title_es });
+  const summary = pickLocalized(lang, { zh: i.summary_zh, en: i.summary_en, es: i.summary_es });
 
   return (
     <SiteShell>
