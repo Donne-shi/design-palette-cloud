@@ -7,18 +7,21 @@ import { createClient } from "@supabase/supabase-js";
 
 type Source = { name: string; url: string; category: string };
 
-// Sources curated for Multicultural Bridge Initiative — Gospel-centered,
-// cross-cultural (East/West, Chinese diaspora), faith & public life.
+// Sources curated for Multicultural Bridge Initiative — Protestant /
+// evangelical, Gospel-centered, cross-cultural (East/West, Chinese diaspora),
+// faith & public life. Catholic-internal outlets are intentionally excluded.
 const SOURCES: Source[] = [
   { name: "Pew Research — Religion", url: "https://www.pewresearch.org/religion/feed/", category: "Society & Research" },
-  { name: "Christianity Today", url: "https://www.christianitytoday.com/ct/rss.xml", category: "U.S. Church" },
+  { name: "Christianity Today", url: "https://www.christianitytoday.com/feed/", category: "U.S. Church" },
   { name: "Religion News Service", url: "https://religionnews.com/feed/", category: "Global Christianity" },
   { name: "The Gospel Coalition", url: "https://www.thegospelcoalition.org/feed/", category: "Theology & Culture" },
-  { name: "Desiring God", url: "https://www.desiringgod.org/rss/articles.xml", category: "Discipleship" },
-  { name: "World Magazine", url: "https://wng.org/feed", category: "Faith & Public Life" },
-  { name: "First Things", url: "https://www.firstthings.com/rss/all-articles", category: "Faith & Public Life" },
-  { name: "Catholic News Agency", url: "https://www.catholicnewsagency.com/rss/news.xml", category: "Global Christianity" },
-  { name: "Vatican News", url: "https://www.vaticannews.va/en.rss.xml", category: "Global Christianity" },
+  { name: "Desiring God", url: "https://feeds.feedburner.com/DesiringGodBlog", category: "Discipleship" },
+  { name: "9Marks", url: "https://www.9marks.org/feed/", category: "Church & Ministry" },
+  { name: "Albert Mohler", url: "https://albertmohler.com/feed", category: "Theology & Culture" },
+  { name: "Challies", url: "https://www.challies.com/feed/", category: "Discipleship" },
+  { name: "Christian Headlines", url: "https://www.christianheadlines.com/rss-feed/", category: "Global Christianity" },
+  { name: "Evangelical Focus", url: "https://www.evangelicalfocus.com/rss", category: "Global Christianity" },
+  { name: "First Things", url: "https://www.firstthings.com/feed", category: "Faith & Public Life" },
 ];
 
 const PER_SOURCE_LIMIT = 6;
