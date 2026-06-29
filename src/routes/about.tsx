@@ -68,7 +68,6 @@ function AboutPage() {
                 <Icon className="h-5 w-5 mt-1 text-accent shrink-0" />
                 <div>
                   <p className="serif text-lg">{t(m.zh, m.en)}</p>
-                  <p className="italic text-sm text-stone-warm">{t(m.en, m.zh)}</p>
                 </div>
               </li>
             ))}
