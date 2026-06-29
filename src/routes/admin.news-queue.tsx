@@ -85,51 +85,63 @@ function NewsQueuePage() {
     }
   };
 
-  const publish = async (d: Draft) => {
-    setBusyId(d.id);
+  // Single-draft publish using whatever (possibly edited) values are in `edits`.
+  const publishOne = async (d: Draft): Promise<{ ok: boolean; error?: string }> => {
     try {
-      const title_zh = (d.title_zh || d.original_title).trim();
-      const title_en = (d.title_en || d.original_title).trim();
-      const excerpt_zh = (d.excerpt_zh || "").trim();
-      const excerpt_en = (d.excerpt_en || "").trim();
+      const title_zh = String(editVal(d, "title_zh") || d.original_title).trim();
+      const title_en = String(editVal(d, "title_en") || d.original_title).trim();
+      const excerpt_zh = String(editVal(d, "excerpt_zh") || "").trim();
+      const excerpt_en = String(editVal(d, "excerpt_en") || "").trim();
       const body_en = `${excerpt_en}\n\n— Source: ${d.source_name}\n${d.source_url}`;
       const body_zh = `${excerpt_zh}\n\n— 来源：${d.source_name}\n${d.source_url}`;
-
       const baseSlug = slugify(title_en || title_zh) || `news-${d.id.slice(0, 8)}`;
       const slug = `${baseSlug}-${d.id.slice(0, 6)}`;
 
       const { data: art, error: insErr } = await supabase
         .from("articles")
         .insert({
-          slug,
-          title_zh,
-          title_en,
-          excerpt_zh,
-          excerpt_en,
-          body_zh,
-          body_en,
+          slug, title_zh, title_en, excerpt_zh, excerpt_en, body_zh, body_en,
           category: d.category || "News & Commentary",
           status: "published",
           published_at: new Date().toISOString(),
         })
         .select("id")
         .single();
-      if (insErr) throw insErr;
+      if (insErr) return { ok: false, error: insErr.message };
 
       const { error: upErr } = await supabase
         .from("news_drafts")
         .update({ status: "published", published_article_id: art!.id })
         .eq("id", d.id);
-      if (upErr) throw upErr;
-
-      toast.success("已发布到 News & Commentary");
-      await load();
+      if (upErr) return { ok: false, error: upErr.message };
+      return { ok: true };
     } catch (e: any) {
-      toast.error(`发布失败：${e.message}`);
-    } finally {
-      setBusyId(null);
+      return { ok: false, error: e.message };
     }
   };
+
+  const publish = async (d: Draft) => {
+    setBusyId(d.id);
+    const r = await publishOne(d);
+    if (r.ok) { toast.success("已发布到 News & Commentary"); await load(); }
+    else toast.error(`发布失败：${r.error}`);
+    setBusyId(null);
+  };
+
+  const publishAllTopPicks = async () => {
+    const targets = drafts.filter((d) => d.is_top_pick && d.status === "pending");
+    if (targets.length === 0) { toast.info("当前列表没有可发布的 Top Pick"); return; }
+    setBatchBusy(true);
+    let ok = 0, fail = 0;
+    for (const d of targets) {
+      const r = await publishOne(d);
+      if (r.ok) ok++; else fail++;
+    }
+    toast[fail === 0 ? "success" : "warning"](`批量发布完成：成功 ${ok} · 失败 ${fail}`);
+    setBatchBusy(false);
+    await load();
+  };
+
 
   const ignore = async (d: Draft) => {
     setBusyId(d.id);
