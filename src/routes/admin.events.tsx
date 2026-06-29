@@ -131,9 +131,15 @@ function EventsAdmin() {
           <DialogHeader><DialogTitle className="serif text-2xl">{editing?.id ? "编辑活动" : "新建活动"}</DialogTitle></DialogHeader>
           {editing && (
             <div className="grid gap-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex justify-end">
+                <Button type="button" variant="outline" size="sm" onClick={autoTranslate} disabled={translating} className="gap-2">
+                  <Sparkles className="h-4 w-4"/>{translating ? "翻译中…" : "Auto-translate EN → ZH/ES"}
+                </Button>
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div><Label>English Title (source)</Label><Input value={editing.title_en || ""} onChange={(e) => setEditing({ ...editing, title_en: e.target.value })}/></div>
                 <div><Label>中文标题 *</Label><Input value={editing.title_zh || ""} onChange={(e) => setEditing({ ...editing, title_zh: e.target.value })}/></div>
-                <div><Label>English Title</Label><Input value={editing.title_en || ""} onChange={(e) => setEditing({ ...editing, title_en: e.target.value })}/></div>
+                <div><Label>Título (ES)</Label><Input value={editing.title_es || ""} onChange={(e) => setEditing({ ...editing, title_es: e.target.value })}/></div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div><Label>开始时间 *</Label><Input type="datetime-local" value={toLocal(editing.start_at)} onChange={(ev) => setEditing({ ...editing, start_at: new Date(ev.target.value).toISOString() })}/></div>
@@ -143,9 +149,10 @@ function EventsAdmin() {
                 <div><Label>地点 Location</Label><Input value={editing.location || ""} onChange={(e) => setEditing({ ...editing, location: e.target.value })}/></div>
                 <div><Label>容量 Capacity</Label><Input type="number" value={editing.capacity ?? ""} onChange={(e) => setEditing({ ...editing, capacity: e.target.value ? parseInt(e.target.value) : null })}/></div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
+                <div><Label>English Description (source)</Label><Textarea rows={4} value={editing.description_en || ""} onChange={(e) => setEditing({ ...editing, description_en: e.target.value })}/></div>
                 <div><Label>中文简介</Label><Textarea rows={4} value={editing.description_zh || ""} onChange={(e) => setEditing({ ...editing, description_zh: e.target.value })}/></div>
-                <div><Label>English Description</Label><Textarea rows={4} value={editing.description_en || ""} onChange={(e) => setEditing({ ...editing, description_en: e.target.value })}/></div>
+                <div><Label>Descripción (ES)</Label><Textarea rows={4} value={editing.description_es || ""} onChange={(e) => setEditing({ ...editing, description_es: e.target.value })}/></div>
               </div>
               <div>
                 <Label>封面图</Label>
