@@ -27,7 +27,27 @@ function EventsAdmin() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<Partial<Ev> | null>(null);
   const [saving, setSaving] = useState(false);
+  const [translating, setTranslating] = useState(false);
   const [filter, setFilter] = useState<"all" | "upcoming" | "past">("all");
+
+  const autoTranslate = async () => {
+    if (!editing?.title_en?.trim()) { toast.error("请先填写 English Title"); return; }
+    setTranslating(true);
+    try {
+      const [titleT, descT] = await Promise.all([
+        translateEnglishToZhEs([editing.title_en]),
+        editing.description_en?.trim() ? translateEnglishToZhEs([editing.description_en]) : Promise.resolve({ zh: [""], es: [""] }),
+      ]);
+      setEditing({ ...editing,
+        title_zh: titleT.zh[0] || editing.title_zh,
+        title_es: titleT.es[0] || editing.title_es,
+        description_zh: descT.zh[0] || editing.description_zh,
+        description_es: descT.es[0] || editing.description_es,
+      });
+      toast.success("已翻译");
+    } catch (e: any) { toast.error(e?.message || "翻译失败"); }
+    finally { setTranslating(false); }
+  };
 
   const load = async () => {
     setLoading(true);
