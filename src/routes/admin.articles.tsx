@@ -235,27 +235,42 @@ function ArticlesAdmin() {
                   </Select>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="flex items-center justify-between gap-3 p-3 rounded border border-dashed border-accent/40 bg-accent/5">
+                <div className="text-xs text-muted-foreground">
+                  填写英文后点击右侧按钮，自动生成 <span className="font-semibold text-foreground">中文</span> 与 <span className="font-semibold text-foreground">Español</span>（已有内容不会被覆盖）。
+                </div>
+                <Button type="button" size="sm" variant="outline" className="gap-2 shrink-0" disabled={translating} onClick={autoTranslate}>
+                  {translating ? <Loader2 className="h-4 w-4 animate-spin"/> : <Languages className="h-4 w-4"/>}
+                  Auto-translate
+                </Button>
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <Label>English Title</Label>
+                  <Input value={editing.title_en || ""} onChange={(e) => setEditing({ ...editing, title_en: e.target.value, slug: editing.slug || slugify(e.target.value) })}/>
+                </div>
                 <div>
                   <Label>中文标题 *</Label>
                   <Input value={editing.title_zh || ""} onChange={(e) => setEditing({ ...editing, title_zh: e.target.value })}/>
                 </div>
                 <div>
-                  <Label>English Title</Label>
-                  <Input value={editing.title_en || ""} onChange={(e) => setEditing({ ...editing, title_en: e.target.value, slug: editing.slug || slugify(e.target.value) })}/>
+                  <Label>Título (Español)</Label>
+                  <Input value={editing.title_es || ""} onChange={(e) => setEditing({ ...editing, title_es: e.target.value })}/>
                 </div>
               </div>
               <div>
                 <Label>Slug（URL 路径，留空将自动生成）</Label>
                 <Input value={editing.slug || ""} onChange={(e) => setEditing({ ...editing, slug: slugify(e.target.value) })} placeholder="my-article-title" className="font-mono"/>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div><Label>中文摘要</Label><Textarea rows={2} value={editing.excerpt_zh || ""} onChange={(e) => setEditing({ ...editing, excerpt_zh: e.target.value })}/></div>
+              <div className="grid grid-cols-3 gap-4">
                 <div><Label>English Excerpt</Label><Textarea rows={2} value={editing.excerpt_en || ""} onChange={(e) => setEditing({ ...editing, excerpt_en: e.target.value })}/></div>
+                <div><Label>中文摘要</Label><Textarea rows={2} value={editing.excerpt_zh || ""} onChange={(e) => setEditing({ ...editing, excerpt_zh: e.target.value })}/></div>
+                <div><Label>Resumen (Español)</Label><Textarea rows={2} value={editing.excerpt_es || ""} onChange={(e) => setEditing({ ...editing, excerpt_es: e.target.value })}/></div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div><Label>中文正文（支持 Markdown）</Label><Textarea rows={10} value={editing.body_zh || ""} onChange={(e) => setEditing({ ...editing, body_zh: e.target.value })}/></div>
-                <div><Label>English Body (Markdown)</Label><Textarea rows={10} value={editing.body_en || ""} onChange={(e) => setEditing({ ...editing, body_en: e.target.value })}/></div>
+              <div className="grid grid-cols-3 gap-4">
+                <div><Label>English Body (Markdown)</Label><Textarea rows={12} value={editing.body_en || ""} onChange={(e) => setEditing({ ...editing, body_en: e.target.value })}/></div>
+                <div><Label>中文正文（Markdown）</Label><Textarea rows={12} value={editing.body_zh || ""} onChange={(e) => setEditing({ ...editing, body_zh: e.target.value })}/></div>
+                <div><Label>Cuerpo (Español, Markdown)</Label><Textarea rows={12} value={editing.body_es || ""} onChange={(e) => setEditing({ ...editing, body_es: e.target.value })}/></div>
               </div>
               <div>
                 <Label>封面图</Label>
