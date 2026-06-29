@@ -145,7 +145,7 @@ function Home() {
                     >
                       <p className="eyebrow text-foreground/60">{a.category || "Article"} · {fmtDate(a.published_at || a.created_at)}</p>
                       <h3 className="serif text-2xl md:text-3xl mt-2 leading-snug group-hover:text-accent transition-colors">{title}</h3>
-                      {subtitle && <p className="serif italic text-base text-stone-warm mt-1">{subtitle}</p>}
+                      {subtitle && lang !== "en" && <p className="serif italic text-base text-stone-warm mt-1">{subtitle}</p>}
                       {excerpt && <p className="mt-3 text-[0.95rem] text-foreground/75 leading-relaxed line-clamp-2 max-w-3xl">{excerpt}</p>}
                     </Link>
                   </li>
