@@ -52,9 +52,13 @@ function NewsPage() {
         ) : (
           <ul className="divide-y divide-border/70">
             {filtered.map((a) => {
-              const title = lang === "en" ? a.title_en || a.title_zh : a.title_zh;
-              const sub = lang === "en" ? a.title_zh : a.title_en;
-              const excerpt = lang === "en" ? a.excerpt_en || a.excerpt_zh : a.excerpt_zh || a.excerpt_en;
+              const title = lang === "es" ? (a.title_es || a.title_en || a.title_zh)
+                : lang === "en" ? (a.title_en || a.title_zh)
+                : a.title_zh;
+              const sub = lang === "en" ? a.title_zh : (lang === "es" ? (a.title_en || a.title_zh) : a.title_en);
+              const excerpt = lang === "es" ? (a.excerpt_es || a.excerpt_en || a.excerpt_zh)
+                : lang === "en" ? (a.excerpt_en || a.excerpt_zh)
+                : (a.excerpt_zh || a.excerpt_en);
               const date = new Date(a.published_at || a.created_at).toLocaleDateString();
               return (
                 <li key={a.id} className="py-8 first:pt-0">
