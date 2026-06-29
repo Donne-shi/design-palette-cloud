@@ -369,6 +369,74 @@ export type Database = {
         }
         Relationships: []
       }
+      news_drafts: {
+        Row: {
+          category: string | null
+          cover_url: string | null
+          created_at: string
+          excerpt_en: string | null
+          excerpt_zh: string | null
+          fetched_at: string
+          id: string
+          original_excerpt: string | null
+          original_title: string
+          published_article_id: string | null
+          published_at_source: string | null
+          source_name: string
+          source_url: string
+          status: string
+          title_en: string | null
+          title_zh: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          cover_url?: string | null
+          created_at?: string
+          excerpt_en?: string | null
+          excerpt_zh?: string | null
+          fetched_at?: string
+          id?: string
+          original_excerpt?: string | null
+          original_title: string
+          published_article_id?: string | null
+          published_at_source?: string | null
+          source_name: string
+          source_url: string
+          status?: string
+          title_en?: string | null
+          title_zh?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          cover_url?: string | null
+          created_at?: string
+          excerpt_en?: string | null
+          excerpt_zh?: string | null
+          fetched_at?: string
+          id?: string
+          original_excerpt?: string | null
+          original_title?: string
+          published_article_id?: string | null
+          published_at_source?: string | null
+          source_name?: string
+          source_url?: string
+          status?: string
+          title_en?: string | null
+          title_zh?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "news_drafts_published_article_id_fkey"
+            columns: ["published_article_id"]
+            isOneToOne: false
+            referencedRelation: "articles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
