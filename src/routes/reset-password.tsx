@@ -7,7 +7,7 @@ import { useLang } from "@/lib/i18n";
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "重置密码 · Reset Password — MBI" },
+      { title: "Reset Password · MBI" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),

@@ -11,7 +11,7 @@ import { Footer } from "@/components/site/Footer";
 export const Route = createFileRoute("/account")({
   head: () => ({
     meta: [
-      { title: "我的账号 · Account — MBI" },
+      { title: "Account · MBI" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),

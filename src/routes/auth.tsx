@@ -17,7 +17,7 @@ export const Route = createFileRoute("/auth")({
   validateSearch: zodValidator(searchSchema),
   head: () => ({
     meta: [
-      { title: "登录 · Sign In — MBI" },
+      { title: "Sign In · MBI" },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),

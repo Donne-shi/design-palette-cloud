@@ -48,7 +48,7 @@ export const Route = createFileRoute("/news/$slug")({
   },
   head: ({ params, loaderData }) => {
     const a = loaderData as PublicArticle | undefined;
-    const title = a?.title_zh ?? "文章 · Article";
+    const title = a?.title_zh ?? "Article";
     const desc = a?.excerpt_zh ?? a?.excerpt_en ?? a?.title_en ?? "Multicultural Bridge Initiative article.";
     const url = `${SITE}/news/${params.slug}`;
     return {
@@ -141,8 +141,8 @@ function NotFoundView() {
     <SiteShell>
       <div className="container-prose py-24 text-center">
         <p className="eyebrow mb-3">404</p>
-        <h1 className="serif text-3xl">文章未找到 · Article not found</h1>
-        <Link to="/news" className="inline-block mt-6 bg-accent text-accent-foreground px-4 py-2 text-sm uppercase tracking-wider">返回 News</Link>
+        <h1 className="serif text-3xl">Article not found</h1>
+        <Link to="/news" className="inline-block mt-6 bg-accent text-accent-foreground px-4 py-2 text-sm uppercase tracking-wider">Back to News</Link>
       </div>
     </SiteShell>
   );
@@ -153,7 +153,7 @@ function ErrorView({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <SiteShell>
       <div className="container-prose py-24 text-center">
-        <h1 className="serif text-2xl">加载失败 · Failed to load</h1>
+        <h1 className="serif text-2xl">Failed to load</h1>
         <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
         <button onClick={() => { router.invalidate(); reset(); }} className="mt-6 bg-accent text-accent-foreground px-4 py-2 text-sm uppercase tracking-wider">Try again</button>
       </div>

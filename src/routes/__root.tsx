@@ -19,7 +19,7 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <p className="eyebrow mb-3">404</p>
-        <h1 className="serif text-4xl text-foreground">页面未找到 · Page not found</h1>
+        <h1 className="serif text-4xl text-foreground">Page not found</h1>
         <p className="mt-3 text-sm text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
@@ -42,7 +42,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="serif text-2xl text-foreground">这页加载失败 · Something went wrong</h1>
+        <h1 className="serif text-2xl text-foreground">Something went wrong</h1>
         <p className="mt-2 text-sm text-muted-foreground">Please try again, or return home.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button onClick={() => { router.invalidate(); reset(); }} className="bg-accent text-accent-foreground px-4 py-2 text-sm tracking-wider uppercase">Try again</button>
@@ -58,16 +58,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "多元文化桥梁计划 · Multicultural Bridge Initiative" },
-      { name: "description", content: "以福音连接文化，以真理回应时代，以恩典促进对话。A platform for Gospel-centered, cross-cultural dialogue and public engagement." },
+      { title: "Multicultural Bridge Initiative" },
+      { name: "description", content: "A platform for Gospel-centered, cross-cultural dialogue and public engagement." },
       { name: "author", content: "Multicultural Bridge Initiative" },
       { property: "og:site_name", content: "Multicultural Bridge Initiative" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "多元文化桥梁计划 · Multicultural Bridge Initiative" },
-      { name: "twitter:title", content: "多元文化桥梁计划 · Multicultural Bridge Initiative" },
-      { property: "og:description", content: "以福音连接文化，以真理回应时代，以恩典促进对话。A platform for Gospel-centered, cross-cultural dialogue and public engagement." },
-      { name: "twitter:description", content: "以福音连接文化，以真理回应时代，以恩典促进对话。A platform for Gospel-centered, cross-cultural dialogue and public engagement." },
+      { property: "og:title", content: "Multicultural Bridge Initiative" },
+      { name: "twitter:title", content: "Multicultural Bridge Initiative" },
+      { property: "og:description", content: "A platform for Gospel-centered, cross-cultural dialogue and public engagement." },
+      { name: "twitter:description", content: "A platform for Gospel-centered, cross-cultural dialogue and public engagement." },
       { property: "og:image", content: "https://bridgeaway.org/__l5e/assets-v1/62b34776-53ed-4ff0-9d36-54ec88612a7f/mbi-logo.png" },
       { name: "twitter:image", content: "https://bridgeaway.org/__l5e/assets-v1/62b34776-53ed-4ff0-9d36-54ec88612a7f/mbi-logo.png" },
     ],

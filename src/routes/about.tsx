@@ -6,8 +6,8 @@ import { Compass, Sparkles, MessagesSquare, HandHeart, Sunrise, Check, X as XIco
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "关于我们 · About — Multicultural Bridge Initiative" },
-      { name: "description", content: "MBI 的愿景、使命与核心价值：Truth, Grace, Dialogue, Service, Hope." },
+      { title: "About · Multicultural Bridge Initiative" },
+      { name: "description", content: "MBI vision, mission and core values: Truth, Grace, Dialogue, Service, Hope." },
       { property: "og:title", content: "About — MBI" },
       { property: "og:description", content: "Vision, mission, and the principles guiding our work." },
       { property: "og:url", content: "/about" },
@@ -37,17 +37,17 @@ function AboutPage() {
   return (
     <SiteShell>
       <PageHero
-        eyebrow="About / 关于我们"
+        eyebrow="About"
         titleZh={t("让福音成为文化之间的桥梁。", "Let the Gospel be a bridge between cultures.")}
         titleEn={t("Let the Gospel be a bridge between cultures.", "让福音成为文化之间的桥梁。")}
         lead={t(
-          "Multicultural Bridge Initiative 是一个连接福音信仰、公共议题、跨文化交流与社会关怀的平台。",
-          "MBI is a platform connecting Gospel faith, public discourse, cross-cultural exchange, and social care."
+          "多元文化桥梁计划是一个连接福音信仰、公共议题、跨文化交流与社会关怀的平台。",
+          "Multicultural Bridge Initiative is a platform connecting Gospel faith, public discourse, cross-cultural exchange, and social care."
         )}
       />
       <section className="container-prose py-20 grid md:grid-cols-12 gap-12">
         <div className="md:col-span-4">
-          <p className="eyebrow mb-3">Vision · 愿景</p>
+          <p className="eyebrow mb-3">Vision</p>
           <h2 className="serif text-3xl leading-tight">{t("让福音成为文化之间的桥梁。", "Let the Gospel be a bridge between cultures.")}</h2>
         </div>
         <div className="md:col-span-8 space-y-4 text-lg leading-relaxed text-foreground/85">
@@ -59,7 +59,7 @@ function AboutPage() {
       <section className="bg-secondary/40 border-y border-border/70 py-20">
         <div className="container-prose grid md:grid-cols-12 gap-12">
           <div className="md:col-span-4">
-            <p className="eyebrow mb-3">Mission · 使命</p>
+            <p className="eyebrow mb-3">Mission</p>
             <h2 className="serif text-3xl">{t("我们做什么", "What we do")}</h2>
           </div>
           <ul className="md:col-span-8 grid sm:grid-cols-2 gap-x-8 gap-y-5 text-foreground/85">
@@ -68,7 +68,6 @@ function AboutPage() {
                 <Icon className="h-5 w-5 mt-1 text-accent shrink-0" />
                 <div>
                   <p className="serif text-lg">{t(m.zh, m.en)}</p>
-                  <p className="italic text-sm text-stone-warm">{t(m.en, m.zh)}</p>
                 </div>
               </li>
             ))}
@@ -77,34 +76,48 @@ function AboutPage() {
       </section>
 
       <section className="container-prose py-24">
-        <p className="eyebrow mb-4">Core Values · 核心价值</p>
+        <p className="eyebrow mb-4">Core Values</p>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
           {values.map(({ Icon, ...v }) => (
             <div key={v.en} className="border-t-2 border-accent pt-5">
               <Icon className="h-6 w-6 text-accent mb-3" />
-              <p className="serif text-3xl">{v.en}</p>
-              <p className="text-stone-warm mt-1">{v.zh}</p>
+              <p className="serif text-3xl">{t(v.zh, v.en)}</p>
             </div>
           ))}
         </div>
       </section>
 
       <section className="container-prose pb-24">
-        <p className="eyebrow mb-4">Editorial Principles · 内容原则</p>
+        <p className="eyebrow mb-4">Editorial Principles</p>
         <div className="grid md:grid-cols-2 gap-12">
           <div>
             <h3 className="serif text-2xl mb-4 flex items-center gap-2"><Check className="h-5 w-5 text-accent" /> {t("我们支持", "We support")}</h3>
             <ul className="space-y-2 text-foreground/85">
-              {["福音中心 / Gospel-centered","跨文化理解 / Cross-cultural understanding","理性公共讨论 / Reasoned public discourse","宗教自由 / Religious liberty","家庭与社区 / Families and communities","全球教会合作 / Global church partnership","普通人的声音 / Voices of ordinary people"].map(x => (
-                <li key={x} className="flex gap-2"><Check className="h-4 w-4 mt-1 text-accent shrink-0" /><span>{x}</span></li>
+              {[
+                { zh: "福音中心", en: "Gospel-centered" },
+                { zh: "跨文化理解", en: "Cross-cultural understanding" },
+                { zh: "理性公共讨论", en: "Reasoned public discourse" },
+                { zh: "宗教自由", en: "Religious liberty" },
+                { zh: "家庭与社区", en: "Families and communities" },
+                { zh: "全球教会合作", en: "Global church partnership" },
+                { zh: "普通人的声音", en: "Voices of ordinary people" },
+              ].map(x => (
+                <li key={x.en} className="flex gap-2"><Check className="h-4 w-4 mt-1 text-accent shrink-0" /><span>{t(x.zh, x.en)}</span></li>
               ))}
             </ul>
           </div>
           <div>
             <h3 className="serif text-2xl mb-4 flex items-center gap-2"><XIcon className="h-5 w-5 text-stone-warm" /> {t("我们反对", "We reject")}</h3>
             <ul className="space-y-2 text-foreground/85">
-              {["极端民族主义 / Extreme nationalism","极端意识形态 / Ideological extremism","仇恨言论 / Hate speech","阴谋论传播 / Conspiracy theorizing","将福音工具化 / Weaponizing the Gospel","成功神学 / Prosperity gospel"].map(x => (
-                <li key={x} className="flex gap-2"><XIcon className="h-4 w-4 mt-1 text-stone-warm shrink-0" /><span>{x}</span></li>
+              {[
+                { zh: "极端民族主义", en: "Extreme nationalism" },
+                { zh: "极端意识形态", en: "Ideological extremism" },
+                { zh: "仇恨言论", en: "Hate speech" },
+                { zh: "阴谋论传播", en: "Conspiracy theorizing" },
+                { zh: "将福音工具化", en: "Weaponizing the Gospel" },
+                { zh: "成功神学", en: "Prosperity gospel" },
+              ].map(x => (
+                <li key={x.en} className="flex gap-2"><XIcon className="h-4 w-4 mt-1 text-stone-warm shrink-0" /><span>{t(x.zh, x.en)}</span></li>
               ))}
             </ul>
           </div>

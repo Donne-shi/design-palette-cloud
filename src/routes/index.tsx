@@ -11,8 +11,8 @@ import eventImg from "@/assets/event.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "多元文化桥梁计划 · Multicultural Bridge Initiative" },
-      { name: "description", content: "以福音连接文化，以真理回应时代，以恩典促进对话。Gospel-centered cross-cultural dialogue and public engagement." },
+      { title: "Multicultural Bridge Initiative · Building Bridges Across Cultures" },
+      { name: "description", content: "Gospel-centered cross-cultural dialogue and public engagement — for families, churches and communities." },
       { property: "og:title", content: "Multicultural Bridge Initiative" },
       { property: "og:description", content: "Building bridges across cultures through the Gospel." },
       { property: "og:url", content: "/" },
@@ -58,11 +58,8 @@ function Home() {
         <div className="relative container-prose pt-28 pb-32 md:pt-40 md:pb-44">
           <p className="eyebrow mb-5 text-accent">Multicultural Bridge Initiative</p>
           <h1 className="serif text-5xl md:text-7xl lg:text-[5.5rem] leading-[0.98] text-foreground max-w-4xl">
-            Building Bridges Across Cultures Through the Gospel.
+            {t("让福音成为文化之间的桥梁。", "Building Bridges Across Cultures Through the Gospel.")}
           </h1>
-          <p className="serif italic text-2xl md:text-3xl text-stone-warm mt-6 max-w-3xl">
-            以福音连接文化，以真理回应时代，以恩典促进对话。
-          </p>
           <p className="mt-8 max-w-xl text-base md:text-lg text-foreground/80 leading-relaxed">
             {t(
               "我们是一个致力于跨文化理解、健康神学讨论与公共议题参与的平台——为普通家庭、教会与社区服务。",
@@ -111,7 +108,6 @@ function Home() {
                   <Icon className="h-5 w-5 mt-1 text-accent shrink-0" />
                   <div>
                     <p className="serif text-lg">{t(zh, en)}</p>
-                    <p className="text-sm text-muted-foreground italic">{t(en, zh)}</p>
                   </div>
                 </div>
               ))}
@@ -149,7 +145,7 @@ function Home() {
                     >
                       <p className="eyebrow text-foreground/60">{a.category || "Article"} · {fmtDate(a.published_at || a.created_at)}</p>
                       <h3 className="serif text-2xl md:text-3xl mt-2 leading-snug group-hover:text-accent transition-colors">{title}</h3>
-                      {subtitle && <p className="serif italic text-base text-stone-warm mt-1">{subtitle}</p>}
+                      {subtitle && lang !== "en" && <p className="serif italic text-base text-stone-warm mt-1">{subtitle}</p>}
                       {excerpt && <p className="mt-3 text-[0.95rem] text-foreground/75 leading-relaxed line-clamp-2 max-w-3xl">{excerpt}</p>}
                     </Link>
                   </li>
@@ -169,7 +165,6 @@ function Home() {
           <div className="md:col-span-7 md:pl-6">
             <p className="eyebrow mb-3">Theology Forum</p>
             <h2 className="serif text-4xl md:text-5xl leading-tight">{t("神学争鸣", "A forum for theology in truth and love")}</h2>
-            <p className="serif italic text-xl text-stone-warm mt-2">In truth and love.</p>
             <p className="mt-6 text-lg text-foreground/80 leading-relaxed">
               {t(
                 "我们邀请不同传统的神学家与牧者，就当代教会与社会的关键问题展开严谨而温和的讨论：圣经解释、教会与社会、神学家观点。",
@@ -216,7 +211,7 @@ function Home() {
                       {fmtDate(e.start_at)}
                     </p>
                     <h3 className="serif text-xl mt-2">{title}</h3>
-                    {subtitle && <p className="serif italic text-sm text-primary-foreground/60 mt-1">{subtitle}</p>}
+                    {subtitle && lang !== "en" && <p className="serif italic text-sm text-primary-foreground/60 mt-1">{subtitle}</p>}
                     {e.location && (
                       <div className="mt-5 text-sm text-primary-foreground/70">{e.location}</div>
                     )}
@@ -245,7 +240,6 @@ function Home() {
             <div key={en} className="border-t-2 border-accent pt-6">
               <Icon className="h-6 w-6 text-accent mb-4" />
               <h3 className="serif text-2xl">{t(zh, en)}</h3>
-              <p className="serif italic text-stone-warm text-sm mt-1">{t(en, zh)}</p>
               <p className="mt-4 text-foreground/75 leading-relaxed">{body}</p>
             </div>
           ))}
@@ -267,7 +261,7 @@ function Home() {
           </div>
           <div>
             <p className="eyebrow mb-3">
-              Bridge Quarterly · 桥梁季刊
+              {t("桥梁季刊", "Bridge Quarterly")}
               {latestIssue && ` · Vol. ${latestIssue.volume} No. ${latestIssue.issue_number}`}
             </p>
             <h2 className="serif text-4xl md:text-5xl leading-tight">

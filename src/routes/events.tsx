@@ -10,8 +10,8 @@ export const Route = createFileRoute("/events")({
   loader: () => listPublishedEvents(),
   head: () => ({
     meta: [
-      { title: "活动 · Events — MBI" },
-      { name: "description", content: "Multicultural Bridge Initiative 主办的对话、讲座与研讨会。" },
+      { title: "Events · MBI" },
+      { name: "description", content: "Talks, dialogues, and seminars hosted by the Multicultural Bridge Initiative." },
       { property: "og:title", content: "Events — MBI" },
       { property: "og:description", content: "Talks, dialogues, and gatherings hosted by MBI." },
       { property: "og:url", content: `${SITE}/events` },
@@ -84,7 +84,7 @@ function ErrorView({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <SiteShell>
       <div className="container-prose py-24 text-center">
-        <h1 className="serif text-2xl">加载失败 · Failed to load</h1>
+        <h1 className="serif text-2xl">Failed to load</h1>
         <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
         <button onClick={() => { router.invalidate(); reset(); }} className="mt-6 bg-accent text-accent-foreground px-4 py-2 text-sm uppercase tracking-wider">Try again</button>
       </div>

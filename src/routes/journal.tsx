@@ -8,8 +8,8 @@ export const Route = createFileRoute("/journal")({
   loader: () => listPublishedIssues(),
   head: () => ({
     meta: [
-      { title: "电子期刊 · Bridge Quarterly — MBI" },
-      { name: "description", content: "桥梁季刊 Bridge Quarterly：专题研究、神学文章、社会观察、文化评论、事工案例。" },
+      { title: "Bridge Quarterly · MBI" },
+      { name: "description", content: "Bridge Quarterly: studies, theology, social observation, cultural commentary and ministry case studies." },
       { property: "og:title", content: "Bridge Quarterly — MBI" },
       { property: "og:description", content: "Quarterly long-form essays at the intersection of faith, culture, and public life." },
       { property: "og:url", content: "https://bridgeaway.org/journal" },
@@ -28,7 +28,7 @@ function JournalPage() {
   return (
     <SiteShell>
       <PageHero
-        eyebrow="Bridge Quarterly · 桥梁季刊"
+        eyebrow="Bridge Quarterly"
         titleZh={t("每季度一次的认真阅读。", "A serious read, once a quarter.")}
         titleEn={t("A serious read, once a quarter.", "每季一次的认真阅读。")}
         lead={t("我们出版深度长文，回应当代教会与社会的根本问题。", "We publish long-form essays on the deep questions of church and society.")}
@@ -76,7 +76,7 @@ function JournalPage() {
       {rest.length > 0 && (
         <section className="bg-secondary/40 border-y border-border/70 py-20">
           <div className="container-prose">
-            <p className="eyebrow mb-3 flex items-center gap-2"><Archive className="h-4 w-4 text-accent" /> Archive · 往期</p>
+            <p className="eyebrow mb-3 flex items-center gap-2"><Archive className="h-4 w-4 text-accent" / > Archive</p>
             <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
               {rest.map((iss) => (
                 <Link key={iss.id} to="/journal/$id" params={{ id: iss.id }} className="border border-border bg-card p-6 hover:border-accent transition-colors block">
@@ -98,7 +98,7 @@ function ErrorView({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <SiteShell>
       <div className="container-prose py-24 text-center">
-        <h1 className="serif text-2xl">加载失败 · Failed to load</h1>
+        <h1 className="serif text-2xl">Failed to load</h1>
         <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
         <button onClick={() => { router.invalidate(); reset(); }} className="mt-6 bg-accent text-accent-foreground px-4 py-2 text-sm uppercase tracking-wider">Try again</button>
       </div>
