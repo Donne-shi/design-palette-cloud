@@ -506,18 +506,21 @@ export type Database = {
           email: string
           id: string
           language: string
+          resend_contact_id: string | null
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
           language?: string
+          resend_contact_id?: string | null
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
           language?: string
+          resend_contact_id?: string | null
         }
         Relationships: []
       }

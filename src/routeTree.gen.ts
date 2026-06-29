@@ -33,6 +33,7 @@ import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminRegistrationsRouteImport } from './routes/admin.registrations'
+import { Route as AdminNewsletterRouteImport } from './routes/admin.newsletter'
 import { Route as AdminNewsQueueRouteImport } from './routes/admin.news-queue'
 import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
 import { Route as AdminJournalRouteImport } from './routes/admin.journal'
@@ -164,6 +165,11 @@ const AdminRegistrationsRoute = AdminRegistrationsRouteImport.update({
   path: '/registrations',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminNewsletterRoute = AdminNewsletterRouteImport.update({
+  id: '/newsletter',
+  path: '/newsletter',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminNewsQueueRoute = AdminNewsQueueRouteImport.update({
   id: '/news-queue',
   path: '/news-queue',
@@ -238,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/admin/journal': typeof AdminJournalRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/news-queue': typeof AdminNewsQueueRoute
+  '/admin/newsletter': typeof AdminNewsletterRoute
   '/admin/registrations': typeof AdminRegistrationsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -273,6 +280,7 @@ export interface FileRoutesByTo {
   '/admin/journal': typeof AdminJournalRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/news-queue': typeof AdminNewsQueueRoute
+  '/admin/newsletter': typeof AdminNewsletterRoute
   '/admin/registrations': typeof AdminRegistrationsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -310,6 +318,7 @@ export interface FileRoutesById {
   '/admin/journal': typeof AdminJournalRoute
   '/admin/messages': typeof AdminMessagesRoute
   '/admin/news-queue': typeof AdminNewsQueueRoute
+  '/admin/newsletter': typeof AdminNewsletterRoute
   '/admin/registrations': typeof AdminRegistrationsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -348,6 +357,7 @@ export interface FileRouteTypes {
     | '/admin/journal'
     | '/admin/messages'
     | '/admin/news-queue'
+    | '/admin/newsletter'
     | '/admin/registrations'
     | '/admin/settings'
     | '/admin/subscribers'
@@ -383,6 +393,7 @@ export interface FileRouteTypes {
     | '/admin/journal'
     | '/admin/messages'
     | '/admin/news-queue'
+    | '/admin/newsletter'
     | '/admin/registrations'
     | '/admin/settings'
     | '/admin/subscribers'
@@ -419,6 +430,7 @@ export interface FileRouteTypes {
     | '/admin/journal'
     | '/admin/messages'
     | '/admin/news-queue'
+    | '/admin/newsletter'
     | '/admin/registrations'
     | '/admin/settings'
     | '/admin/subscribers'
@@ -628,6 +640,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRegistrationsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/newsletter': {
+      id: '/admin/newsletter'
+      path: '/newsletter'
+      fullPath: '/admin/newsletter'
+      preLoaderRoute: typeof AdminNewsletterRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/news-queue': {
       id: '/admin/news-queue'
       path: '/news-queue'
@@ -708,6 +727,7 @@ interface AdminRouteChildren {
   AdminJournalRoute: typeof AdminJournalRoute
   AdminMessagesRoute: typeof AdminMessagesRoute
   AdminNewsQueueRoute: typeof AdminNewsQueueRoute
+  AdminNewsletterRoute: typeof AdminNewsletterRoute
   AdminRegistrationsRoute: typeof AdminRegistrationsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
@@ -722,6 +742,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminJournalRoute: AdminJournalRoute,
   AdminMessagesRoute: AdminMessagesRoute,
   AdminNewsQueueRoute: AdminNewsQueueRoute,
+  AdminNewsletterRoute: AdminNewsletterRoute,
   AdminRegistrationsRoute: AdminRegistrationsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
@@ -779,13 +800,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
