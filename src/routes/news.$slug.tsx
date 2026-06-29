@@ -88,10 +88,10 @@ export const Route = createFileRoute("/news/$slug")({
 function ArticleDetail() {
   const a = Route.useLoaderData() as PublicArticle;
   const { t, lang } = useLang();
-  const rawBody = lang === "en" ? a.body_en || a.body_zh : a.body_zh || a.body_en;
+  const rawBody = pickLocalized(lang, { zh: a.body_zh, en: a.body_en, es: a.body_es });
   const { body, sourceUrl, sourceName } = extractSource(rawBody);
-  const title = lang === "en" ? a.title_en || a.title_zh : a.title_zh;
-  const subtitle = lang === "en" ? a.title_zh : a.title_en;
+  const title = pickLocalized(lang, { zh: a.title_zh, en: a.title_en, es: a.title_es });
+  const subtitle = lang === "zh" ? a.title_en : (lang === "en" ? a.title_zh : (a.title_en ?? a.title_zh));
   const date = new Date(a.published_at || a.created_at).toLocaleDateString();
   const words = (body || "").replace(/\s+/g, "").length;
   const readMin = Math.max(1, Math.round(words / 400));
