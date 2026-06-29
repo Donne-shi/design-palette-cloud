@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X, Globe, ChevronDown } from "lucide-react";
+import { Menu, X, Globe, ChevronDown, User, LogOut } from "lucide-react";
 import { useLang, type Lang } from "@/lib/i18n";
+import { supabase } from "@/integrations/supabase/client";
 import logoAsset from "@/assets/mbi-logo.png.asset.json";
+
 
 const nav = [
   { to: "/", zh: "首页", en: "Home" },
