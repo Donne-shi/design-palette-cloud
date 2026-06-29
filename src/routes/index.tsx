@@ -58,11 +58,8 @@ function Home() {
         <div className="relative container-prose pt-28 pb-32 md:pt-40 md:pb-44">
           <p className="eyebrow mb-5 text-accent">Multicultural Bridge Initiative</p>
           <h1 className="serif text-5xl md:text-7xl lg:text-[5.5rem] leading-[0.98] text-foreground max-w-4xl">
-            Building Bridges Across Cultures Through the Gospel.
+            {t("让福音成为文化之间的桥梁。", "Building Bridges Across Cultures Through the Gospel.")}
           </h1>
-          <p className="serif italic text-2xl md:text-3xl text-stone-warm mt-6 max-w-3xl">
-            以福音连接文化，以真理回应时代，以恩典促进对话。
-          </p>
           <p className="mt-8 max-w-xl text-base md:text-lg text-foreground/80 leading-relaxed">
             {t(
               "我们是一个致力于跨文化理解、健康神学讨论与公共议题参与的平台——为普通家庭、教会与社区服务。",
