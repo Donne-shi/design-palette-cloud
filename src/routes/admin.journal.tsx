@@ -114,18 +114,25 @@ function JournalAdmin() {
           <DialogHeader><DialogTitle className="serif text-2xl">{editing?.id ? "编辑期刊" : "新建期刊"}</DialogTitle></DialogHeader>
           {editing && (
             <div className="grid gap-4">
+              <div className="flex justify-end">
+                <Button type="button" variant="outline" size="sm" onClick={autoTranslate} disabled={translating} className="gap-2">
+                  <Sparkles className="h-4 w-4"/>{translating ? "翻译中…" : "Auto-translate EN → ZH/ES"}
+                </Button>
+              </div>
               <div className="grid grid-cols-3 gap-4">
                 <div><Label>卷 Volume *</Label><Input type="number" value={editing.volume ?? ""} onChange={(e) => setEditing({ ...editing, volume: parseInt(e.target.value) || 0 })}/></div>
                 <div><Label>期号 Issue *</Label><Input type="number" value={editing.issue_number ?? ""} onChange={(e) => setEditing({ ...editing, issue_number: parseInt(e.target.value) || 0 })}/></div>
                 <div><Label>发布日期</Label><Input type="date" value={editing.published_at || ""} onChange={(e) => setEditing({ ...editing, published_at: e.target.value || null })}/></div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
+                <div><Label>English Title (source)</Label><Input value={editing.title_en || ""} onChange={(e) => setEditing({ ...editing, title_en: e.target.value })}/></div>
                 <div><Label>中文标题 *</Label><Input value={editing.title_zh || ""} onChange={(e) => setEditing({ ...editing, title_zh: e.target.value })}/></div>
-                <div><Label>English Title</Label><Input value={editing.title_en || ""} onChange={(e) => setEditing({ ...editing, title_en: e.target.value })}/></div>
+                <div><Label>Título (ES)</Label><Input value={editing.title_es || ""} onChange={(e) => setEditing({ ...editing, title_es: e.target.value })}/></div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
+                <div><Label>English Summary (source)</Label><Textarea rows={4} value={editing.summary_en || ""} onChange={(e) => setEditing({ ...editing, summary_en: e.target.value })}/></div>
                 <div><Label>中文摘要</Label><Textarea rows={4} value={editing.summary_zh || ""} onChange={(e) => setEditing({ ...editing, summary_zh: e.target.value })}/></div>
-                <div><Label>English Summary</Label><Textarea rows={4} value={editing.summary_en || ""} onChange={(e) => setEditing({ ...editing, summary_en: e.target.value })}/></div>
+                <div><Label>Resumen (ES)</Label><Textarea rows={4} value={editing.summary_es || ""} onChange={(e) => setEditing({ ...editing, summary_es: e.target.value })}/></div>
               </div>
               <div>
                 <Label>封面图</Label>
