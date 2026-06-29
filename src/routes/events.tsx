@@ -2,6 +2,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { listPublishedEvents, type PublicEvent } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
+import { pickLocalized } from "@/lib/pickLocalized";
 import { CalendarDays, MapPin } from "lucide-react";
 
 const SITE = "https://bridgeaway.org";
