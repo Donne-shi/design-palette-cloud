@@ -30,6 +30,7 @@ import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSubscribersRouteImport } from './routes/admin.subscribers'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminRegistrationsRouteImport } from './routes/admin.registrations'
+import { Route as AdminNewsQueueRouteImport } from './routes/admin.news-queue'
 import { Route as AdminMessagesRouteImport } from './routes/admin.messages'
 import { Route as AdminJournalRouteImport } from './routes/admin.journal'
 import { Route as AdminEventsRouteImport } from './routes/admin.events'
@@ -38,6 +39,7 @@ import { Route as AdminArticlesRouteImport } from './routes/admin.articles'
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as ApiPublicCronScrapeNewsRouteImport } from './routes/api/public/cron/scrape-news'
 
 const TheologyRoute = TheologyRouteImport.update({
   id: '/theology',
@@ -144,6 +146,11 @@ const AdminRegistrationsRoute = AdminRegistrationsRouteImport.update({
   path: '/registrations',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminNewsQueueRoute = AdminNewsQueueRouteImport.update({
+  id: '/news-queue',
+  path: '/news-queue',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminMessagesRoute = AdminMessagesRouteImport.update({
   id: '/messages',
   path: '/messages',
@@ -185,6 +192,11 @@ const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
   path: '/lovable/email/auth/preview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicCronScrapeNewsRoute = ApiPublicCronScrapeNewsRouteImport.update({
+  id: '/api/public/cron/scrape-news',
+  path: '/api/public/cron/scrape-news',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -205,6 +217,7 @@ export interface FileRoutesByFullPath {
   '/admin/events': typeof AdminEventsRoute
   '/admin/journal': typeof AdminJournalRoute
   '/admin/messages': typeof AdminMessagesRoute
+  '/admin/news-queue': typeof AdminNewsQueueRoute
   '/admin/registrations': typeof AdminRegistrationsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -213,6 +226,7 @@ export interface FileRoutesByFullPath {
   '/journal/$id': typeof JournalIdRoute
   '/news/$slug': typeof NewsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/cron/scrape-news': typeof ApiPublicCronScrapeNewsRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -235,6 +249,7 @@ export interface FileRoutesByTo {
   '/admin/events': typeof AdminEventsRoute
   '/admin/journal': typeof AdminJournalRoute
   '/admin/messages': typeof AdminMessagesRoute
+  '/admin/news-queue': typeof AdminNewsQueueRoute
   '/admin/registrations': typeof AdminRegistrationsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -243,6 +258,7 @@ export interface FileRoutesByTo {
   '/journal/$id': typeof JournalIdRoute
   '/news/$slug': typeof NewsSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/api/public/cron/scrape-news': typeof ApiPublicCronScrapeNewsRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -267,6 +283,7 @@ export interface FileRoutesById {
   '/admin/events': typeof AdminEventsRoute
   '/admin/journal': typeof AdminJournalRoute
   '/admin/messages': typeof AdminMessagesRoute
+  '/admin/news-queue': typeof AdminNewsQueueRoute
   '/admin/registrations': typeof AdminRegistrationsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/subscribers': typeof AdminSubscribersRoute
@@ -275,6 +292,7 @@ export interface FileRoutesById {
   '/journal/$id': typeof JournalIdRoute
   '/news/$slug': typeof NewsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/cron/scrape-news': typeof ApiPublicCronScrapeNewsRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -300,6 +318,7 @@ export interface FileRouteTypes {
     | '/admin/events'
     | '/admin/journal'
     | '/admin/messages'
+    | '/admin/news-queue'
     | '/admin/registrations'
     | '/admin/settings'
     | '/admin/subscribers'
@@ -308,6 +327,7 @@ export interface FileRouteTypes {
     | '/journal/$id'
     | '/news/$slug'
     | '/admin/'
+    | '/api/public/cron/scrape-news'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
@@ -330,6 +350,7 @@ export interface FileRouteTypes {
     | '/admin/events'
     | '/admin/journal'
     | '/admin/messages'
+    | '/admin/news-queue'
     | '/admin/registrations'
     | '/admin/settings'
     | '/admin/subscribers'
@@ -338,6 +359,7 @@ export interface FileRouteTypes {
     | '/journal/$id'
     | '/news/$slug'
     | '/admin'
+    | '/api/public/cron/scrape-news'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
@@ -361,6 +383,7 @@ export interface FileRouteTypes {
     | '/admin/events'
     | '/admin/journal'
     | '/admin/messages'
+    | '/admin/news-queue'
     | '/admin/registrations'
     | '/admin/settings'
     | '/admin/subscribers'
@@ -369,6 +392,7 @@ export interface FileRouteTypes {
     | '/journal/$id'
     | '/news/$slug'
     | '/admin/'
+    | '/api/public/cron/scrape-news'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
@@ -388,6 +412,7 @@ export interface RootRouteChildren {
   ResourcesRoute: typeof ResourcesRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TheologyRoute: typeof TheologyRoute
+  ApiPublicCronScrapeNewsRoute: typeof ApiPublicCronScrapeNewsRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
@@ -542,6 +567,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRegistrationsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/news-queue': {
+      id: '/admin/news-queue'
+      path: '/news-queue'
+      fullPath: '/admin/news-queue'
+      preLoaderRoute: typeof AdminNewsQueueRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/messages': {
       id: '/admin/messages'
       path: '/messages'
@@ -598,6 +630,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/cron/scrape-news': {
+      id: '/api/public/cron/scrape-news'
+      path: '/api/public/cron/scrape-news'
+      fullPath: '/api/public/cron/scrape-news'
+      preLoaderRoute: typeof ApiPublicCronScrapeNewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -607,6 +646,7 @@ interface AdminRouteChildren {
   AdminEventsRoute: typeof AdminEventsRoute
   AdminJournalRoute: typeof AdminJournalRoute
   AdminMessagesRoute: typeof AdminMessagesRoute
+  AdminNewsQueueRoute: typeof AdminNewsQueueRoute
   AdminRegistrationsRoute: typeof AdminRegistrationsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminSubscribersRoute: typeof AdminSubscribersRoute
@@ -620,6 +660,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminEventsRoute: AdminEventsRoute,
   AdminJournalRoute: AdminJournalRoute,
   AdminMessagesRoute: AdminMessagesRoute,
+  AdminNewsQueueRoute: AdminNewsQueueRoute,
   AdminRegistrationsRoute: AdminRegistrationsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminSubscribersRoute: AdminSubscribersRoute,
@@ -675,6 +716,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResourcesRoute: ResourcesRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TheologyRoute: TheologyRoute,
+  ApiPublicCronScrapeNewsRoute: ApiPublicCronScrapeNewsRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
