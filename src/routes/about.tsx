@@ -81,8 +81,7 @@ function AboutPage() {
           {values.map(({ Icon, ...v }) => (
             <div key={v.en} className="border-t-2 border-accent pt-5">
               <Icon className="h-6 w-6 text-accent mb-3" />
-              <p className="serif text-3xl">{v.en}</p>
-              <p className="text-stone-warm mt-1">{v.zh}</p>
+              <p className="serif text-3xl">{t(v.zh, v.en)}</p>
             </div>
           ))}
         </div>
