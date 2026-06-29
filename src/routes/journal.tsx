@@ -56,10 +56,10 @@ function JournalPage() {
           </div>
           <div className="md:col-span-7">
             <p className="eyebrow mb-3">Vol.{latest.volume} · Issue {latest.issue_number}{latest.published_at && ` · ${new Date(latest.published_at).toLocaleDateString()}`}</p>
-            <h2 className="serif text-4xl md:text-5xl leading-tight">{lang === "en" ? latest.title_en || latest.title_zh : latest.title_zh}</h2>
-            {(latest.summary_zh || latest.summary_en) && (
+            <h2 className="serif text-4xl md:text-5xl leading-tight">{pickLocalized(lang, { zh: latest.title_zh, en: latest.title_en, es: latest.title_es })}</h2>
+            {(latest.summary_zh || latest.summary_en || latest.summary_es) && (
               <p className="mt-6 text-foreground/80 leading-relaxed whitespace-pre-wrap">
-                {lang === "en" ? latest.summary_en || latest.summary_zh : latest.summary_zh || latest.summary_en}
+                {pickLocalized(lang, { zh: latest.summary_zh, en: latest.summary_en, es: latest.summary_es })}
               </p>
             )}
           </div>
