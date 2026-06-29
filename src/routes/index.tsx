@@ -133,9 +133,9 @@ function Home() {
           ) : (
             <ul className="divide-y divide-border/70">
               {articles.map((a: PublicArticle) => {
-                const title = lang === "en" && a.title_en ? a.title_en : a.title_zh;
-                const subtitle = lang === "en" ? a.title_zh : (a.title_en ?? "");
-                const excerpt = lang === "en" ? (a.excerpt_en || a.excerpt_zh) : (a.excerpt_zh || a.excerpt_en);
+                const title = pickLocalized(lang, { zh: a.title_zh, en: a.title_en, es: a.title_es });
+                const subtitle = lang === "zh" ? (a.title_en ?? "") : (lang === "en" ? a.title_zh : (a.title_en ?? a.title_zh));
+                const excerpt = pickLocalized(lang, { zh: a.excerpt_zh, en: a.excerpt_en, es: a.excerpt_es });
                 return (
                   <li key={a.id} className="py-7 first:pt-0">
                     <Link
