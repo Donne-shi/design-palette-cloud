@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { SiteShell, PageHero } from "@/components/site/SiteShell";
 import { useLang } from "@/lib/i18n";
-import newsImg from "@/assets/news.jpg";
+
 import { CalendarDays, Tag } from "lucide-react";
 import { listPublishedArticles, type PublicArticle } from "@/lib/content.functions";
 import { useState } from "react";
