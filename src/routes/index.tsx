@@ -36,7 +36,7 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const NEWS_FALLBACK = [newsImg, dialogueImg, theologyImg];
+
 
 function fmtDate(s: string | null | undefined) {
   if (!s) return "";
