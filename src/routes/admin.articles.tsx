@@ -21,10 +21,13 @@ type Article = {
   slug: string | null;
   title_zh: string;
   title_en: string | null;
+  title_es: string | null;
   excerpt_zh: string | null;
   excerpt_en: string | null;
+  excerpt_es: string | null;
   body_zh: string | null;
   body_en: string | null;
+  body_es: string | null;
   cover_url: string | null;
   status: string;
   published_at: string | null;
@@ -33,7 +36,7 @@ type Article = {
 
 const CATEGORIES = ["news", "theology", "cultural-exchange", "faith-public", "resources"];
 const PAGE_SIZE = 15;
-const empty: Partial<Article> = { category: "news", title_zh: "", title_en: "", excerpt_zh: "", excerpt_en: "", body_zh: "", body_en: "", cover_url: "", status: "draft", slug: "" };
+const empty: Partial<Article> = { category: "news", title_zh: "", title_en: "", title_es: "", excerpt_zh: "", excerpt_en: "", excerpt_es: "", body_zh: "", body_en: "", body_es: "", cover_url: "", status: "draft", slug: "" };
 
 function ArticlesAdmin() {
   const [rows, setRows] = useState<Article[]>([]);
