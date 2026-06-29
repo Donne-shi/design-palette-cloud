@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-rout
 import { SiteShell } from "@/components/site/SiteShell";
 import { getEventById, type PublicEvent } from "@/lib/content.functions";
 import { useLang } from "@/lib/i18n";
+import { pickLocalized } from "@/lib/pickLocalized";
 import { ArrowLeft, CalendarDays, MapPin, Users } from "lucide-react";
 import { RegistrationPanel } from "@/components/site/RegistrationPanel";
 
