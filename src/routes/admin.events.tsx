@@ -7,19 +7,20 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { FileUpload } from "@/components/admin/FileUpload";
+import { translateEnglishToZhEs } from "@/lib/auto-translate";
 
 export const Route = createFileRoute("/admin/events")({ component: EventsAdmin });
 
 type Ev = {
-  id: string; title_zh: string; title_en: string | null;
-  description_zh: string | null; description_en: string | null;
+  id: string; title_zh: string; title_en: string | null; title_es: string | null;
+  description_zh: string | null; description_en: string | null; description_es: string | null;
   location: string | null; start_at: string; end_at: string | null;
   capacity: number | null; cover_url: string | null; status: string;
 };
-const empty: Partial<Ev> = { title_zh: "", title_en: "", description_zh: "", description_en: "", location: "", start_at: "", end_at: "", status: "draft" };
+const empty: Partial<Ev> = { title_zh: "", title_en: "", title_es: "", description_zh: "", description_en: "", description_es: "", location: "", start_at: "", end_at: "", status: "draft" };
 
 function EventsAdmin() {
   const [rows, setRows] = useState<Ev[]>([]);
