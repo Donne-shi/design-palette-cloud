@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X, Globe, ChevronDown } from "lucide-react";
+import { Menu, X, Globe, ChevronDown, User, LogOut } from "lucide-react";
 import { useLang, type Lang } from "@/lib/i18n";
+import { supabase } from "@/integrations/supabase/client";
 import logoAsset from "@/assets/mbi-logo.png.asset.json";
+
 
 const nav = [
   { to: "/", zh: "首页", en: "Home" },
@@ -27,15 +29,31 @@ export function Header() {
   const { lang, setLang, t } = useLang();
   const [open, setOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
   const langRef = useRef<HTMLDivElement>(null);
+  const userRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setEmail(data.session?.user.email ?? null));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setEmail(s?.user.email ?? null));
+    return () => sub.subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
       if (langRef.current && !langRef.current.contains(e.target as Node)) setLangOpen(false);
+      if (userRef.current && !userRef.current.contains(e.target as Node)) setUserOpen(false);
     };
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setUserOpen(false);
+  };
+
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
@@ -87,6 +105,47 @@ export function Header() {
               </div>
             )}
           </div>
+
+          {email ? (
+            <div ref={userRef} className="relative hidden sm:block">
+              <button
+                onClick={() => setUserOpen((v) => !v)}
+                className="flex items-center gap-1.5 text-xs tracking-widest uppercase text-stone-warm hover:text-accent transition-colors px-2 py-1.5"
+                aria-label="Account"
+              >
+                <User className="h-3.5 w-3.5" />
+                <span className="max-w-[8rem] truncate normal-case tracking-normal">{email}</span>
+                <ChevronDown className="h-3 w-3" />
+              </button>
+              {userOpen && (
+                <div className="absolute right-0 mt-1 min-w-[10rem] border border-border bg-background shadow-lg">
+                  <Link
+                    to="/admin"
+                    onClick={() => setUserOpen(false)}
+                    className="block w-full text-left px-3 py-2 text-xs uppercase tracking-widest hover:bg-secondary"
+                  >
+                    {t("后台", "Admin")}
+                  </Link>
+                  <button
+                    onClick={signOut}
+                    className="flex items-center gap-2 w-full text-left px-3 py-2 text-xs uppercase tracking-widest hover:bg-secondary"
+                  >
+                    <LogOut className="h-3 w-3" />
+                    {t("退出", "Sign out")}
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              to="/auth"
+              className="hidden sm:flex items-center gap-1.5 text-xs tracking-widest uppercase text-stone-warm hover:text-accent transition-colors px-2 py-1.5"
+            >
+              <User className="h-3.5 w-3.5" />
+              {t("登录", "Sign in")}
+            </Link>
+          )}
+
           <button
             className="lg:hidden p-2 -mr-2"
             onClick={() => setOpen((v) => !v)}
