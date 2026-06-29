@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ExternalLink, CheckCircle2, XCircle, RefreshCcw, Loader2, Star } from "lucide-react";
+import { ExternalLink, CheckCircle2, XCircle, RefreshCcw, Loader2, Star, Rocket } from "lucide-react";
 import { slugify } from "@/lib/slug";
 
 export const Route = createFileRoute("/admin/news-queue")({
