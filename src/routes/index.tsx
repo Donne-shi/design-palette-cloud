@@ -165,7 +165,6 @@ function Home() {
           <div className="md:col-span-7 md:pl-6">
             <p className="eyebrow mb-3">Theology Forum</p>
             <h2 className="serif text-4xl md:text-5xl leading-tight">{t("神学争鸣", "A forum for theology in truth and love")}</h2>
-            <p className="serif italic text-xl text-stone-warm mt-2">In truth and love.</p>
             <p className="mt-6 text-lg text-foreground/80 leading-relaxed">
               {t(
                 "我们邀请不同传统的神学家与牧者，就当代教会与社会的关键问题展开严谨而温和的讨论：圣经解释、教会与社会、神学家观点。",
