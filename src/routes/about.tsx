@@ -93,8 +93,16 @@ function AboutPage() {
           <div>
             <h3 className="serif text-2xl mb-4 flex items-center gap-2"><Check className="h-5 w-5 text-accent" /> {t("我们支持", "We support")}</h3>
             <ul className="space-y-2 text-foreground/85">
-              {["福音中心 / Gospel-centered","跨文化理解 / Cross-cultural understanding","理性公共讨论 / Reasoned public discourse","宗教自由 / Religious liberty","家庭与社区 / Families and communities","全球教会合作 / Global church partnership","普通人的声音 / Voices of ordinary people"].map(x => (
-                <li key={x} className="flex gap-2"><Check className="h-4 w-4 mt-1 text-accent shrink-0" /><span>{x}</span></li>
+              {[
+                { zh: "福音中心", en: "Gospel-centered" },
+                { zh: "跨文化理解", en: "Cross-cultural understanding" },
+                { zh: "理性公共讨论", en: "Reasoned public discourse" },
+                { zh: "宗教自由", en: "Religious liberty" },
+                { zh: "家庭与社区", en: "Families and communities" },
+                { zh: "全球教会合作", en: "Global church partnership" },
+                { zh: "普通人的声音", en: "Voices of ordinary people" },
+              ].map(x => (
+                <li key={x.en} className="flex gap-2"><Check className="h-4 w-4 mt-1 text-accent shrink-0" /><span>{t(x.zh, x.en)}</span></li>
               ))}
             </ul>
           </div>
