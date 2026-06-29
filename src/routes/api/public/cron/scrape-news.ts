@@ -7,18 +7,21 @@ import { createClient } from "@supabase/supabase-js";
 
 type Source = { name: string; url: string; category: string };
 
-// Sources curated for Multicultural Bridge Initiative — Gospel-centered,
-// cross-cultural (East/West, Chinese diaspora), faith & public life.
+// Sources curated for Multicultural Bridge Initiative — Protestant /
+// evangelical, Gospel-centered, cross-cultural (East/West, Chinese diaspora),
+// faith & public life. Catholic-internal outlets are intentionally excluded.
 const SOURCES: Source[] = [
   { name: "Pew Research — Religion", url: "https://www.pewresearch.org/religion/feed/", category: "Society & Research" },
-  { name: "Christianity Today", url: "https://www.christianitytoday.com/ct/rss.xml", category: "U.S. Church" },
+  { name: "Christianity Today", url: "https://www.christianitytoday.com/feed/", category: "U.S. Church" },
   { name: "Religion News Service", url: "https://religionnews.com/feed/", category: "Global Christianity" },
   { name: "The Gospel Coalition", url: "https://www.thegospelcoalition.org/feed/", category: "Theology & Culture" },
-  { name: "Desiring God", url: "https://www.desiringgod.org/rss/articles.xml", category: "Discipleship" },
-  { name: "World Magazine", url: "https://wng.org/feed", category: "Faith & Public Life" },
-  { name: "First Things", url: "https://www.firstthings.com/rss/all-articles", category: "Faith & Public Life" },
-  { name: "Catholic News Agency", url: "https://www.catholicnewsagency.com/rss/news.xml", category: "Global Christianity" },
-  { name: "Vatican News", url: "https://www.vaticannews.va/en.rss.xml", category: "Global Christianity" },
+  { name: "Desiring God", url: "https://feeds.feedburner.com/DesiringGodBlog", category: "Discipleship" },
+  { name: "9Marks", url: "https://www.9marks.org/feed/", category: "Church & Ministry" },
+  { name: "Albert Mohler", url: "https://albertmohler.com/feed", category: "Theology & Culture" },
+  { name: "Challies", url: "https://www.challies.com/feed/", category: "Discipleship" },
+  { name: "Christian Headlines", url: "https://www.christianheadlines.com/rss-feed/", category: "Global Christianity" },
+  { name: "Evangelical Focus", url: "https://www.evangelicalfocus.com/rss", category: "Global Christianity" },
+  { name: "First Things", url: "https://www.firstthings.com/feed", category: "Faith & Public Life" },
 ];
 
 const PER_SOURCE_LIMIT = 6;
@@ -124,21 +127,31 @@ async function scoreForMBI(
   apiKey: string,
   items: { id: string; title_en: string; excerpt_en: string; source_name: string; category: string | null }[],
 ): Promise<ScoreOut[]> {
-  const sys = `You are the senior editor of Multicultural Bridge Initiative (MBI). MBI's positioning:
-- Gospel-centered, evangelical Christian perspective
+  const sys = `You are the senior editor of Multicultural Bridge Initiative (MBI). MBI is a **Protestant, evangelical** publication. MBI's positioning:
+- Gospel-centered, evangelical Protestant perspective (NOT Roman Catholic, NOT Eastern Orthodox)
 - Serving the global Chinese diaspora and bridging East ↔ West
 - Faith & public life: church, religion in society, religious liberty, ethics, family
-- Cultural exchange between Chinese & Western Christianity
-- Theology, discipleship, missions, intercultural ministry
+- Cultural exchange between Chinese & Western Protestant Christianity
+- Reformed / evangelical theology, discipleship, missions, intercultural ministry
 
-Score each news item 0–100 for how important and on-mission it is for MBI readers TODAY:
-- 90–100: must-publish, directly central to MBI mission (e.g. Chinese church, diaspora faith, major global Christian event, landmark religion-and-public-life story)
+Score each news item 0–100 for how important and on-mission it is for MBI's evangelical Protestant readers TODAY:
+- 90–100: must-publish, directly central to MBI mission (Chinese church, diaspora faith, major global evangelical / Protestant event, landmark religion-and-public-life story)
 - 70–89: highly relevant
 - 40–69: tangentially relevant
 - 0–39: off-mission, skip
 
-Penalize: hyper-local U.S. parish news, celebrity gossip, narrow denominational politics with no broader bearing.
-Reward: stories touching China, Asia, diaspora, persecution, religious freedom, major theological/cultural shifts, cross-cultural missions.
+HARD PENALTIES (cap score at 25):
+- Catholic-internal church politics: Pope, Vatican, Holy See, Synod of Bishops, Cardinals, Curia, Roman Catholic diocese affairs, canonization, Marian devotion, papal liturgy. MBI does not cover internal Catholic governance.
+- Eastern Orthodox internal affairs (patriarchs, synods) unless directly tied to persecution or East-West relations.
+- Hyper-local U.S. parish news, celebrity gossip, narrow denominational squabbles.
+
+REWARD (push toward 80+):
+- China, Hong Kong, Taiwan, Asian diaspora, Chinese house church, overseas Chinese ministry
+- Persecution of Christians, religious liberty, missions
+- Major shifts in global evangelicalism, Reformed theology, biblical scholarship
+- Cross-cultural ministry, intercultural church planting, immigrant churches
+
+Note: an item about Catholics that is fundamentally about religious liberty, persecution, or China policy CAN still score high — judge by the actual substance, not the actor.
 
 Return STRICT JSON: {"scores":[{"id":"...","score":0-100,"reason":"<=20 words, English"}, ...]} for every input id, no prose outside JSON.`;
   const user = JSON.stringify({
@@ -196,7 +209,11 @@ export const Route = createFileRoute("/api/public/cron/scrape-news")({
         for (const src of SOURCES) {
           try {
             const r = await fetch(src.url, {
-              headers: { "user-agent": "MBI-NewsBot/1.0 (+https://bridgeaway.org)" },
+              headers: {
+                "user-agent":
+                  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                accept: "application/rss+xml, application/atom+xml, application/xml;q=0.9, */*;q=0.8",
+              },
             });
             if (!r.ok) { result.errors.push(`${src.name}: HTTP ${r.status}`); continue; }
             const xml = await r.text();
